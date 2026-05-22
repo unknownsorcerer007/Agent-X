@@ -1,0 +1,580 @@
+{
+  "timestamp": "2026-04-15T03:12:14.741301",
+  "total_tests": 95,
+  "passed": 94,
+  "failed": 1,
+  "success_rate": 98.94736842105263,
+  "total_time_seconds": 24.55114221572876,
+  "results": [
+    {
+      "name": "Router Category Classification (90/94)",
+      "passed": false,
+      "details": "Failed: [\"'premier league standings' \u2192 got ambiguous, expected needs_web\", \"'freelance interview resume' \u2192 got ambiguous, expected needs_web\", \"'implement linked list in C++' \u2192 got ambiguous, expected needs_code\", \"'define machine learning' \u2192 got needs_web, expected needs_knowledge\"]",
+      "duration_ms": 503.7806034088135
+    },
+    {
+      "name": "Social Media Agent Routing (13/13)",
+      "passed": true,
+      "details": "",
+      "duration_ms": 504.2095184326172
+    },
+    {
+      "name": "20 Agent Profiles Exist",
+      "passed": true,
+      "details": "Found 20 profiles",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Query\u2192Profile Matching (18/18)",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Search Query Generation (4/4)",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Agent Pool Creation",
+      "passed": true,
+      "details": "workers=5, agents=20",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "All 20 Agents Idle",
+      "passed": true,
+      "details": "20 agents",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Swarm Status Fields",
+      "passed": true,
+      "details": "registered=20, temp=0",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Temp Agent Spawning (5 clones)",
+      "passed": true,
+      "details": "temp_agents=5",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Temp Agent Spawning (10 more)",
+      "passed": true,
+      "details": "total_temp=15",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Temp Agent Cleanup",
+      "passed": true,
+      "details": "remaining=0",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Max Swarm Size = 50",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "50-Worker Pool Creation",
+      "passed": true,
+      "details": "workers=50",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "All Profile Agents Accessible",
+      "passed": true,
+      "details": "20 profiles",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Reset Agents",
+      "passed": true,
+      "details": "busy=0",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Pool Close",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Exact URL Dedup",
+      "passed": true,
+      "details": "2 \u2192 1",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Trailing Slash Dedup",
+      "passed": true,
+      "details": "2 \u2192 1",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "WWW Prefix Dedup",
+      "passed": true,
+      "details": "2 \u2192 1",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "UTM Parameter Dedup",
+      "passed": true,
+      "details": "2 \u2192 1",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "False Positive Prevention (different domains)",
+      "passed": true,
+      "details": "2 \u2192 2",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Similar Title Same-Domain Dedup",
+      "passed": true,
+      "details": "2 \u2192 1",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Similar Title Diff-Domain NOT Deduped",
+      "passed": true,
+      "details": "2 \u2192 2",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Distinct Titles NOT Deduped",
+      "passed": true,
+      "details": "2 \u2192 2",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Mass Dedup (100 results, 30 dupes)",
+      "passed": true,
+      "details": "100 \u2192 70",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Content Hash Consistency",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Valid URLs (83) (83/83)",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Invalid URLs Rejected (14) (14/14)",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Empty Title Rejected",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Empty URL Rejected",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "FTP URL Rejected",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Aggregation Removes Failed",
+      "passed": true,
+      "details": "input=4, output=2",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Aggregator Dedup (same URL)",
+      "passed": true,
+      "details": "reuters_count=1",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Cross-Reference Boost",
+      "passed": true,
+      "details": "boosted_count=2, scores=[0.7999999999999999, 0.75]",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Quality Scoring Produces Scores",
+      "passed": true,
+      "details": "scores=[('Result 1 from News', '0.62'), ('Result 1 from Research', '0.55')]",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Trusted Domain Boost",
+      "passed": true,
+      "details": "trusted=0.62, untrusted=0.47",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Output Has Query",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Output Has Category",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Output Has Tier",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Output Has Agents",
+      "passed": true,
+      "details": "agents=['Generalist', 'News Hound']",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Output Has Results",
+      "passed": true,
+      "details": "total=2",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Output Has Confidence",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Output Has Timestamp",
+      "passed": true,
+      "details": "ts=2026-04-15T03:11:50.707209+00:00",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "JSON Output Valid",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Markdown Output Has Content",
+      "passed": true,
+      "details": "len=622",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Markdown Has Title",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Dict Output Has Keys",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Safe JSON: Valid",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Safe JSON: Invalid",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Safe JSON: Invalid with default",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Safe JSON: None-like",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Safe JSON: Empty object",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Config Default Enabled",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Config Router Threshold",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Config Max Workers",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Config Max Total Agents",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Config Search Timeout",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Config Max Retries",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Config Output Format",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Config Max Results",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Config Dedup Enabled",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Config Min Relevance",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Config from_env Works",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "get_config Works",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "reload_config Works",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Env Override Max Workers",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Env Override Enabled",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Search Strategy Mapping (7/7)",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Query Style Generation (5/5)",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Plan Has Estimated Time",
+      "passed": true,
+      "details": "est=18.0s",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Combine Results Dedup",
+      "passed": true,
+      "details": "3 lists with 1 dupe \u2192 4",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Combine Results Max Limit",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Combine Results Empty",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "SearchProvider Enum",
+      "passed": true,
+      "details": "providers=['google', 'bing', 'duckduckgo', 'searxng', 'agent_os', 'http']",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "SearchRequest Creation",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Orchestrator: News \u2192 NEEDS_WEB",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Orchestrator: Calc \u2192 NEEDS_CALCULATION",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Orchestrator: Ambiguous \u2192 NEEDS_WEB (Tier 3)",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Orchestrator: Social Media \u2192 NEEDS_WEB",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Orchestrator: Social Media Agent",
+      "passed": true,
+      "details": "agents=['social_media_tracker', 'generalist']",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Module Imports (14/14)",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Non-Bing URL Passthrough",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Empty URL Passthrough",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "None URL Passthrough",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Agent Search Returns Result",
+      "passed": true,
+      "details": "status=completed, title=Mock result for: test query",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Agent Search Has URL",
+      "passed": true,
+      "details": "url=https://example.com/result?q=test+query",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Agent Search Has Execution Time",
+      "passed": true,
+      "details": "time=0.000s",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Query Reformulation (technical)",
+      "passed": true,
+      "details": "ref='python async await documentation tutorial'",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Parallel Search Returns Results",
+      "passed": true,
+      "details": "completed=3, total=3",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Swarm Status After Search",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "HTTPSearchBackend Available",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Live Search (5 queries) (5/5)",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Content Extraction",
+      "passed": true,
+      "details": "extracted 142 chars",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "Backend Close",
+      "passed": true,
+      "details": "",
+      "duration_ms": 0.0
+    },
+    {
+      "name": "50 Concurrent Searches",
+      "passed": true,
+      "details": "results=50, completed=50, rate=100.0%",
+      "duration_ms": 0.0
+    }
+  ]
+}

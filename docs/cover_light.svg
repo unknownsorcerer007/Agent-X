@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 300">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f0f23"/>
+      <stop offset="50%" style="stop-color:#1a1a3e"/>
+      <stop offset="100%" style="stop-color:#0f0f23"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00d4ff"/>
+      <stop offset="100%" style="stop-color:#7b2ff7"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00d4ff;stop-opacity:0.8"/>
+      <stop offset="100%" style="stop-color:#7b2ff7;stop-opacity:0.8"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="300" fill="url(#bg)" rx="12"/>
+
+  <!-- Grid pattern -->
+  <g opacity="0.05" stroke="#00d4ff" stroke-width="0.5">
+    <line x1="0" y1="50" x2="900" y2="50"/><line x1="0" y1="100" x2="900" y2="100"/>
+    <line x1="0" y1="150" x2="900" y2="150"/><line x1="0" y1="200" x2="900" y2="200"/>
+    <line x1="0" y1="250" x2="900" y2="250"/>
+    <line x1="100" y1="0" x2="100" y2="300"/><line x1="200" y1="0" x2="200" y2="300"/>
+    <line x1="300" y1="0" x2="300" y2="300"/><line x1="400" y1="0" x2="400" y2="300"/>
+    <line x1="500" y1="0" x2="500" y2="300"/><line x1="600" y1="0" x2="600" y2="300"/>
+    <line x1="700" y1="0" x2="700" y2="300"/><line x1="800" y1="0" x2="800" y2="300"/>
+  </g>
+
+  <!-- Browser icon -->
+  <g transform="translate(60, 80)">
+    <rect width="120" height="90" rx="8" fill="none" stroke="url(#accent)" stroke-width="2.5"/>
+    <line x1="0" y1="25" x2="120" y2="25" stroke="url(#accent)" stroke-width="1.5"/>
+    <circle cx="15" cy="12.5" r="4" fill="#ff5f57"/><circle cx="30" cy="12.5" r="4" fill="#febc2e"/><circle cx="45" cy="12.5" r="4" fill="#28c840"/>
+    <!-- Shield overlay -->
+    <path d="M60 40 L90 50 L90 70 L60 85 L30 70 L30 50 Z" fill="none" stroke="#00d4ff" stroke-width="2" opacity="0.6"/>
+    <path d="M60 50 L75 55 L75 65 L60 75 L45 65 L45 55 Z" fill="#00d4ff" opacity="0.15"/>
+    <!-- Terminal cursor blink -->
+    <rect x="10" y="35" width="6" height="12" fill="#00d4ff" opacity="0.8">
+      <animate attributeName="opacity" values="0.8;0.2;0.8" dur="1.2s" repeatCount="indefinite"/>
+    </rect>
+    <text x="22" y="46" font-family="monospace" font-size="10" fill="#7b2ff7">agent</text>
+  </g>
+
+  <!-- Main title -->
+  <text x="220" y="115" font-family="'SF Pro Display', 'Segoe UI', system-ui, -apple-system, sans-serif" font-size="58" font-weight="800" fill="white" letter-spacing="-1">
+    Agent
+  </text>
+  <text x="440" y="115" font-family="'SF Pro Display', 'Segoe UI', system-ui, -apple-system, sans-serif" font-size="58" font-weight="800" fill="url(#accent)" letter-spacing="-1">
+    -OS
+  </text>
+
+  <!-- Accent line -->
+  <rect x="220" y="128" width="350" height="3" rx="1.5" fill="url(#accent)" opacity="0.6"/>
+
+  <!-- Tagline -->
+  <text x="220" y="160" font-family="'SF Pro Text', 'Segoe UI', system-ui, sans-serif" font-size="18" fill="#a0a0c0" font-weight="400">
+    Give any AI agent a real browser.
+  </text>
+  <text x="220" y="185" font-family="'SF Pro Text', 'Segoe UI', system-ui, sans-serif" font-size="18" fill="#a0a0c0" font-weight="400">
+    Persistent. Stealthy. Self-hosted.
+  </text>
+
+  <!-- Feature pills -->
+  <g transform="translate(220, 205)">
+    <rect width="80" height="24" rx="12" fill="#00d4ff" opacity="0.15"/>
+    <text x="40" y="16" font-family="'SF Pro Text', system-ui, sans-serif" font-size="11" fill="#00d4ff" text-anchor="middle" font-weight="600">203 Tools</text>
+
+    <rect x="90" width="90" height="24" rx="12" fill="#7b2ff7" opacity="0.15"/>
+    <text x="135" y="16" font-family="'SF Pro Text', system-ui, sans-serif" font-size="11" fill="#7b2ff7" text-anchor="middle" font-weight="600">Anti-Detect</text>
+
+    <rect x="190" width="80" height="24" rx="12" fill="#00d4ff" opacity="0.15"/>
+    <text x="230" y="16" font-family="'SF Pro Text', system-ui, sans-serif" font-size="11" fill="#00d4ff" text-anchor="middle" font-weight="600">Adaptive</text>
+
+    <rect x="280" width="70" height="24" rx="12" fill="#7b2ff7" opacity="0.15"/>
+    <text x="315" y="16" font-family="'SF Pro Text', system-ui, sans-serif" font-size="11" fill="#7b2ff7" text-anchor="middle" font-weight="600">MCP</text>
+  </g>
+
+  <!-- Version badge -->
+  <rect x="750" y="30" width="120" height="28" rx="14" fill="url(#accent)" opacity="0.2"/>
+  <text x="810" y="49" font-family="monospace" font-size="12" fill="url(#accent)" text-anchor="middle" font-weight="600">v3.2.0</text>
+
+  <!-- Bottom accent bar -->
+  <rect x="0" y="296" width="900" height="4" fill="url(#accent)" opacity="0.4"/>
+</svg>

@@ -1,0 +1,22 @@
+{
+  "name": "agent-os-browser-engine",
+  "version": "3.2.0",
+  "description": "Agent-OS Browser Engine — Anti-detection browser automation",
+  "main": "index.ts",
+  "scripts": {
+    "dev": "bun --hot index.ts",
+    "start": "bun index.ts",
+    "build": "bun build index.ts --outdir dist --target bun"
+  },
+  "dependencies": {
+    "ws": "^8.16.0",
+    "uuid": "^9.0.0",
+    "playwright": "^1.42.0"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.5.10",
+    "@types/uuid": "^9.0.8",
+    "bun-types": "latest",
+    "typescript": "^5.4.0"
+  }
+}

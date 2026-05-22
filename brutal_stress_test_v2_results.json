@@ -1,0 +1,1344 @@
+{
+  "total": 157,
+  "passed": 143,
+  "failed": 14,
+  "skipped": 0,
+  "success_rate": 91.1,
+  "fatal_issues": 0,
+  "critical_issues": 1,
+  "categories": {
+    "Installation": {
+      "tests": [
+        {
+          "test": "Import patchright",
+          "passed": true,
+          "details": "vunknown",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:57.035102"
+        },
+        {
+          "test": "Import websockets",
+          "passed": true,
+          "details": "v13.1",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:57.048685"
+        },
+        {
+          "test": "Import aiohttp",
+          "passed": true,
+          "details": "v3.11.11",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:57.145678"
+        },
+        {
+          "test": "Import cryptography",
+          "passed": true,
+          "details": "v44.0.2",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:57.146271"
+        },
+        {
+          "test": "Import pyyaml",
+          "passed": true,
+          "details": "v6.0.2",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:57.155664"
+        },
+        {
+          "test": "Import psutil",
+          "passed": true,
+          "details": "v6.1.1",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:57.163826"
+        },
+        {
+          "test": "Import numpy",
+          "passed": true,
+          "details": "v1.26.4",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:57.231857"
+        },
+        {
+          "test": "Optional: curl_cffi",
+          "passed": true,
+          "details": "v0.15.0",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:57.260299"
+        },
+        {
+          "test": "Optional: cloudscraper",
+          "passed": true,
+          "details": "v1.2.71",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:57.347115"
+        },
+        {
+          "test": "Optional: redis",
+          "passed": true,
+          "details": "v7.4.0",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:57.398102"
+        },
+        {
+          "test": "Optional: sqlalchemy",
+          "passed": true,
+          "details": "v2.0.49",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:57.505451"
+        },
+        {
+          "test": "Optional: asyncpg",
+          "passed": true,
+          "details": "v0.31.0",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:57.521749"
+        },
+        {
+          "test": "Optional: PyJWT",
+          "passed": true,
+          "details": "v2.7.0",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:57.540183"
+        },
+        {
+          "test": "Optional: bcrypt",
+          "passed": true,
+          "details": "v3.2.2",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:57.540194"
+        },
+        {
+          "test": "Optional: pydantic",
+          "passed": true,
+          "details": "v2.12.5",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:57.540198"
+        },
+        {
+          "test": "Optional: structlog",
+          "passed": true,
+          "details": "v25.5.0",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:57.585562"
+        },
+        {
+          "test": "Optional: mcp",
+          "passed": true,
+          "details": "vunknown",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:57.815158"
+        },
+        {
+          "test": "Optional: openai",
+          "passed": true,
+          "details": "v2.31.0",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:58.039678"
+        },
+        {
+          "test": "Patchright browser binary",
+          "passed": true,
+          "details": "patchright module importable",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:58.615501"
+        },
+        {
+          "test": "install.sh exists",
+          "passed": true,
+          "details": "Found: /home/z/my-project/Agent-OS/install.sh",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:58.615600"
+        },
+        {
+          "test": "requirements.txt",
+          "passed": true,
+          "details": "26 packages listed",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:58.615707"
+        },
+        {
+          "test": "Dockerfile exists",
+          "passed": true,
+          "details": "Found",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:58.615734"
+        },
+        {
+          "test": "docker-compose.yml exists",
+          "passed": true,
+          "details": "Found",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:58.615752"
+        }
+      ],
+      "passed": 23,
+      "failed": 0,
+      "skipped": 0
+    },
+    "Stealth": {
+      "tests": [
+        {
+          "test": "Browser profiles count",
+          "passed": true,
+          "details": "12 profiles (need 12+)",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:58.664026"
+        },
+        {
+          "test": "Profile platform diversity",
+          "passed": true,
+          "details": "Platforms: {'MacIntel', 'Win32', 'Linux x86_64'} (need 3+)",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:58.664043"
+        },
+        {
+          "test": "ANTI_DETECTION_JS layers",
+          "passed": true,
+          "details": "All 17 layers present",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:58.664175"
+        },
+        {
+          "test": "JS: webdriver removal",
+          "passed": true,
+          "details": "Present",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:58.664300"
+        },
+        {
+          "test": "JS: toString cloaking",
+          "passed": true,
+          "details": "Present",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:58.664302"
+        },
+        {
+          "test": "JS: Chrome runtime mock",
+          "passed": true,
+          "details": "Present",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:58.664304"
+        },
+        {
+          "test": "JS: WebGL spoofing",
+          "passed": true,
+          "details": "Present",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:58.664305"
+        },
+        {
+          "test": "JS: Canvas noise",
+          "passed": true,
+          "details": "Present",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:58.664306"
+        },
+        {
+          "test": "JS: Audio fingerprint",
+          "passed": true,
+          "details": "Present",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:58.664307"
+        },
+        {
+          "test": "JS: WebRTC block",
+          "passed": true,
+          "details": "Present",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:58.664308"
+        },
+        {
+          "test": "JS: Permissions spoof",
+          "passed": true,
+          "details": "Present",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:58.664310"
+        },
+        {
+          "test": "JS: Notification mock",
+          "passed": true,
+          "details": "Present",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:58.664311"
+        },
+        {
+          "test": "JS: Battery API",
+          "passed": true,
+          "details": "Present",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:58.664312"
+        },
+        {
+          "test": "JS: Font enumeration block",
+          "passed": true,
+          "details": "Present",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:58.664313"
+        },
+        {
+          "test": "JS: Performance timing",
+          "passed": true,
+          "details": "Present",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:58.664314"
+        },
+        {
+          "test": "JS: Beacon API intercept",
+          "passed": true,
+          "details": "Present",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:58.664315"
+        },
+        {
+          "test": "JS: CDP detection prevention",
+          "passed": true,
+          "details": "Present",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:58.664316"
+        },
+        {
+          "test": "JS: Cloudflare challenge detection",
+          "passed": true,
+          "details": "Present",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:58.664317"
+        },
+        {
+          "test": "CDPStealthInjector init",
+          "passed": true,
+          "details": "Initialized",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:58.664320"
+        },
+        {
+          "test": "GodModeStealth init",
+          "passed": true,
+          "details": "Initialized",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:58.664322"
+        },
+        {
+          "test": "ConsistentFingerprint init",
+          "passed": true,
+          "details": "Initialized",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:30:58.664392"
+        },
+        {
+          "test": "Browser startup with stealth",
+          "passed": true,
+          "details": "Browser started",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:00.661892"
+        },
+        {
+          "test": "navigator.webdriver",
+          "passed": true,
+          "details": "Value: None",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:06.335463"
+        },
+        {
+          "test": "navigator.plugins",
+          "passed": true,
+          "details": "Count: 3 (need 3+)",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:06.337324"
+        },
+        {
+          "test": "window.chrome.runtime",
+          "passed": true,
+          "details": "Exists: True",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:06.339009"
+        },
+        {
+          "test": "navigator.platform",
+          "passed": true,
+          "details": "Platform: Win32",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:06.340487"
+        },
+        {
+          "test": "navigator.languages",
+          "passed": true,
+          "details": "Languages: ['en-US', 'en;q=0.9']",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:06.342558"
+        },
+        {
+          "test": "Hardware info set",
+          "passed": true,
+          "details": "Cores: 4, Memory: 8GB",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:06.345656"
+        },
+        {
+          "test": "WebGL vendor",
+          "passed": true,
+          "details": "Vendor: Google Inc. (Google)",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:06.353085"
+        },
+        {
+          "test": "WebGL renderer (NOT SwiftShader)",
+          "passed": false,
+          "details": "Renderer: ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0",
+          "severity": "critical",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:06.359446"
+        },
+        {
+          "test": "Bot detection screenshot",
+          "passed": true,
+          "details": "Saved to /home/z/my-project/Agent-OS/proof/brutal_test_bot_sannysoft.png",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:06.450648"
+        },
+        {
+          "test": "CreepJS fingerprint score",
+          "passed": true,
+          "details": "Score: unknown",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:12.333166"
+        },
+        {
+          "test": "CreepJS screenshot",
+          "passed": true,
+          "details": "Saved to /home/z/my-project/Agent-OS/proof/brutal_test_creepjs.png",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:13.009126"
+        }
+      ],
+      "passed": 32,
+      "failed": 1,
+      "skipped": 0
+    },
+    "Form Filler": {
+      "tests": [
+        {
+          "test": "FormFiller import",
+          "passed": true,
+          "details": "Imported",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:13.092121"
+        },
+        {
+          "test": "ProfileBuilder import",
+          "passed": true,
+          "details": "Imported",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:13.092128"
+        },
+        {
+          "test": "FIELD_PATTERNS completeness",
+          "passed": true,
+          "details": "All 11 field types present",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:13.092134"
+        },
+        {
+          "test": "Password field patterns",
+          "passed": true,
+          "details": "Patterns: ['password', 'passwd', 'pass', 'pwd', 'user_password', 'user_pass']",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:13.092140"
+        },
+        {
+          "test": "Cross-field mapping",
+          "passed": true,
+          "details": "Mappings: {'username': ['email'], 'email': ['username']}",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:13.092145"
+        },
+        {
+          "test": "ProfileBuilder.from_dict",
+          "passed": true,
+          "details": "Email: test@example.com, FName: John",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:13.092151"
+        },
+        {
+          "test": "GitHub login form fill",
+          "passed": false,
+          "details": "Status: error, Fields filled: 0",
+          "severity": "warning",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:28.801798"
+        },
+        {
+          "test": "Username field value",
+          "passed": false,
+          "details": "Value: ''",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:28.803409"
+        },
+        {
+          "test": "Password field value",
+          "passed": false,
+          "details": "Has value: False",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:28.805059"
+        },
+        {
+          "test": "Form fill screenshot",
+          "passed": true,
+          "details": "Saved",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:28.928715"
+        }
+      ],
+      "passed": 7,
+      "failed": 3,
+      "skipped": 0
+    },
+    "Swarm Router": {
+      "tests": [
+        {
+          "test": "RuleBasedRouter import",
+          "passed": true,
+          "details": "Imported",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.167710"
+        },
+        {
+          "test": "Route: 'solve the captcha'",
+          "passed": true,
+          "details": "\u2192 needs_security (conf: 0.97)",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.182794"
+        },
+        {
+          "test": "Route: 'bypass cloudflare'",
+          "passed": true,
+          "details": "\u2192 needs_security (conf: 0.96)",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.182820"
+        },
+        {
+          "test": "Route: 'what is 2 + 2'",
+          "passed": true,
+          "details": "\u2192 needs_calculation (conf: 0.97)",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.182898"
+        },
+        {
+          "test": "Route: 'calculate compound interest'",
+          "passed": true,
+          "details": "\u2192 needs_calculation (conf: 0.95)",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.182943"
+        },
+        {
+          "test": "Route: 'write a python function'",
+          "passed": true,
+          "details": "\u2192 needs_code (conf: 0.90)",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.183008"
+        },
+        {
+          "test": "Route: 'implement a load balancer in G'",
+          "passed": true,
+          "details": "\u2192 needs_code (conf: 0.93)",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.183072"
+        },
+        {
+          "test": "Route: 'what is photosynthesis'",
+          "passed": true,
+          "details": "\u2192 needs_knowledge (conf: 0.90)",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.183123"
+        },
+        {
+          "test": "Route: 'who invented the telephone'",
+          "passed": true,
+          "details": "\u2192 needs_knowledge (conf: 0.91)",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.183182"
+        },
+        {
+          "test": "Route: 'latest news today'",
+          "passed": true,
+          "details": "\u2192 needs_web (conf: 0.95)",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.183271"
+        },
+        {
+          "test": "Route: 'bitcoin price right now'",
+          "passed": true,
+          "details": "\u2192 needs_web (conf: 0.94)",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.183376"
+        },
+        {
+          "test": "Route: 'weather in New York today'",
+          "passed": true,
+          "details": "\u2192 needs_web (conf: 0.94)",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.183489"
+        },
+        {
+          "test": "Route: 'scrape product prices from ama'",
+          "passed": true,
+          "details": "\u2192 needs_web (conf: 0.92)",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.183608"
+        },
+        {
+          "test": "Route: 'fill out the login form'",
+          "passed": true,
+          "details": "\u2192 needs_security (conf: 0.88)",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.183626"
+        },
+        {
+          "test": "Route: 'solve the math equation'",
+          "passed": true,
+          "details": "\u2192 needs_calculation (conf: 0.90)",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.183661"
+        },
+        {
+          "test": "Route: 'how to install python'",
+          "passed": true,
+          "details": "\u2192 needs_web (conf: 0.85)",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.183762"
+        },
+        {
+          "test": "Route: 'formula for area of circle'",
+          "passed": true,
+          "details": "\u2192 needs_knowledge (conf: 0.94)",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.183802"
+        },
+        {
+          "test": "Route: 'code fibonacci in python'",
+          "passed": true,
+          "details": "\u2192 needs_code (conf: 0.93)",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.183834"
+        },
+        {
+          "test": "Route: 'convert 100 USD to EUR'",
+          "passed": true,
+          "details": "\u2192 needs_web (conf: 0.93)",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.183885"
+        },
+        {
+          "test": "Overall routing accuracy",
+          "passed": true,
+          "details": "100% (18/18)",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.183889"
+        },
+        {
+          "test": "Agents for 'solve recaptcha'",
+          "passed": true,
+          "details": "Agents: ['captcha_solver', 'security_agent']",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.183903"
+        },
+        {
+          "test": "Agents for 'latest AI news'",
+          "passed": true,
+          "details": "Agents: ['news_hound', 'generalist']",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.183966"
+        },
+        {
+          "test": "Agents for 'calculate factorial'",
+          "passed": true,
+          "details": "Agents: ['generalist']",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.184004"
+        },
+        {
+          "test": "OrchestratorRouter init",
+          "passed": false,
+          "details": "cannot import name 'OrchestratorRouter' from 'src.agent_swar",
+          "severity": "warning",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.184015"
+        },
+        {
+          "test": "ProviderRouter import",
+          "passed": true,
+          "details": "Imported",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.184018"
+        },
+        {
+          "test": "ConservativeRouter import",
+          "passed": true,
+          "details": "Imported",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.184020"
+        }
+      ],
+      "passed": 25,
+      "failed": 1,
+      "skipped": 0
+    },
+    "Proxy Rotation": {
+      "tests": [
+        {
+          "test": "ProxyManager import",
+          "passed": true,
+          "details": "Imported",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.184059"
+        },
+        {
+          "test": "ProxyManager init",
+          "passed": true,
+          "details": "Strategy: weighted",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.184140"
+        },
+        {
+          "test": "Missing file handling",
+          "passed": true,
+          "details": "Result: {'status': 'success', 'loaded': 0}",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.184252"
+        },
+        {
+          "test": "Add proxies",
+          "passed": true,
+          "details": "3 proxies added",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.184419"
+        },
+        {
+          "test": "Get next proxy",
+          "passed": false,
+          "details": "'ProxyManager' object has no attribute 'get_next_proxy'",
+          "severity": "warning",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.184423"
+        },
+        {
+          "test": "Rotation",
+          "passed": false,
+          "details": "'ProxyManager' object has no attribute 'get_next_proxy'",
+          "severity": "warning",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.184427"
+        },
+        {
+          "test": "Result recording",
+          "passed": false,
+          "details": "'ProxyManager' object has no attribute 'get_next_proxy'",
+          "severity": "warning",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.184429"
+        }
+      ],
+      "passed": 4,
+      "failed": 3,
+      "skipped": 0
+    },
+    "TLS Fingerprinting": {
+      "tests": [
+        {
+          "test": "TLSFingerprintEngine import",
+          "passed": true,
+          "details": "Imported",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.184447"
+        },
+        {
+          "test": "Engine init",
+          "passed": true,
+          "details": "Initialized",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.184463"
+        },
+        {
+          "test": "TLS request with impersonation",
+          "passed": false,
+          "details": "Status: None",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.971692"
+        },
+        {
+          "test": "curl_cffi available",
+          "passed": true,
+          "details": "Installed",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:30.971704"
+        }
+      ],
+      "passed": 3,
+      "failed": 1,
+      "skipped": 0
+    },
+    "Database": {
+      "tests": [
+        {
+          "test": "Module import",
+          "passed": true,
+          "details": "Imported",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:31.025693"
+        },
+        {
+          "test": "Models import",
+          "passed": true,
+          "details": "Imported",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:31.060167"
+        },
+        {
+          "test": "PostgreSQL connection",
+          "passed": false,
+          "details": "DB not running: Multiple exceptions: [Errno 111] Connect call failed ('::1',",
+          "severity": "warning",
+          "fix_hint": "Start PostgreSQL or use docker-compose",
+          "timestamp": "2026-04-16T06:31:37.597461"
+        },
+        {
+          "test": "Alembic setup",
+          "passed": true,
+          "details": "INI: True, Dir: True",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:37.597525"
+        }
+      ],
+      "passed": 3,
+      "failed": 1,
+      "skipped": 0
+    },
+    "Redis": {
+      "tests": [
+        {
+          "test": "Module import",
+          "passed": true,
+          "details": "Imported",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:31.060632"
+        },
+        {
+          "test": "Redis connection",
+          "passed": false,
+          "details": "Redis not running: Error 111 connecting to localhost:6379. Connection refused.",
+          "severity": "warning",
+          "fix_hint": "Start Redis: docker run -d -p 6379:6379 redis",
+          "timestamp": "2026-04-16T06:31:37.596040"
+        }
+      ],
+      "passed": 1,
+      "failed": 1,
+      "skipped": 0
+    },
+    "MCP": {
+      "tests": [
+        {
+          "test": "MCP server module",
+          "passed": false,
+          "details": "cannot import name 'mcp' from 'connectors.mcp_server' (/home/z/my-project/Agent-",
+          "severity": "warning",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:37.598742"
+        },
+        {
+          "test": "MCP config file",
+          "passed": true,
+          "details": "Config loaded",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:37.598868"
+        },
+        {
+          "test": "mcp library",
+          "passed": true,
+          "details": "vinstalled",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:37.598874"
+        },
+        {
+          "test": "OpenAI connector",
+          "passed": false,
+          "details": "cannot import name 'OpenAIConnector' from 'connectors.openai",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:37.599577"
+        }
+      ],
+      "passed": 2,
+      "failed": 2,
+      "skipped": 0
+    },
+    "Login Handoff": {
+      "tests": [
+        {
+          "test": "Module import",
+          "passed": true,
+          "details": "All classes imported",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:37.601394"
+        },
+        {
+          "test": "URL detect: https://github.com/login",
+          "passed": true,
+          "details": "Expected: login, Got: login (conf: 0.95)",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:37.601430"
+        },
+        {
+          "test": "URL detect: https://instagram.com/accounts/login/",
+          "passed": true,
+          "details": "Expected: login, Got: login (conf: 0.95)",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:37.601452"
+        },
+        {
+          "test": "URL detect: https://twitter.com/i/flow/login",
+          "passed": true,
+          "details": "Expected: login, Got: login (conf: 0.95)",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:37.601462"
+        },
+        {
+          "test": "URL detect: https://amazon.com/ap/signin",
+          "passed": true,
+          "details": "Expected: login, Got: login (conf: 0.95)",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:37.601470"
+        },
+        {
+          "test": "URL detect: https://example.com/signup",
+          "passed": true,
+          "details": "Expected: signup, Got: signup (conf: 0.88)",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:37.601479"
+        },
+        {
+          "test": "URL detect: https://example.com/register",
+          "passed": true,
+          "details": "Expected: signup, Got: signup (conf: 0.88)",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:37.601487"
+        },
+        {
+          "test": "URL detect: https://example.com/home",
+          "passed": true,
+          "details": "Expected: none, Got: none (conf: 0.00)",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:37.601493"
+        },
+        {
+          "test": "URL detect: https://google.com/search?q=test",
+          "passed": true,
+          "details": "Expected: none, Got: none (conf: 0.00)",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:37.601503"
+        },
+        {
+          "test": "URL detection accuracy",
+          "passed": true,
+          "details": "8/8 correct",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:37.601507"
+        },
+        {
+          "test": "Domain: instagram.com",
+          "passed": true,
+          "details": "In list",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:37.601509"
+        },
+        {
+          "test": "Domain: twitter.com",
+          "passed": true,
+          "details": "In list",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:37.601511"
+        },
+        {
+          "test": "Domain: x.com",
+          "passed": true,
+          "details": "In list",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:37.601512"
+        },
+        {
+          "test": "Domain: facebook.com",
+          "passed": true,
+          "details": "In list",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:37.601513"
+        },
+        {
+          "test": "Domain: linkedin.com",
+          "passed": true,
+          "details": "In list",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:37.601514"
+        },
+        {
+          "test": "Domain: github.com",
+          "passed": true,
+          "details": "In list",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:37.601515"
+        },
+        {
+          "test": "Domain: amazon.com",
+          "passed": true,
+          "details": "In list",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:37.601516"
+        },
+        {
+          "test": "HandoffState enum",
+          "passed": true,
+          "details": "All states present",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:37.601519"
+        },
+        {
+          "test": "HandoffSession creation",
+          "passed": true,
+          "details": "ID: test_ho_123, State: HandoffState.IDLE",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:37.601531"
+        },
+        {
+          "test": "HandoffSession.to_dict",
+          "passed": true,
+          "details": "Keys: ['handoff_id', 'url', 'domain', 'page_type', 'state']...",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:37.601561"
+        },
+        {
+          "test": "DOM detection on GitHub login",
+          "passed": true,
+          "details": "Type: login, Conf: 1.00",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:44.206770"
+        }
+      ],
+      "passed": 21,
+      "failed": 0,
+      "skipped": 0
+    },
+    "Security": {
+      "tests": [
+        {
+          "test": "EvasionEngine init",
+          "passed": true,
+          "details": "Initialized",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:44.283817"
+        },
+        {
+          "test": "Fingerprint: windows",
+          "passed": true,
+          "details": "Chrome: 131, UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64...",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:44.283867"
+        },
+        {
+          "test": "Fingerprint: mac",
+          "passed": true,
+          "details": "Chrome: 110, UA: Mozilla/5.0 (Macintosh; Intel Mac OS X 1...",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:44.283884"
+        },
+        {
+          "test": "Fingerprint: linux",
+          "passed": true,
+          "details": "Chrome: 133, UA: Mozilla/5.0 (X11; Linux x86_64) AppleWeb...",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:44.283896"
+        },
+        {
+          "test": "Injection JS generation",
+          "passed": true,
+          "details": "JS length: 19901 chars",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:44.283948"
+        },
+        {
+          "test": "JS section: CDP DETECTION",
+          "passed": true,
+          "details": "Present",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:44.284042"
+        },
+        {
+          "test": "JS section: DEVTOOLS DETECTION",
+          "passed": true,
+          "details": "Present",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:44.284096"
+        },
+        {
+          "test": "JS section: WEBDRIVER",
+          "passed": true,
+          "details": "Present",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:44.284143"
+        },
+        {
+          "test": "JS section: AUTOMATION ARTIFACT",
+          "passed": true,
+          "details": "Present",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:44.284203"
+        },
+        {
+          "test": "JS section: FINGERPRINTING",
+          "passed": true,
+          "details": "Present",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:44.284249"
+        },
+        {
+          "test": "JS section: NAVIGATOR PROPERTIES",
+          "passed": true,
+          "details": "Present",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:44.284302"
+        },
+        {
+          "test": "JS section: WEBGL FINGERPRINT",
+          "passed": true,
+          "details": "Present",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:44.284375"
+        },
+        {
+          "test": "JS section: CANVAS FINGERPRINT",
+          "passed": true,
+          "details": "Present",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:44.284431"
+        },
+        {
+          "test": "JS section: AUDIO FINGERPRINT",
+          "passed": true,
+          "details": "Present",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:44.284489"
+        },
+        {
+          "test": "JS section: CHROME OBJECT",
+          "passed": true,
+          "details": "Present",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:44.284544"
+        },
+        {
+          "test": "JS section: PERMISSIONS",
+          "passed": true,
+          "details": "Present",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:44.284595"
+        },
+        {
+          "test": "JS section: WEBRTC",
+          "passed": true,
+          "details": "Present",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:44.284648"
+        },
+        {
+          "test": "JS section: STACK TRACE",
+          "passed": true,
+          "details": "Present",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:44.284705"
+        },
+        {
+          "test": "CaptchaSolver init",
+          "passed": true,
+          "details": "Initialized",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:44.284714"
+        },
+        {
+          "test": "CloudflareBypass import",
+          "passed": true,
+          "details": "Imported",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:44.284717"
+        },
+        {
+          "test": "HumanMimicry init",
+          "passed": true,
+          "details": "Initialized",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:44.284722"
+        },
+        {
+          "test": "JWT token",
+          "passed": false,
+          "details": "JWT secret key must be at least 32 characters",
+          "severity": "warning",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:44.285234"
+        },
+        {
+          "test": "AuthMiddleware import",
+          "passed": true,
+          "details": "Imported",
+          "severity": "info",
+          "fix_hint": "",
+          "timestamp": "2026-04-16T06:31:44.299018"
+        }
+      ],
+      "passed": 22,
+      "failed": 1,
+      "skipped": 0
+    }
+  }
+}

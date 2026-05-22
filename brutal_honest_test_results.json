@@ -1,0 +1,688 @@
+{
+  "total_tests": 85,
+  "passed": 61,
+  "failed": 24,
+  "success_rate": 71.8,
+  "results": [
+    {
+      "name": "src.core.config",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 15.3,
+      "error": "",
+      "details": "Config created"
+    },
+    {
+      "name": "src.core.browser",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 215.9,
+      "error": "",
+      "details": "12 profiles loaded"
+    },
+    {
+      "name": "src.core.stealth",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 0.0,
+      "error": "",
+      "details": "Stealth JS: 40493 chars"
+    },
+    {
+      "name": "src.core.cdp_stealth",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 0.1,
+      "error": "",
+      "details": "CDP stealth JS: 25742 chars, no duplicate toString"
+    },
+    {
+      "name": "src.core.stealth_god",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 0.8,
+      "error": "",
+      "details": "God mode fingerprint: 67bfd0b3518b Chrome 131"
+    },
+    {
+      "name": "src.core.tls_spoof",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 0.0,
+      "error": "",
+      "details": "9 Chrome brand versions"
+    },
+    {
+      "name": "src.core.tls_proxy",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 0.0,
+      "error": "",
+      "details": "TLS proxy imported"
+    },
+    {
+      "name": "src.core.firefox_engine",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 0.0,
+      "error": "",
+      "details": "Firefox engine imported"
+    },
+    {
+      "name": "src.core.smart_navigator",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 53.2,
+      "error": "",
+      "details": "Smart navigator imported"
+    },
+    {
+      "name": "src.core.session",
+      "category": "Import",
+      "passed": false,
+      "duration_ms": 0.8,
+      "error": "SessionManager.__init__() missing 1 required positional argument: 'config'",
+      "details": "Traceback (most recent call last):\n  File \"/home/z/my-project/Agent-OS/brutal_honest_test.py\", line 53, in wrapper\n    result = fn()\n             ^^^^\n  File \"/home/z/my-project/Agent-OS/brutal_honest"
+    },
+    {
+      "name": "src.tools.form_filler",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 1.5,
+      "error": "",
+      "details": "FormFiller: 18 field patterns"
+    },
+    {
+      "name": "src.tools.smart_wait",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 3.7,
+      "error": "",
+      "details": "SmartWait imported"
+    },
+    {
+      "name": "src.tools.smart_finder",
+      "category": "Import",
+      "passed": false,
+      "duration_ms": 0.2,
+      "error": "cannot import name 'SmartFinder' from 'src.tools.smart_finder' (/home/z/my-project/Agent-OS/src/tools/smart_finder.py)",
+      "details": "Traceback (most recent call last):\n  File \"/home/z/my-project/Agent-OS/brutal_honest_test.py\", line 53, in wrapper\n    result = fn()\n             ^^^^\n  File \"/home/z/my-project/Agent-OS/brutal_honest"
+    },
+    {
+      "name": "src.tools.login_handoff",
+      "category": "Import",
+      "passed": false,
+      "duration_ms": 1.2,
+      "error": "cannot import name 'LoginHandoff' from 'src.tools.login_handoff' (/home/z/my-project/Agent-OS/src/tools/login_handoff.py)",
+      "details": "Traceback (most recent call last):\n  File \"/home/z/my-project/Agent-OS/brutal_honest_test.py\", line 53, in wrapper\n    result = fn()\n             ^^^^\n  File \"/home/z/my-project/Agent-OS/brutal_honest"
+    },
+    {
+      "name": "src.tools.page_analyzer",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 0.2,
+      "error": "",
+      "details": "PageAnalyzer imported"
+    },
+    {
+      "name": "src.tools.scanner",
+      "category": "Import",
+      "passed": false,
+      "duration_ms": 0.7,
+      "error": "cannot import name 'WebScanner' from 'src.tools.scanner' (/home/z/my-project/Agent-OS/src/tools/scanner.py)",
+      "details": "Traceback (most recent call last):\n  File \"/home/z/my-project/Agent-OS/brutal_honest_test.py\", line 53, in wrapper\n    result = fn()\n             ^^^^\n  File \"/home/z/my-project/Agent-OS/brutal_honest"
+    },
+    {
+      "name": "src.tools.workflow",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 0.3,
+      "error": "",
+      "details": "WorkflowEngine imported"
+    },
+    {
+      "name": "src.tools.auto_retry",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 1.9,
+      "error": "",
+      "details": "AutoRetry imported"
+    },
+    {
+      "name": "src.tools.auto_heal",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 0.5,
+      "error": "",
+      "details": "AutoHeal imported"
+    },
+    {
+      "name": "src.tools.auto_proxy",
+      "category": "Import",
+      "passed": false,
+      "duration_ms": 1.2,
+      "error": "cannot import name 'AutoProxy' from 'src.tools.auto_proxy' (/home/z/my-project/Agent-OS/src/tools/auto_proxy.py)",
+      "details": "Traceback (most recent call last):\n  File \"/home/z/my-project/Agent-OS/brutal_honest_test.py\", line 53, in wrapper\n    result = fn()\n             ^^^^\n  File \"/home/z/my-project/Agent-OS/brutal_honest"
+    },
+    {
+      "name": "src.tools.proxy_rotation",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 0.0,
+      "error": "",
+      "details": "ProxyManager imported"
+    },
+    {
+      "name": "src.tools.network_capture",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 0.8,
+      "error": "",
+      "details": "NetworkCapture imported"
+    },
+    {
+      "name": "src.tools.session_recording",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 1.8,
+      "error": "",
+      "details": "SessionRecording imported"
+    },
+    {
+      "name": "src.tools.transcriber",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 0.3,
+      "error": "",
+      "details": "Transcriber imported"
+    },
+    {
+      "name": "src.tools.web_query_router",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 0.6,
+      "error": "",
+      "details": "WebQueryRouter imported"
+    },
+    {
+      "name": "src.security.evasion_engine",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 0.1,
+      "error": "",
+      "details": "EvasionEngine: fingerprint b2f3751d38df JS 19985 chars"
+    },
+    {
+      "name": "src.security.human_mimicry",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 0.3,
+      "error": "",
+      "details": "HumanMimicry: typing delay 109ms, mouse path 71 points"
+    },
+    {
+      "name": "src.security.cloudflare_bypass",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 0.0,
+      "error": "",
+      "details": "CloudflareBypassEngine imported"
+    },
+    {
+      "name": "src.security.captcha_bypass",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 0.6,
+      "error": "",
+      "details": "CaptchaBypass imported"
+    },
+    {
+      "name": "src.security.captcha_solver",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 0.0,
+      "error": "",
+      "details": "CaptchaSolver imported"
+    },
+    {
+      "name": "src.security.auth_handler",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 0.2,
+      "error": "",
+      "details": "AuthHandler imported"
+    },
+    {
+      "name": "src.agent_swarm.router.rule_based",
+      "category": "Import",
+      "passed": false,
+      "duration_ms": 160.2,
+      "error": "'RuleBasedRouter' object has no attribute 'route'",
+      "details": "Traceback (most recent call last):\n  File \"/home/z/my-project/Agent-OS/brutal_honest_test.py\", line 53, in wrapper\n    result = fn()\n             ^^^^\n  File \"/home/z/my-project/Agent-OS/brutal_honest"
+    },
+    {
+      "name": "src.agent_swarm.router.provider_router",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 0.0,
+      "error": "",
+      "details": "ProviderRouter imported"
+    },
+    {
+      "name": "src.agent_swarm.router.conservative",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 0.0,
+      "error": "",
+      "details": "ConservativeRouter imported"
+    },
+    {
+      "name": "src.agent_swarm.router.orchestrator",
+      "category": "Import",
+      "passed": false,
+      "duration_ms": 0.0,
+      "error": "cannot import name 'Orchestrator' from 'src.agent_swarm.router.orchestrator' (/home/z/my-project/Agent-OS/src/agent_swarm/router/orchestrator.py)",
+      "details": "Traceback (most recent call last):\n  File \"/home/z/my-project/Agent-OS/brutal_honest_test.py\", line 53, in wrapper\n    result = fn()\n             ^^^^\n  File \"/home/z/my-project/Agent-OS/brutal_honest"
+    },
+    {
+      "name": "src.agent_swarm.agents.base",
+      "category": "Import",
+      "passed": false,
+      "duration_ms": 0.0,
+      "error": "cannot import name 'BaseAgent' from 'src.agent_swarm.agents.base' (/home/z/my-project/Agent-OS/src/agent_swarm/agents/base.py)",
+      "details": "Traceback (most recent call last):\n  File \"/home/z/my-project/Agent-OS/brutal_honest_test.py\", line 53, in wrapper\n    result = fn()\n             ^^^^\n  File \"/home/z/my-project/Agent-OS/brutal_honest"
+    },
+    {
+      "name": "src.agent_swarm.agents.pool",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 0.0,
+      "error": "",
+      "details": "AgentPool imported"
+    },
+    {
+      "name": "src.agent_swarm.agents.profiles",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 0.0,
+      "error": "",
+      "details": "AgentProfiles imported"
+    },
+    {
+      "name": "src.agent_swarm.agents.strategies",
+      "category": "Import",
+      "passed": false,
+      "duration_ms": 0.0,
+      "error": "cannot import name 'AgentStrategies' from 'src.agent_swarm.agents.strategies' (/home/z/my-project/Agent-OS/src/agent_swarm/agents/strategies.py)",
+      "details": "Traceback (most recent call last):\n  File \"/home/z/my-project/Agent-OS/brutal_honest_test.py\", line 53, in wrapper\n    result = fn()\n             ^^^^\n  File \"/home/z/my-project/Agent-OS/brutal_honest"
+    },
+    {
+      "name": "src.agent_swarm.output.aggregator",
+      "category": "Import",
+      "passed": false,
+      "duration_ms": 0.0,
+      "error": "cannot import name 'OutputAggregator' from 'src.agent_swarm.output.aggregator' (/home/z/my-project/Agent-OS/src/agent_swarm/output/aggregator.py)",
+      "details": "Traceback (most recent call last):\n  File \"/home/z/my-project/Agent-OS/brutal_honest_test.py\", line 53, in wrapper\n    result = fn()\n             ^^^^\n  File \"/home/z/my-project/Agent-OS/brutal_honest"
+    },
+    {
+      "name": "src.agent_swarm.output.dedup",
+      "category": "Import",
+      "passed": false,
+      "duration_ms": 0.0,
+      "error": "cannot import name 'OutputDeduplicator' from 'src.agent_swarm.output.dedup' (/home/z/my-project/Agent-OS/src/agent_swarm/output/dedup.py)",
+      "details": "Traceback (most recent call last):\n  File \"/home/z/my-project/Agent-OS/brutal_honest_test.py\", line 53, in wrapper\n    result = fn()\n             ^^^^\n  File \"/home/z/my-project/Agent-OS/brutal_honest"
+    },
+    {
+      "name": "src.agent_swarm.output.formatter",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 0.0,
+      "error": "",
+      "details": "OutputFormatter imported"
+    },
+    {
+      "name": "src.agent_swarm.output.quality",
+      "category": "Import",
+      "passed": false,
+      "duration_ms": 0.0,
+      "error": "cannot import name 'QualityChecker' from 'src.agent_swarm.output.quality' (/home/z/my-project/Agent-OS/src/agent_swarm/output/quality.py)",
+      "details": "Traceback (most recent call last):\n  File \"/home/z/my-project/Agent-OS/brutal_honest_test.py\", line 53, in wrapper\n    result = fn()\n             ^^^^\n  File \"/home/z/my-project/Agent-OS/brutal_honest"
+    },
+    {
+      "name": "src.agent_swarm.search.base",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 0.0,
+      "error": "",
+      "details": "SearchBackend imported"
+    },
+    {
+      "name": "src.agent_swarm.search.http_backend",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 0.0,
+      "error": "",
+      "details": "HTTPSearchBackend imported"
+    },
+    {
+      "name": "src.agent_swarm.search.agent_os_backend",
+      "category": "Import",
+      "passed": false,
+      "duration_ms": 0.0,
+      "error": "cannot import name 'AgentOSSearchBackend' from 'src.agent_swarm.search.agent_os_backend' (/home/z/my-project/Agent-OS/src/agent_swarm/search/agent_os_backend.py)",
+      "details": "Traceback (most recent call last):\n  File \"/home/z/my-project/Agent-OS/brutal_honest_test.py\", line 53, in wrapper\n    result = fn()\n             ^^^^\n  File \"/home/z/my-project/Agent-OS/brutal_honest"
+    },
+    {
+      "name": "src.agent_swarm.search.extractors",
+      "category": "Import",
+      "passed": false,
+      "duration_ms": 0.0,
+      "error": "cannot import name 'ResultExtractor' from 'src.agent_swarm.search.extractors' (/home/z/my-project/Agent-OS/src/agent_swarm/search/extractors.py)",
+      "details": "Traceback (most recent call last):\n  File \"/home/z/my-project/Agent-OS/brutal_honest_test.py\", line 53, in wrapper\n    result = fn()\n             ^^^^\n  File \"/home/z/my-project/Agent-OS/brutal_honest"
+    },
+    {
+      "name": "src.auth.jwt_handler",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 8.7,
+      "error": "",
+      "details": "JWTHandler imported"
+    },
+    {
+      "name": "src.auth.middleware",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 67.9,
+      "error": "",
+      "details": "AuthMiddleware imported"
+    },
+    {
+      "name": "src.auth.user_manager",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 0.2,
+      "error": "",
+      "details": "UserManager imported"
+    },
+    {
+      "name": "src.auth.api_key_manager",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 0.0,
+      "error": "",
+      "details": "APIKeyManager imported"
+    },
+    {
+      "name": "src.infra.database",
+      "category": "Import",
+      "passed": false,
+      "duration_ms": 166.1,
+      "error": "cannot import name 'Database' from 'src.infra.database' (/home/z/my-project/Agent-OS/src/infra/database.py)",
+      "details": "Traceback (most recent call last):\n  File \"/home/z/my-project/Agent-OS/brutal_honest_test.py\", line 53, in wrapper\n    result = fn()\n             ^^^^\n  File \"/home/z/my-project/Agent-OS/brutal_honest"
+    },
+    {
+      "name": "src.infra.models",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 62.1,
+      "error": "",
+      "details": "Models imported"
+    },
+    {
+      "name": "src.infra.redis_client",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 0.5,
+      "error": "",
+      "details": "RedisClient imported"
+    },
+    {
+      "name": "src.validation.schemas",
+      "category": "Import",
+      "passed": false,
+      "duration_ms": 1.3,
+      "error": "cannot import name 'validate_command' from 'src.validation.schemas' (/home/z/my-project/Agent-OS/src/validation/schemas.py)",
+      "details": "Traceback (most recent call last):\n  File \"/home/z/my-project/Agent-OS/brutal_honest_test.py\", line 53, in wrapper\n    result = fn()\n             ^^^^\n  File \"/home/z/my-project/Agent-OS/brutal_honest"
+    },
+    {
+      "name": "src.debug.server",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 0.7,
+      "error": "",
+      "details": "DebugServer imported"
+    },
+    {
+      "name": "src.agents.server",
+      "category": "Import",
+      "passed": true,
+      "duration_ms": 3.3,
+      "error": "",
+      "details": "AgentServer imported"
+    },
+    {
+      "name": "connectors.mcp_server",
+      "category": "Import",
+      "passed": false,
+      "duration_ms": 140.8,
+      "error": "cannot import name 'MCPServer' from 'connectors.mcp_server' (/home/z/my-project/Agent-OS/connectors/mcp_server.py)",
+      "details": "Traceback (most recent call last):\n  File \"/home/z/my-project/Agent-OS/brutal_honest_test.py\", line 53, in wrapper\n    result = fn()\n             ^^^^\n  File \"/home/z/my-project/Agent-OS/brutal_honest"
+    },
+    {
+      "name": "connectors.openai_connector",
+      "category": "Import",
+      "passed": false,
+      "duration_ms": 0.7,
+      "error": "cannot import name 'OpenAIConnector' from 'connectors.openai_connector' (/home/z/my-project/Agent-OS/connectors/openai_connector.py)",
+      "details": "Traceback (most recent call last):\n  File \"/home/z/my-project/Agent-OS/brutal_honest_test.py\", line 53, in wrapper\n    result = fn()\n             ^^^^\n  File \"/home/z/my-project/Agent-OS/brutal_honest"
+    },
+    {
+      "name": "connectors.openclaw_connector",
+      "category": "Import",
+      "passed": false,
+      "duration_ms": 0.3,
+      "error": "cannot import name 'OpenClawConnector' from 'connectors.openclaw_connector' (/home/z/my-project/Agent-OS/connectors/openclaw_connector.py)",
+      "details": "Traceback (most recent call last):\n  File \"/home/z/my-project/Agent-OS/brutal_honest_test.py\", line 53, in wrapper\n    result = fn()\n             ^^^^\n  File \"/home/z/my-project/Agent-OS/brutal_honest"
+    },
+    {
+      "name": "Config: set/get/deep_merge",
+      "category": "Functionality",
+      "passed": true,
+      "duration_ms": 0.1,
+      "error": "",
+      "details": "Config set/get works"
+    },
+    {
+      "name": "SessionManager: create/expiry",
+      "category": "Functionality",
+      "passed": false,
+      "duration_ms": 0.0,
+      "error": "SessionManager.__init__() missing 1 required positional argument: 'config'",
+      "details": "Traceback (most recent call last):\n  File \"/home/z/my-project/Agent-OS/brutal_honest_test.py\", line 53, in wrapper\n    result = fn()\n             ^^^^\n  File \"/home/z/my-project/Agent-OS/brutal_honest"
+    },
+    {
+      "name": "Request interception: blocks recaptcha",
+      "category": "Functionality",
+      "passed": true,
+      "duration_ms": 0.0,
+      "error": "",
+      "details": "Recaptcha blocked: {'success': True, 'score': 0.95, 'action': 'login', 'challenge_ts': '2026-04-08T12:00:00Z'}"
+    },
+    {
+      "name": "Request interception: blocks perimeterx",
+      "category": "Functionality",
+      "passed": true,
+      "duration_ms": 0.0,
+      "error": "",
+      "details": "PerimeterX blocked: {'status': 0, 'uuid': 'fake-uuid-agent-os', 'vid': 'fake-vid', 'risk_score': 5}"
+    },
+    {
+      "name": "Request interception: blocks datadome",
+      "category": "Functionality",
+      "passed": true,
+      "duration_ms": 0.0,
+      "error": "",
+      "details": "DataDome blocked: {'status': 200, 'headers': {'x-datadome': 'pass'}, 'cookie': 'human-verified'}"
+    },
+    {
+      "name": "Request interception: allows normal URLs",
+      "category": "Functionality",
+      "passed": true,
+      "duration_ms": 0.0,
+      "error": "",
+      "details": "Normal URLs pass through"
+    },
+    {
+      "name": "FormFiller: field pattern matching",
+      "category": "Functionality",
+      "passed": true,
+      "duration_ms": 0.0,
+      "error": "",
+      "details": "All field pattern matching works"
+    },
+    {
+      "name": "FormFiller: selector building",
+      "category": "Functionality",
+      "passed": true,
+      "duration_ms": 0.0,
+      "error": "",
+      "details": "Selector building works"
+    },
+    {
+      "name": "ProfileBuilder: from_dict",
+      "category": "Functionality",
+      "passed": true,
+      "duration_ms": 0.0,
+      "error": "",
+      "details": "ProfileBuilder: all fields mapped correctly"
+    },
+    {
+      "name": "EvasionEngine: fingerprint generation + JS injection",
+      "category": "Functionality",
+      "passed": true,
+      "duration_ms": 0.1,
+      "error": "",
+      "details": "2 fingerprints generated, JS injection works"
+    },
+    {
+      "name": "HumanMimicry: realistic behavior",
+      "category": "Functionality",
+      "passed": false,
+      "duration_ms": 0.7,
+      "error": "Unusual word pause: 1058",
+      "details": "Traceback (most recent call last):\n  File \"/home/z/my-project/Agent-OS/brutal_honest_test.py\", line 53, in wrapper\n    result = fn()\n             ^^^^\n  File \"/home/z/my-project/Agent-OS/brutal_honest"
+    },
+    {
+      "name": "RuleBasedRouter: correct routing",
+      "category": "Functionality",
+      "passed": false,
+      "duration_ms": 0.2,
+      "error": "'RuleBasedRouter' object has no attribute 'route'",
+      "details": "Traceback (most recent call last):\n  File \"/home/z/my-project/Agent-OS/brutal_honest_test.py\", line 53, in wrapper\n    result = fn()\n             ^^^^\n  File \"/home/z/my-project/Agent-OS/brutal_honest"
+    },
+    {
+      "name": "CDP Stealth: no duplicate toString override",
+      "category": "Functionality",
+      "passed": true,
+      "duration_ms": 0.0,
+      "error": "",
+      "details": "CDP stealth: 16 makeNative() calls, no duplicate toString"
+    },
+    {
+      "name": "CDP Stealth: WebGL getExtension returns real extension",
+      "category": "Functionality",
+      "passed": false,
+      "duration_ms": 0.0,
+      "error": "Still creating fake extension object!",
+      "details": "Traceback (most recent call last):\n  File \"/home/z/my-project/Agent-OS/brutal_honest_test.py\", line 53, in wrapper\n    result = fn()\n             ^^^^\n  File \"/home/z/my-project/Agent-OS/brutal_honest"
+    },
+    {
+      "name": "CDP Stealth: Permissions query has try/catch",
+      "category": "Functionality",
+      "passed": true,
+      "duration_ms": 0.0,
+      "error": "",
+      "details": "Permissions query: has try/catch for safety"
+    },
+    {
+      "name": "CDP Stealth: chrome.loadTimes no duplicate keys",
+      "category": "Functionality",
+      "passed": true,
+      "duration_ms": 0.0,
+      "error": "",
+      "details": "chrome.loadTimes: no duplicate keys"
+    },
+    {
+      "name": "BrowserProfile: all 12 profiles have consistent data",
+      "category": "Functionality",
+      "passed": true,
+      "duration_ms": 0.0,
+      "error": "",
+      "details": "All 12 profiles have consistent data"
+    },
+    {
+      "name": "Browser: _VERIFY_AND_FIX_JS uses correct setter per element type",
+      "category": "Functionality",
+      "passed": true,
+      "duration_ms": 0.0,
+      "error": "",
+      "details": "React sync: correct setter per element type + direct onChange call"
+    },
+    {
+      "name": "Browser: headless stealth hook uses prototype-level overrides",
+      "category": "Functionality",
+      "passed": true,
+      "duration_ms": 1.7,
+      "error": "",
+      "details": "Headless hook: prototype-level + verify-before-fix pattern"
+    },
+    {
+      "name": "SmartWait: JS snippets are valid",
+      "category": "Functionality",
+      "passed": true,
+      "duration_ms": 0.0,
+      "error": "",
+      "details": "All 6 SmartWait JS snippets are valid"
+    },
+    {
+      "name": "CaptchaBypass: detection patterns",
+      "category": "Functionality",
+      "passed": false,
+      "duration_ms": 0.8,
+      "error": "'CaptchaBypass' object has no attribute 'detect'",
+      "details": "Traceback (most recent call last):\n  File \"/home/z/my-project/Agent-OS/brutal_honest_test.py\", line 53, in wrapper\n    result = fn()\n             ^^^^\n  File \"/home/z/my-project/Agent-OS/brutal_honest"
+    },
+    {
+      "name": "No instance-level navigator.webdriver in CDP stealth",
+      "category": "Consistency",
+      "passed": true,
+      "duration_ms": 0.3,
+      "error": "",
+      "details": "No instance-level navigator.webdriver overrides"
+    },
+    {
+      "name": "No instance-level navigator.plugins in CDP stealth",
+      "category": "Consistency",
+      "passed": true,
+      "duration_ms": 0.1,
+      "error": "",
+      "details": "No instance-level navigator.plugins overrides"
+    },
+    {
+      "name": "Headless hook doesn't conflict with CDP stealth",
+      "category": "Consistency",
+      "passed": true,
+      "duration_ms": 0.2,
+      "error": "",
+      "details": "OK: Headless hook uses verify-before-fix pattern"
+    },
+    {
+      "name": "ANTI_DETECTION_JS and CDP stealth don't conflict on toString",
+      "category": "Consistency",
+      "passed": true,
+      "duration_ms": 0.0,
+      "error": "",
+      "details": "ANTI_DETECTION has _overriddenFns: True, CDP has _nativeFnMap: True (no conflict if not co-injected)"
+    }
+  ]
+}

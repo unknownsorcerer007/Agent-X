@@ -1,0 +1,1028 @@
+{
+  "passed": 204,
+  "failed": 0,
+  "errors": 0,
+  "skipped": 0,
+  "tests": [
+    {
+      "name": "Config: Default values load correctly",
+      "category": "config",
+      "status": "PASS"
+    },
+    {
+      "name": "Config: Dotted key access works",
+      "category": "config",
+      "status": "PASS"
+    },
+    {
+      "name": "Config: Token generation produces valid tokens",
+      "category": "config",
+      "status": "PASS"
+    },
+    {
+      "name": "Config: Deep nested key access",
+      "category": "config",
+      "status": "PASS"
+    },
+    {
+      "name": "Config: Nonexistent key returns default",
+      "category": "config",
+      "status": "PASS"
+    },
+    {
+      "name": "Config: Save and reload preserves data",
+      "category": "config",
+      "status": "PASS"
+    },
+    {
+      "name": "Config: Corrupt YAML handled gracefully",
+      "category": "config",
+      "status": "PASS"
+    },
+    {
+      "name": "Config: Empty YAML handled gracefully",
+      "category": "config",
+      "status": "PASS"
+    },
+    {
+      "name": "Config: Max RAM boundary values",
+      "category": "config",
+      "status": "PASS"
+    },
+    {
+      "name": "Config: All default ports are valid",
+      "category": "config",
+      "status": "PASS"
+    },
+    {
+      "name": "JWT: Short secret key rejected (<32 chars)",
+      "category": "jwt",
+      "status": "PASS"
+    },
+    {
+      "name": "JWT: Create and verify access token",
+      "category": "jwt",
+      "status": "PASS"
+    },
+    {
+      "name": "JWT: Create and verify refresh token",
+      "category": "jwt",
+      "status": "PASS"
+    },
+    {
+      "name": "JWT: Expired token rejected",
+      "category": "jwt",
+      "status": "PASS"
+    },
+    {
+      "name": "JWT: Tampered token rejected",
+      "category": "jwt",
+      "status": "PASS"
+    },
+    {
+      "name": "JWT: Token with wrong secret rejected",
+      "category": "jwt",
+      "status": "PASS"
+    },
+    {
+      "name": "JWT: Blacklist invalidates token",
+      "category": "jwt",
+      "status": "PASS"
+    },
+    {
+      "name": "JWT: Revoke all user tokens",
+      "category": "jwt",
+      "status": "PASS"
+    },
+    {
+      "name": "JWT: Scopes preserved in token",
+      "category": "jwt",
+      "status": "PASS"
+    },
+    {
+      "name": "JWT: Extra data preserved in token",
+      "category": "jwt",
+      "status": "PASS"
+    },
+    {
+      "name": "JWT: Multiple algorithms rejected",
+      "category": "jwt",
+      "status": "PASS"
+    },
+    {
+      "name": "JWT: Token has JTI for uniqueness",
+      "category": "jwt",
+      "status": "PASS"
+    },
+    {
+      "name": "API Key: Generate valid key format",
+      "category": "api_key",
+      "status": "PASS"
+    },
+    {
+      "name": "API Key: Verify correct key",
+      "category": "api_key",
+      "status": "PASS"
+    },
+    {
+      "name": "API Key: Reject wrong key",
+      "category": "api_key",
+      "status": "PASS"
+    },
+    {
+      "name": "API Key: Create key with scopes",
+      "category": "api_key",
+      "status": "PASS"
+    },
+    {
+      "name": "API Key: Revoke key works",
+      "category": "api_key",
+      "status": "PASS"
+    },
+    {
+      "name": "API Key: List keys per user",
+      "category": "api_key",
+      "status": "PASS"
+    },
+    {
+      "name": "API Key: Expiration set correctly",
+      "category": "api_key",
+      "status": "PASS"
+    },
+    {
+      "name": "User: Password hashing works",
+      "category": "user",
+      "status": "PASS"
+    },
+    {
+      "name": "User: Wrong password rejected",
+      "category": "user",
+      "status": "PASS"
+    },
+    {
+      "name": "User: Empty password handled",
+      "category": "user",
+      "status": "PASS"
+    },
+    {
+      "name": "User: Register new user",
+      "category": "user",
+      "status": "PASS"
+    },
+    {
+      "name": "User: Invalid email rejected",
+      "category": "user",
+      "status": "PASS"
+    },
+    {
+      "name": "User: Short password rejected",
+      "category": "user",
+      "status": "PASS"
+    },
+    {
+      "name": "User: Short username rejected",
+      "category": "user",
+      "status": "PASS"
+    },
+    {
+      "name": "User: Authenticate with correct credentials",
+      "category": "user",
+      "status": "PASS"
+    },
+    {
+      "name": "User: Authenticate with wrong password returns None",
+      "category": "user",
+      "status": "PASS"
+    },
+    {
+      "name": "User: Duplicate email rejected",
+      "category": "user",
+      "status": "PASS"
+    },
+    {
+      "name": "User: Plan limits applied correctly",
+      "category": "user",
+      "status": "PASS"
+    },
+    {
+      "name": "Session: Create session",
+      "category": "session",
+      "status": "PASS"
+    },
+    {
+      "name": "Session: Session has expiry",
+      "category": "session",
+      "status": "PASS"
+    },
+    {
+      "name": "Session: Session time tracking",
+      "category": "session",
+      "status": "PASS"
+    },
+    {
+      "name": "Session: Reuse existing session for same token",
+      "category": "session",
+      "status": "PASS"
+    },
+    {
+      "name": "Session: Different tokens get different sessions",
+      "category": "session",
+      "status": "PASS"
+    },
+    {
+      "name": "Session: Destroy session",
+      "category": "session",
+      "status": "PASS"
+    },
+    {
+      "name": "Session: Concurrent session limit",
+      "category": "session",
+      "status": "PASS"
+    },
+    {
+      "name": "Session: Commands counter",
+      "category": "session",
+      "status": "PASS"
+    },
+    {
+      "name": "Session: Blocked requests counter",
+      "category": "session",
+      "status": "PASS"
+    },
+    {
+      "name": "Validation: JS injection blocked",
+      "category": "validation",
+      "status": "PASS"
+    },
+    {
+      "name": "Validation: Safe JS allowed",
+      "category": "validation",
+      "status": "PASS"
+    },
+    {
+      "name": "Validation: URL scheme validation",
+      "category": "validation",
+      "status": "PASS"
+    },
+    {
+      "name": "Validation: String sanitization strips null bytes",
+      "category": "validation",
+      "status": "PASS"
+    },
+    {
+      "name": "Validation: String length limit enforced",
+      "category": "validation",
+      "status": "PASS"
+    },
+    {
+      "name": "Validation: Non-string input rejected",
+      "category": "validation",
+      "status": "PASS"
+    },
+    {
+      "name": "Validation: XSS payload blocked",
+      "category": "validation",
+      "status": "PASS"
+    },
+    {
+      "name": "Validation: Selector length limit",
+      "category": "validation",
+      "status": "PASS"
+    },
+    {
+      "name": "Profiles: Exactly 12 profiles defined",
+      "category": "profiles",
+      "status": "PASS"
+    },
+    {
+      "name": "Profiles: All profiles have valid user agents",
+      "category": "profiles",
+      "status": "PASS"
+    },
+    {
+      "name": "Profiles: Platform distribution correct",
+      "category": "profiles",
+      "status": "PASS"
+    },
+    {
+      "name": "Profiles: Viewports are realistic",
+      "category": "profiles",
+      "status": "PASS"
+    },
+    {
+      "name": "Profiles: All profiles have sec-ch-ua headers",
+      "category": "profiles",
+      "status": "PASS"
+    },
+    {
+      "name": "Profiles: Hardware concurrency is realistic",
+      "category": "profiles",
+      "status": "PASS"
+    },
+    {
+      "name": "Profiles: Device memory is realistic",
+      "category": "profiles",
+      "status": "PASS"
+    },
+    {
+      "name": "Profiles: Timezones are valid",
+      "category": "profiles",
+      "status": "PASS"
+    },
+    {
+      "name": "Profiles: Edge profiles have Edge in UA",
+      "category": "profiles",
+      "status": "PASS"
+    },
+    {
+      "name": "Profiles: macOS profiles have correct platform",
+      "category": "profiles",
+      "status": "PASS"
+    },
+    {
+      "name": "Profiles: pixel_ratio set for Retina",
+      "category": "profiles",
+      "status": "PASS"
+    },
+    {
+      "name": "Profiles: No duplicate user agents",
+      "category": "profiles",
+      "status": "PASS"
+    },
+    {
+      "name": "Stealth: ANTI_DETECTION_JS is valid JS",
+      "category": "stealth",
+      "status": "PASS"
+    },
+    {
+      "name": "Stealth: JS contains no detectable console.log",
+      "category": "stealth",
+      "status": "PASS"
+    },
+    {
+      "name": "Stealth: Block domains list is populated",
+      "category": "stealth",
+      "status": "PASS"
+    },
+    {
+      "name": "Stealth: Human mimicry module loads",
+      "category": "stealth",
+      "status": "PASS"
+    },
+    {
+      "name": "Stealth: Evasion engine loads",
+      "category": "stealth",
+      "status": "PASS"
+    },
+    {
+      "name": "Stealth: CDP stealth injector loads",
+      "category": "stealth",
+      "status": "PASS"
+    },
+    {
+      "name": "Stealth: GodMode stealth loads",
+      "category": "stealth",
+      "status": "PASS"
+    },
+    {
+      "name": "Stealth: Consistent fingerprint generator",
+      "category": "stealth",
+      "status": "PASS"
+    },
+    {
+      "name": "Captcha: Bypass module loads",
+      "category": "security",
+      "status": "PASS"
+    },
+    {
+      "name": "Captcha: Solver module loads",
+      "category": "security",
+      "status": "PASS"
+    },
+    {
+      "name": "Captcha: Preempt module loads",
+      "category": "security",
+      "status": "PASS"
+    },
+    {
+      "name": "Cloudflare: Bypass engine loads",
+      "category": "security",
+      "status": "PASS"
+    },
+    {
+      "name": "Auth: Handler module loads",
+      "category": "security",
+      "status": "PASS"
+    },
+    {
+      "name": "Cloudflare: Challenge types defined",
+      "category": "security",
+      "status": "PASS"
+    },
+    {
+      "name": "Captcha: Detect method exists",
+      "category": "security",
+      "status": "PASS"
+    },
+    {
+      "name": "Smart Finder: Class loads",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Smart Finder: Has find method",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Smart Finder: Has find_all method",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Smart Finder: Has click_text method",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Smart Finder: Has fill_text method",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Smart Finder: Search JS builder works",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Smart Wait: Module loads",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Smart Wait: Has wait methods",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Auto Heal: Module loads",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Auto Heal: Has heal method",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Auto Retry: Module loads",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Auto Retry: Has retry method",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Proxy: Manager loads",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Proxy: ProxyInfo dataclass",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Proxy: Manager has rotation strategies",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Network Capture: Module loads",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Network Capture: Has capture methods",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Page Analyzer: Module loads",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Page Analyzer: Has analyze method",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Scanner: Module loads",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Scanner: Has XSS scan method",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Scanner: Has SQLi scan method",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Recording: Module loads",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Recording: Has record method",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Transcriber: Module loads",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Multi-Agent: Module loads",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Multi-Agent: Has coordination methods",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Workflow: Module loads",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Workflow: Has execute method",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Form Filler: Module loads",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Form Filler: 18 field patterns defined",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Form Filler: Has email pattern",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Form Filler: Has password pattern",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Form Filler: Cross-field mapping exists",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Login Handoff: Module loads",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "AI Content: Module loads",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "AI Content: Has extract methods",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Web Query Router: Module loads",
+      "category": "tools",
+      "status": "PASS"
+    },
+    {
+      "name": "Smart Navigator: Module loads",
+      "category": "core",
+      "status": "PASS"
+    },
+    {
+      "name": "HTTP Client: Module loads",
+      "category": "core",
+      "status": "PASS"
+    },
+    {
+      "name": "HTTP Client: curl_cffi available",
+      "category": "core",
+      "status": "PASS"
+    },
+    {
+      "name": "TLS Spoof: Module loads",
+      "category": "core",
+      "status": "PASS"
+    },
+    {
+      "name": "TLS Proxy: Module loads",
+      "category": "core",
+      "status": "PASS"
+    },
+    {
+      "name": "Firefox: Engine loads",
+      "category": "core",
+      "status": "PASS"
+    },
+    {
+      "name": "Firefox: Dual engine manager loads",
+      "category": "core",
+      "status": "PASS"
+    },
+    {
+      "name": "Persistent: Manager loads",
+      "category": "core",
+      "status": "PASS"
+    },
+    {
+      "name": "Persistent: Has health monitor",
+      "category": "core",
+      "status": "PASS"
+    },
+    {
+      "name": "Swarm: Config loads",
+      "category": "swarm",
+      "status": "PASS"
+    },
+    {
+      "name": "Swarm: Query router loads",
+      "category": "swarm",
+      "status": "PASS"
+    },
+    {
+      "name": "Swarm: Agent pool loads",
+      "category": "swarm",
+      "status": "PASS"
+    },
+    {
+      "name": "Swarm: Agent profiles defined",
+      "category": "swarm",
+      "status": "PASS"
+    },
+    {
+      "name": "Swarm: Agent strategies defined",
+      "category": "swarm",
+      "status": "PASS"
+    },
+    {
+      "name": "Swarm: Output formatter loads",
+      "category": "swarm",
+      "status": "PASS"
+    },
+    {
+      "name": "Swarm: Output aggregator loads",
+      "category": "swarm",
+      "status": "PASS"
+    },
+    {
+      "name": "Swarm: Quality scorer loads",
+      "category": "swarm",
+      "status": "PASS"
+    },
+    {
+      "name": "Swarm: Dedup module loads",
+      "category": "swarm",
+      "status": "PASS"
+    },
+    {
+      "name": "Swarm: Search backends load",
+      "category": "swarm",
+      "status": "PASS"
+    },
+    {
+      "name": "Swarm: Provider router loads",
+      "category": "swarm",
+      "status": "PASS"
+    },
+    {
+      "name": "Swarm: Conservative router loads",
+      "category": "swarm",
+      "status": "PASS"
+    },
+    {
+      "name": "Swarm: Rule-based router loads",
+      "category": "swarm",
+      "status": "PASS"
+    },
+    {
+      "name": "Database: Module loads",
+      "category": "infra",
+      "status": "PASS"
+    },
+    {
+      "name": "Database: Models defined",
+      "category": "infra",
+      "status": "PASS"
+    },
+    {
+      "name": "Redis: Client module loads",
+      "category": "infra",
+      "status": "PASS"
+    },
+    {
+      "name": "Redis: In-memory fallback exists",
+      "category": "infra",
+      "status": "PASS"
+    },
+    {
+      "name": "Logging: Setup works",
+      "category": "infra",
+      "status": "PASS"
+    },
+    {
+      "name": "MCP: Server module loads",
+      "category": "connectors",
+      "status": "PASS"
+    },
+    {
+      "name": "OpenAI: Connector loads",
+      "category": "connectors",
+      "status": "PASS"
+    },
+    {
+      "name": "OpenClaw: Connector loads",
+      "category": "connectors",
+      "status": "PASS"
+    },
+    {
+      "name": "Middleware: Module loads",
+      "category": "auth",
+      "status": "PASS"
+    },
+    {
+      "name": "Middleware: Has auth chain",
+      "category": "auth",
+      "status": "PASS"
+    },
+    {
+      "name": "Docker: Dockerfile exists and valid",
+      "category": "docker",
+      "status": "PASS"
+    },
+    {
+      "name": "Docker: docker-compose exists",
+      "category": "docker",
+      "status": "PASS"
+    },
+    {
+      "name": "Docker: .dockerignore exists",
+      "category": "docker",
+      "status": "PASS"
+    },
+    {
+      "name": "Docker: nginx.conf exists",
+      "category": "docker",
+      "status": "PASS"
+    },
+    {
+      "name": "Browser: AgentBrowser class loads",
+      "category": "browser",
+      "status": "PASS"
+    },
+    {
+      "name": "Browser: Has 40+ methods",
+      "category": "browser",
+      "status": "PASS"
+    },
+    {
+      "name": "Browser: Has navigate method",
+      "category": "browser",
+      "status": "PASS"
+    },
+    {
+      "name": "Browser: Has screenshot method",
+      "category": "browser",
+      "status": "PASS"
+    },
+    {
+      "name": "Browser: Has click method",
+      "category": "browser",
+      "status": "PASS"
+    },
+    {
+      "name": "Browser: Has evaluate_js method",
+      "category": "browser",
+      "status": "PASS"
+    },
+    {
+      "name": "Browser: Has evaluate_js_raw method",
+      "category": "browser",
+      "status": "PASS"
+    },
+    {
+      "name": "Browser: Has fill method",
+      "category": "browser",
+      "status": "PASS"
+    },
+    {
+      "name": "Browser: Has cookie methods",
+      "category": "browser",
+      "status": "PASS"
+    },
+    {
+      "name": "Browser: Has DOM snapshot",
+      "category": "browser",
+      "status": "PASS"
+    },
+    {
+      "name": "LLM Provider: Module loads",
+      "category": "core",
+      "status": "PASS"
+    },
+    {
+      "name": "Server: AgentServer class loads",
+      "category": "server",
+      "status": "PASS"
+    },
+    {
+      "name": "Server: Has WebSocket handler",
+      "category": "server",
+      "status": "PASS"
+    },
+    {
+      "name": "Server: Has HTTP route setup",
+      "category": "server",
+      "status": "PASS"
+    },
+    {
+      "name": "Server: Has command handler",
+      "category": "server",
+      "status": "PASS"
+    },
+    {
+      "name": "Server: Has health endpoint",
+      "category": "server",
+      "status": "PASS"
+    },
+    {
+      "name": "Server: Has status endpoint",
+      "category": "server",
+      "status": "PASS"
+    },
+    {
+      "name": "Server: Has auth endpoints",
+      "category": "server",
+      "status": "PASS"
+    },
+    {
+      "name": "Server: Has API key endpoints",
+      "category": "server",
+      "status": "PASS"
+    },
+    {
+      "name": "Server: Has swarm endpoints",
+      "category": "server",
+      "status": "PASS"
+    },
+    {
+      "name": "Server: Has handoff endpoints",
+      "category": "server",
+      "status": "PASS"
+    },
+    {
+      "name": "Server: Has rate limiting",
+      "category": "server",
+      "status": "PASS"
+    },
+    {
+      "name": "Server: Has debug endpoint",
+      "category": "server",
+      "status": "PASS"
+    },
+    {
+      "name": "Server: Has screenshot endpoint",
+      "category": "server",
+      "status": "PASS"
+    },
+    {
+      "name": "Server: Has persistent browser routes",
+      "category": "server",
+      "status": "PASS"
+    },
+    {
+      "name": "Server: Has 130+ command handlers",
+      "category": "server",
+      "status": "PASS"
+    },
+    {
+      "name": "Edge: Config with None values",
+      "category": "edge",
+      "status": "PASS"
+    },
+    {
+      "name": "Edge: Config with boolean values",
+      "category": "edge",
+      "status": "PASS"
+    },
+    {
+      "name": "Edge: Config with numeric values",
+      "category": "edge",
+      "status": "PASS"
+    },
+    {
+      "name": "Edge: Session with zero timeout",
+      "category": "edge",
+      "status": "PASS"
+    },
+    {
+      "name": "Edge: JWT with very long user ID",
+      "category": "edge",
+      "status": "PASS"
+    },
+    {
+      "name": "Edge: API key hash collision test",
+      "category": "edge",
+      "status": "PASS"
+    },
+    {
+      "name": "Edge: Password with unicode characters",
+      "category": "edge",
+      "status": "PASS"
+    },
+    {
+      "name": "Edge: Validation with empty string",
+      "category": "edge",
+      "status": "PASS"
+    },
+    {
+      "name": "Edge: Validation with only whitespace",
+      "category": "edge",
+      "status": "PASS"
+    },
+    {
+      "name": "Edge: Validation with unicode",
+      "category": "edge",
+      "status": "PASS"
+    },
+    {
+      "name": "Edge: Config concurrent access",
+      "category": "edge",
+      "status": "PASS"
+    },
+    {
+      "name": "Integration: Config + Session work together",
+      "category": "integration",
+      "status": "PASS"
+    },
+    {
+      "name": "Integration: JWT + User auth flow",
+      "category": "integration",
+      "status": "PASS"
+    },
+    {
+      "name": "Integration: API Key + JWT together",
+      "category": "integration",
+      "status": "PASS"
+    },
+    {
+      "name": "Integration: All tool modules importable together",
+      "category": "integration",
+      "status": "PASS"
+    },
+    {
+      "name": "Integration: All core modules importable together",
+      "category": "integration",
+      "status": "PASS"
+    },
+    {
+      "name": "Integration: All auth modules importable together",
+      "category": "integration",
+      "status": "PASS"
+    },
+    {
+      "name": "Integration: All security modules importable together",
+      "category": "integration",
+      "status": "PASS"
+    },
+    {
+      "name": "Integration: All infra modules importable together",
+      "category": "integration",
+      "status": "PASS"
+    },
+    {
+      "name": "Integration: All agent_swarm modules importable",
+      "category": "integration",
+      "status": "PASS"
+    }
+  ]
+}

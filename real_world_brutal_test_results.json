@@ -1,0 +1,37 @@
+{
+  "total": 37,
+  "passed": 32,
+  "failed": 5,
+  "rate": 86.5,
+  "sites": 10,
+  "sites_ok": 9,
+  "critical": 1,
+  "verdict": "\ud83d\udfe1 ALMOST READY",
+  "failures": [
+    {
+      "c": "Nav/tech",
+      "n": "SO",
+      "e": "TIMEOUT"
+    },
+    {
+      "c": "Stealth",
+      "n": "plugins>0",
+      "e": ""
+    },
+    {
+      "c": "Stealth",
+      "n": "chrome_exists",
+      "e": ""
+    },
+    {
+      "c": "Stealth",
+      "n": "overall",
+      "e": ""
+    },
+    {
+      "c": "FormFill",
+      "n": "special_chars",
+      "e": "got:N/A"
+    }
+  ]
+}

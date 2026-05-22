@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent-OS Debug</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+</head>
+<body>
+    <!-- Top Bar -->
+    <header class="topbar">
+        <div class="topbar-left">
+            <span class="logo">🤖 Agent-OS</span>
+            <span class="badge" id="status-badge">Connecting...</span>
+        </div>
+        <div class="topbar-center">
+            <div class="stats">
+                <div class="stat" title="RAM Usage">
+                    <span class="stat-icon">💾</span>
+                    <span class="stat-value" id="stat-ram">--</span>
+                    <span class="stat-label">MB</span>
+                </div>
+                <div class="stat" title="Uptime">
+                    <span class="stat-icon">⏱</span>
+                    <span class="stat-value" id="stat-uptime">--</span>
+                </div>
+                <div class="stat" title="Sessions">
+                    <span class="stat-icon">🔗</span>
+                    <span class="stat-value" id="stat-sessions">0</span>
+                </div>
+                <div class="stat" title="WS Clients">
+                    <span class="stat-icon">📡</span>
+                    <span class="stat-value" id="stat-clients">0</span>
+                </div>
+                <div class="stat" title="Tabs">
+                    <span class="stat-icon">📑</span>
+                    <span class="stat-value" id="stat-tabs">0</span>
+                </div>
+            </div>
+        </div>
+        <div class="topbar-right">
+            <button class="btn btn-sm" id="btn-fullscreen" title="Toggle fullscreen browser">⛶</button>
+            <a href="/api/status" target="_blank" class="btn btn-sm" title="Raw API">API</a>
+        </div>
+    </header>
+
+    <!-- Main Layout -->
+    <div class="layout">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <button class="nav-btn active" data-panel="browser" title="Live Browser">
+                <span class="nav-icon">🌐</span>
+                <span class="nav-label">Browser</span>
+            </button>
+            <button class="nav-btn" data-panel="sessions" title="Sessions">
+                <span class="nav-icon">🔗</span>
+                <span class="nav-label">Sessions</span>
+            </button>
+            <button class="nav-btn" data-panel="commands" title="Command Log">
+                <span class="nav-icon">⚡</span>
+                <span class="nav-label">Commands</span>
+            </button>
+            <button class="nav-btn" data-panel="network" title="Network">
+                <span class="nav-icon">🌍</span>
+                <span class="nav-label">Network</span>
+            </button>
+            <button class="nav-btn" data-panel="console" title="Console">
+                <span class="nav-icon">🖥</span>
+                <span class="nav-label">Console</span>
+            </button>
+            <button class="nav-btn" data-panel="dom" title="DOM Inspector">
+                <span class="nav-icon">🏗</span>
+                <span class="nav-label">DOM</span>
+            </button>
+            <button class="nav-btn" data-panel="cookies" title="Cookies">
+                <span class="nav-icon">🍪</span>
+                <span class="nav-label">Cookies</span>
+            </button>
+            <button class="nav-btn" data-panel="pages" title="Page Info">
+                <span class="nav-icon">📊</span>
+                <span class="nav-label">Pages</span>
+            </button>
+            <button class="nav-btn" data-panel="handoff" title="Login Handoff">
+                <span class="nav-icon">🔐</span>
+                <span class="nav-label">Handoff</span>
+            </button>
+            <button class="nav-btn" data-panel="terminal" title="Command Terminal">
+                <span class="nav-icon">⌨</span>
+                <span class="nav-label">Terminal</span>
+            </button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="content">
+            <!-- Browser Panel -->
+            <section class="panel active" id="panel-browser">
+                <div class="panel-header">
+                    <h2>🌐 Live Browser View</h2>
+                    <div class="panel-actions">
+                        <select id="browser-tab-select" class="select-sm">
+                            <option value="">Select Tab</option>
+                        </select>
+                        <button class="btn btn-sm" id="btn-refresh-screenshot">↻ Refresh</button>
+                        <button class="btn btn-sm" id="btn-screenshot-download">📷 Download</button>
+                    </div>
+                </div>
+                <div class="browser-view">
+                    <div class="browser-chrome">
+                        <div class="browser-bar">
+                            <div class="browser-dots">
+                                <span class="dot dot-red"></span>
+                                <span class="dot dot-yellow"></span>
+                                <span class="dot dot-green"></span>
+                            </div>
+                            <div class="browser-url" id="browser-url">about:blank</div>
+                        </div>
+                        <div class="browser-frame">
+                            <img id="browser-screenshot" src="" alt="Live browser view" />
+                            <div class="browser-placeholder" id="browser-placeholder">
+                                <span>🌐</span>
+                                <p>No browser page open yet.<br>Use the Terminal to navigate somewhere.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sessions Panel -->
+            <section class="panel" id="panel-sessions">
+                <div class="panel-header">
+                    <h2>🔗 Active Sessions</h2>
+                    <div class="panel-actions">
+                        <button class="btn btn-sm" id="btn-refresh-sessions">↻ Refresh</button>
+                    </div>
+                </div>
+                <div class="table-wrap">
+                    <table class="data-table" id="sessions-table">
+                        <thead>
+                            <tr>
+                                <th>Session ID</th>
+                                <th>Created</th>
+                                <th>Expires In</th>
+                                <th>Commands</th>
+                                <th>Blocked</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sessions-body">
+                            <tr><td colspan="7" class="empty">No active sessions</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Commands Panel -->
+            <section class="panel" id="panel-commands">
+                <div class="panel-header">
+                    <h2>⚡ Command History</h2>
+                    <div class="panel-actions">
+                        <button class="btn btn-sm" id="btn-refresh-commands">↻ Refresh</button>
+                        <button class="btn btn-sm btn-danger" id="btn-clear-commands">Clear</button>
+                    </div>
+                </div>
+                <div class="command-list" id="command-list">
+                    <div class="empty-state">No commands executed yet</div>
+                </div>
+            </section>
+
+            <!-- Network Panel -->
+            <section class="panel" id="panel-network">
+                <div class="panel-header">
+                    <h2>🌍 Network Requests</h2>
+                    <div class="panel-actions">
+                        <input type="text" class="input-sm" id="network-filter" placeholder="Filter URL..." />
+                        <button class="btn btn-sm" id="btn-refresh-network">↻ Refresh</button>
+                    </div>
+                </div>
+                <div class="table-wrap">
+                    <table class="data-table" id="network-table">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Method</th>
+                                <th>URL</th>
+                                <th>Status</th>
+                                <th>Type</th>
+                            </tr>
+                        </thead>
+                        <tbody id="network-body">
+                            <tr><td colspan="5" class="empty">No network requests captured</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Console Panel -->
+            <section class="panel" id="panel-console">
+                <div class="panel-header">
+                    <h2>🖥 Console</h2>
+                    <div class="panel-actions">
+                        <button class="btn btn-sm" id="btn-fetch-console">Fetch Logs</button>
+                        <button class="btn btn-sm btn-danger" id="btn-clear-console">Clear</button>
+                    </div>
+                </div>
+                <div class="console-output" id="console-output">
+                    <div class="empty-state">No console logs yet</div>
+                </div>
+            </section>
+
+            <!-- DOM Panel -->
+            <section class="panel" id="panel-dom">
+                <div class="panel-header">
+                    <h2>🏗 DOM Inspector</h2>
+                    <div class="panel-actions">
+                        <button class="btn btn-sm" id="btn-fetch-dom">↻ Refresh</button>
+                    </div>
+                </div>
+                <div class="dom-tree" id="dom-tree">
+                    <div class="empty-state">Click Refresh to inspect the DOM</div>
+                </div>
+            </section>
+
+            <!-- Cookies Panel -->
+            <section class="panel" id="panel-cookies">
+                <div class="panel-header">
+                    <h2>🍪 Cookies</h2>
+                    <div class="panel-actions">
+                        <button class="btn btn-sm" id="btn-fetch-cookies">↻ Refresh</button>
+                        <button class="btn btn-sm" id="btn-export-cookies">⬇ Export JSON</button>
+                        <label class="btn btn-sm" id="btn-import-cookies" for="cookie-import-input">⬆ Import JSON</label>
+                        <input type="file" id="cookie-import-input" accept=".json" style="display:none" />
+                        <span class="cookie-import-status" id="cookie-import-status"></span>
+                    </div>
+                </div>
+                <div class="table-wrap">
+                    <table class="data-table" id="cookies-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Value</th>
+                                <th>Domain</th>
+                                <th>Path</th>
+                                <th>Secure</th>
+                                <th>HttpOnly</th>
+                                <th>SameSite</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cookies-body">
+                            <tr><td colspan="7" class="empty">No cookies loaded</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Pages Panel -->
+            <section class="panel" id="panel-pages">
+                <div class="panel-header">
+                    <h2>📊 Page Analysis</h2>
+                    <div class="panel-actions">
+                        <button class="btn btn-sm" id="btn-fetch-pages">↻ Refresh</button>
+                    </div>
+                </div>
+                <div class="pages-grid" id="pages-grid">
+                    <div class="empty-state">Click Refresh to analyze pages</div>
+                </div>
+            </section>
+
+            <!-- Login Handoff Panel -->
+            <section class="panel" id="panel-handoff">
+                <div class="panel-header">
+                    <h2>🔐 Login Handoff</h2>
+                    <div class="panel-actions">
+                        <button class="btn btn-sm" id="btn-handoff-detect">🔍 Detect Login</button>
+                        <button class="btn btn-sm" id="btn-handoff-start">▶ Start Handoff</button>
+                        <button class="btn btn-sm" id="btn-handoff-refresh">↻ Refresh</button>
+                    </div>
+                </div>
+
+                <!-- Active Handoff Banner -->
+                <div class="handoff-banner" id="handoff-banner" style="display:none">
+                    <div class="handoff-banner-inner">
+                        <div class="handoff-banner-icon">🔐</div>
+                        <div class="handoff-banner-info">
+                            <div class="handoff-banner-title" id="handoff-banner-title">Login Required</div>
+                            <div class="handoff-banner-msg" id="handoff-banner-msg">Login page detected. AI is paused.</div>
+                        </div>
+                        <div class="handoff-banner-timer" id="handoff-banner-timer">5:00</div>
+                        <div class="handoff-banner-actions">
+                            <button class="btn btn-sm btn-handoff-complete" id="btn-handoff-complete-banner">✓ I'm Done Logging In</button>
+                            <button class="btn btn-sm btn-danger" id="btn-handoff-cancel-banner">✗ Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Handoff Content -->
+                <div class="handoff-content">
+                    <!-- Detection Result -->
+                    <div class="handoff-section" id="handoff-detection-result" style="display:none">
+                        <h3 class="handoff-section-title">Detection Result</h3>
+                        <div class="handoff-detection-card" id="handoff-detection-card"></div>
+                    </div>
+
+                    <!-- Active Handoffs -->
+                    <div class="handoff-section">
+                        <h3 class="handoff-section-title">Active Handoffs</h3>
+                        <div class="handoff-cards" id="handoff-active-cards">
+                            <div class="empty-state">No active handoffs</div>
+                        </div>
+                    </div>
+
+                    <!-- Handoff History -->
+                    <div class="handoff-section">
+                        <h3 class="handoff-section-title">History</h3>
+                        <div class="handoff-history-list" id="handoff-history-list">
+                            <div class="empty-state">No handoff history yet</div>
+                        </div>
+                    </div>
+
+                    <!-- How It Works -->
+                    <div class="handoff-section">
+                        <h3 class="handoff-section-title">How Login Handoff Works</h3>
+                        <div class="handoff-workflow-steps">
+                            <div class="handoff-step">
+                                <div class="handoff-step-num">1</div>
+                                <div class="handoff-step-body">
+                                    <div class="handoff-step-title">AI Detects Login Page</div>
+                                    <div class="handoff-step-desc">When the AI agent navigates to a login/signup page (Instagram, Twitter, Gmail, etc.), it automatically detects the login form and pauses automation.</div>
+                                </div>
+                            </div>
+                            <div class="handoff-step">
+                                <div class="handoff-step-num">2</div>
+                                <div class="handoff-step-body">
+                                    <div class="handoff-step-title">Control Handed to You</div>
+                                    <div class="handoff-step-desc">The AI pauses and you get control of the browser. A banner appears here and in the browser view showing that login is needed. Your credentials are NEVER seen by the AI.</div>
+                                </div>
+                            </div>
+                            <div class="handoff-step">
+                                <div class="handoff-step-num">3</div>
+                                <div class="handoff-step-body">
+                                    <div class="handoff-step-title">You Log In Manually</div>
+                                    <div class="handoff-step-desc">If the browser is running in non-headless mode, type your credentials directly in the browser window. If headless, use the Debug Terminal to interact. Your password goes ONLY to the real website.</div>
+                                </div>
+                            </div>
+                            <div class="handoff-step">
+                                <div class="handoff-step-num">4</div>
+                                <div class="handoff-step-body">
+                                    <div class="handoff-step-title">Click "I'm Done"</div>
+                                    <div class="handoff-step-desc">Once you've finished logging in, click the "I'm Done Logging In" button. The AI verifies new auth cookies, saves your session, and resumes automation with your logged-in state.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Terminal Panel -->
+            <section class="panel" id="panel-terminal">
+                <div class="panel-header">
+                    <h2>⌨ Command Terminal</h2>
+                    <div class="panel-actions">
+                        <select id="terminal-token" class="select-sm" placeholder="Agent Token">
+                            <option value="">Set Token First</option>
+                        </select>
+                        <input type="text" class="input-sm" id="terminal-token-input" placeholder="Agent Token" />
+                    </div>
+                </div>
+                <div class="terminal-container">
+                    <div class="terminal-output" id="terminal-output">
+                        <div class="terminal-line info">Welcome to Agent-OS Debug Terminal</div>
+                        <div class="terminal-line info">Enter your agent token above, then type commands below.</div>
+                        <div class="terminal-line info">Try: navigate {"url": "https://example.com"}</div>
+                        <div class="terminal-line"></div>
+                    </div>
+                    <div class="terminal-input-row">
+                        <span class="terminal-prompt">$</span>
+                        <input type="text" class="terminal-input" id="terminal-input" placeholder='command {params} — e.g. navigate {"url":"https://example.com"}' />
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Command Quick-Run Bar (always visible) -->
+    <div class="quickbar" id="quickbar">
+        <div class="quickbar-title">Quick Commands</div>
+        <div class="quickbar-buttons">
+            <button class="quick-btn" data-cmd="screenshot" data-params='{}'>📷 Screenshot</button>
+            <button class="quick-btn" data-cmd="get-content" data-params='{}'>📄 Content</button>
+            <button class="quick-btn" data-cmd="get-links" data-params='{}'>🔗 Links</button>
+            <button class="quick-btn" data-cmd="tabs" data-params='{"action":"list"}'>📑 Tabs</button>
+            <button class="quick-btn" data-cmd="get-cookies" data-params='{}'>🍪 Cookies</button>
+            <button class="quick-btn" data-cmd="console-logs" data-params='{}'>🖥 Console</button>
+            <button class="quick-btn" data-cmd="back" data-params='{}'>⬅ Back</button>
+            <button class="quick-btn" data-cmd="reload" data-params='{}'>↻ Reload</button>
+            <button class="quick-btn quick-btn-handoff" id="quick-detect-login">🔍 Detect Login</button>
+            <button class="quick-btn quick-btn-handoff" id="quick-start-handoff">🔐 Handoff</button>
+            <button class="quick-btn quick-btn-handoff-complete" id="quick-complete-handoff" style="display:none">✓ Done Login</button>
+        </div>
+    </div>
+
+    <script src="/app.js"></script>
+</body>
+</html>

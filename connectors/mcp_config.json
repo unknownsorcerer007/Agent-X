@@ -1,0 +1,25 @@
+{
+  "_comment": "Agent-OS MCP Config — NO API KEY NEEDED",
+  "mcpServers": {
+    "agent-os": {
+      "command": "python3",
+      "args": ["/absolute/path/to/Agent-OS/connectors/mcp_passthrough.py"],
+      "env": {
+        "AGENT_OS_URL": "http://localhost:8001",
+        "AGENT_OS_TOKEN": "your-agent-token-here",
+        "AGENT_OS_COMPRESS": "aggressive",
+        "AGENT_OS_MAX_OUTPUT": "8000"
+      }
+    }
+  },
+  "_env_options": {
+    "AGENT_OS_COMPRESS": "aggressive | normal | off (default: aggressive)",
+    "AGENT_OS_MAX_OUTPUT": "max chars per tool result (default: 8000)"
+  },
+  "_setup": [
+    "1. Start Agent-OS server: python main.py --agent-token 'your-token'",
+    "2. Replace /absolute/path/to with real path",
+    "3. Use same token in AGENT_OS_TOKEN",
+    "4. Restart Claude Desktop"
+  ]
+}
