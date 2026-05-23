@@ -24,7 +24,7 @@ def section(title):
 def save_screenshot(name):
     r = cmd("screenshot")
     img = base64.b64decode(r['screenshot'])
-    path = f"/root/.openclaw/workspace/Agent-OS/proof/demo_{name}.png"
+    path = f"demo_{name}.png"
     with open(path, "wb") as f:
         f.write(img)
     print(f"📸 Screenshot: demo_{name}.png ({len(img)//1024}KB)")
