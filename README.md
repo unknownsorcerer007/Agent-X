@@ -1,7 +1,7 @@
-<!-- mcp-name: io.github.factspark23-hash/Agent-OS -->
+<!-- mcp-name: io.github.unknownsorcerer007/Agent-OS -->
 
 <h1 align="center">
-    <a href="https://github.com/factspark23-hash/Agent-OS-Final-Pro">
+    <a href="https://github.com/unknownsorcerer007/Agent-OS-Final-Pro">
         <picture>
           <source media="(prefers-color-scheme: dark)" srcset="docs/cover_dark.svg">
           <img alt="Agent-OS Logo" src="docs/cover_light.svg" width="750">
@@ -13,6 +13,11 @@
 > [!IMPORTANT]
 > **Project Acquisition & Sponsorship Notice**  
 > Agent-OS is currently open for **acquisition or corporate sponsorship**. If you are an AI startup, developer tool company, or enterprise looking to acquire the technology stack, codebase IP, or sponsor its ongoing development, please contact us at **[unknownsorcerer007@gmail.com](mailto:unknownsorcerer007@gmail.com)**. *Serious inquiries only.*
+
+> [!TIP]
+> **⚡ Next Frontier: SynapseLink (Teaser)**  
+> *Beyond the browser, into the physical world.* We are quietly building **SynapseLink**, an MCP-compatible ecosystem allowing LLMs to interface safely with any physical hardware—cabled (USB/Serial) or wireless (Bluetooth BLE / Wi-Fi) devices. Register configurations, download local LLMs (via Ollama), and monitor task completion in a closed loop.  
+> 🐦 Follow the journey and get early access on **[Twitter/X](https://x.com/YOUR_TWITTER_HANDLE)**.
 
 <p align="center">
     <a href="LICENSE">
@@ -27,11 +32,11 @@
     <img src="https://img.shields.io/badge/tools-209-brightgreen.svg?style=flat-square" alt="209 Tools" />
     <img src="https://img.shields.io/badge/version-3.2.0-orange.svg?style=flat-square" alt="Version 3.2.0" />
     <br/>
-    <a href="https://github.com/factspark23-hash/Agent-OS-Final-Pro/stargazers">
-        <img src="https://img.shields.io/github/stars/factspark23-hash/Agent-OS-Final-Pro?style=social" alt="Stars" />
+    <a href="https://github.com/unknownsorcerer007/Agent-OS-Final-Pro/stargazers">
+        <img src="https://img.shields.io/github/stars/unknownsorcerer007/Agent-OS-Final-Pro?style=social" alt="Stars" />
     </a>
-    <a href="https://github.com/factspark23-hash/Agent-OS-Final-Pro/network/members">
-        <img src="https://img.shields.io/github/forks/factspark23-hash/Agent-OS-Final-Pro?style=social" alt="Forks" />
+    <a href="https://github.com/unknownsorcerer007/Agent-OS-Final-Pro/network/members">
+        <img src="https://img.shields.io/github/forks/unknownsorcerer007/Agent-OS-Final-Pro?style=social" alt="Forks" />
     </a>
 </p>
 
@@ -100,7 +105,7 @@ One command to install. One configuration to connect. Zero compilation dependenc
 Open PowerShell as Administrator and execute:
 ```powershell
 # Clone the repository
-git clone https://github.com/factspark23-hash/Agent-OS-Final-Pro.git
+git clone https://github.com/unknownsorcerer007/Agent-OS-Final-Pro.git
 cd Agent-OS-Final-Pro
 
 # Run the frictionless installer (sets up venv, installs packages, sets up chromium)
@@ -118,7 +123,7 @@ cd Agent-OS-Final-Pro
 Open your terminal and execute:
 ```bash
 # Clone the repository
-git clone https://github.com/factspark23-hash/Agent-OS-Final-Pro.git
+git clone https://github.com/unknownsorcerer007/Agent-OS-Final-Pro.git
 cd Agent-OS-Final-Pro
 
 # Install dependencies (with no-compiler fallbacks for aiohttp, yarl, etc.)
@@ -137,7 +142,7 @@ cd Agent-OS-Final-Pro
 ### 🐳 Docker Deployment
 
 ```bash
-git clone https://github.com/factspark23-hash/Agent-OS-Final-Pro.git
+git clone https://github.com/unknownsorcerer007/Agent-OS-Final-Pro.git
 cd Agent-OS-Final-Pro
 export POSTGRES_PASSWORD="your-strong-password"
 docker compose up -d
