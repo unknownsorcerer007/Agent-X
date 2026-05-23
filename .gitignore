@@ -28,3 +28,9 @@ test_results.json
 mingit/
 mingit.zip
 push_to_github.ps1
+
+# Test reports and results
+*results*.json
+*results.json
+*report.json
+*.log
