@@ -10,9 +10,13 @@
     <br>
 </h1>
 
+> [!IMPORTANT]
+> **Project Acquisition & Sponsorship Notice**  
+> Agent-OS is currently open for **acquisition or corporate sponsorship**. If you are an AI startup, developer tool company, or enterprise looking to acquire the technology stack, codebase IP, or sponsor its ongoing development, please contact the repository owners. *Serious inquiries only.*
+
 <p align="center">
-    <a href="https://opensource.org/licenses/MIT">
-        <img src="https://img.shields.io/badge/License-MIT-green.svg?style=flat-square" alt="License: MIT" />
+    <a href="LICENSE">
+        <img src="https://img.shields.io/badge/License-Personal_&_Non--Commercial-red.svg?style=flat-square" alt="License: Personal & Non-Commercial" />
     </a>
     <a href="https://www.python.org/downloads/">
         <img src="https://img.shields.io/badge/python-3.10+-blue.svg?style=flat-square" alt="Python 3.10+" />
