@@ -168,7 +168,7 @@ class DynamicSseServerTransport(SseServerTransport):
             host = forwarded_host
             
         base_url = f"{proto}://{host}"
-        session_uri = f"{base_url}/messages?session_id={session_id.hex}"
+        session_uri = f"{base_url}/sse?session_id={session_id.hex}"
         
         self._read_stream_writers[session_id] = read_stream_writer
         logger.info(f"Created new session with ID: {session_id}, absolute messages URL: {session_uri}")
@@ -216,11 +216,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-sse = DynamicSseServerTransport("/messages")
+sse = DynamicSseServerTransport("/sse")
 
 # ─── Mock OAuth 2.1 Provider Endpoints ────────────────────────
 
 @app.get("/.well-known/oauth-protected-resource")
+@app.get("/.well-known/oauth-protected-resource/sse")
 async def oauth_protected_resource(request: Request):
     headers = request.headers
     host = headers.get("x-forwarded-host") or headers.get("host") or "localhost:8002"
@@ -302,7 +303,7 @@ async def handle_sse(request: Request):
         proto = headers.get("x-forwarded-proto") or request.url.scheme or "http"
         base_url = f"{proto}://{host}"
         
-        metadata_url = f"{base_url}/.well-known/oauth-protected-resource"
+        metadata_url = f"{base_url}/.well-known/oauth-protected-resource/sse"
         logger.info(f"Unauthenticated request to /sse. Challenging with WWW-Authenticate pointing to {metadata_url}")
         
         return JSONResponse(
@@ -323,7 +324,12 @@ async def handle_sse(request: Request):
             server.create_initialization_options()
         )
 
-app.mount("/messages", sse.handle_post_message)
+@app.post("/sse")
+async def handle_post_sse(request: Request):
+    auth_header = request.headers.get("Authorization")
+    if not auth_header or not auth_header.startswith("Bearer "):
+        return JSONResponse(status_code=401, content={"error": "unauthorized"})
+    return await sse.handle_post_message(request)
 
 if __name__ == "__main__":
     import uvicorn
