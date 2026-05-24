@@ -156,6 +156,7 @@ class DynamicSseServerTransport(SseServerTransport):
         write_stream, write_stream_reader = anyio.create_memory_object_stream(0)
 
         session_id = uuid4()
+        self._current_session_id = session_id
         
         # Build dynamic absolute URL using request details from scope
         headers = dict(scope.get("headers", []))
@@ -344,7 +345,8 @@ class _MessagePostMiddleware:
             path = scope.get("path", "")
             method = scope.get("method", "GET")
             
-            if method == "POST" and path.startswith("/messages"):
+            # Intercept POST to /messages, /sse, or / (excluding oauth endpoints or register/token)
+            if method == "POST" and (path.startswith("/messages") or path in ("/", "/sse", "/sse/")):
                 # Check auth
                 headers_list = scope.get("headers", [])
                 auth_val = b""
@@ -357,7 +359,29 @@ class _MessagePostMiddleware:
                     resp = _JR(status_code=401, content={"error": "unauthorized"})
                     await resp(scope, receive, send)
                     return
-                logger.info(f"POST /messages authenticated, delegating to handle_post_message")
+                
+                # Check query string for session_id
+                import urllib.parse
+                query_string = scope.get("query_string", b"").decode("utf-8")
+                query_params = dict(urllib.parse.parse_qsl(query_string))
+                
+                if "session_id" not in query_params:
+                    # Resolve active session_id from transport
+                    active_sessions = list(self._transport._read_stream_writers.keys())
+                    if active_sessions:
+                        session_id = active_sessions[-1]
+                        query_params["session_id"] = session_id.hex
+                        scope["query_string"] = urllib.parse.urlencode(query_params).encode("utf-8")
+                        logger.info(f"Injected session_id {session_id.hex} into POST {path} request")
+                    elif hasattr(self._transport, "_current_session_id") and self._transport._current_session_id:
+                        session_id = self._transport._current_session_id
+                        query_params["session_id"] = session_id.hex
+                        scope["query_string"] = urllib.parse.urlencode(query_params).encode("utf-8")
+                        logger.info(f"Injected fallback current_session_id {session_id.hex} into POST {path} request")
+                    else:
+                        logger.error(f"No active SSE session found to route POST {path} request!")
+                
+                logger.info(f"POST {path} authenticated, delegating to handle_post_message")
                 await self._transport.handle_post_message(scope, receive, send)
                 return
 
