@@ -66,7 +66,10 @@ class AgentOS:
         # ─── Database ────────────────────────────────────
         self.db = None
         db_dsn = args.database or self.config.get("database.dsn")
-        if args.database or self.config.get("database.enabled", False):
+        if not db_dsn:
+            db_dsn = "sqlite+aiosqlite:///" + str(Path(__file__).parent / "agent_os.db")
+        # Initialize database by default or when enabled
+        if args.database or self.config.get("database.enabled", True):
             from src.infra.database import init_db
             self.db = init_db(
                 db_dsn,
@@ -224,8 +227,8 @@ class AgentOS:
             self.logger.info("Connecting to Redis...")
             await self.redis.connect()
 
-        # Create DB tables if needed (dev mode)
-        if self.db and self.args.create_tables:
+        # Create DB tables if needed (dev mode or SQLite)
+        if self.db and (self.args.create_tables or "sqlite" in self.db.dsn):
             self.logger.info("Creating database tables...")
             await self.db.create_tables()
 

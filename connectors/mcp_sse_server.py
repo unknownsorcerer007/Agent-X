@@ -80,7 +80,7 @@ async def _get_client() -> httpx.AsyncClient:
     if _client is None or _client.is_closed:
         _client = httpx.AsyncClient(
             timeout=60.0,
-            limits=httpx.Limits(max_connections=20, max_keepalive_connections=10),
+            limits=httpx.Limits(max_connections=100, max_keepalive_connections=50),
         )
     return _client
 
@@ -195,15 +195,21 @@ class DynamicSseServerTransport(SseServerTransport):
                         }
                     )
 
-        async with anyio.create_task_group() as tg:
-            response = EventSourceResponse(
-                content=sse_stream_reader, data_sender_callable=sse_writer
-            )
-            logger.debug("Starting SSE response task")
-            tg.start_soon(response, scope, receive, send)
+        try:
+            async with anyio.create_task_group() as tg:
+                response = EventSourceResponse(
+                    content=sse_stream_reader, data_sender_callable=sse_writer
+                )
+                logger.debug("Starting SSE response task")
+                tg.start_soon(response, scope, receive, send)
 
-            logger.debug("Yielding read and write streams")
-            yield (read_stream, write_stream)
+                logger.debug("Yielding read and write streams")
+                yield (read_stream, write_stream)
+        finally:
+            self._read_stream_writers.pop(session_id, None)
+            if hasattr(self, "_current_session_id") and self._current_session_id == session_id:
+                self._current_session_id = None
+            logger.info(f"Cleaned up session with ID: {session_id}")
 
 app = FastAPI(title="Agent-OS MCP SSE Server")
 
@@ -368,11 +374,20 @@ class _MessagePostMiddleware:
                 if "session_id" not in query_params:
                     # Resolve active session_id from transport
                     active_sessions = list(self._transport._read_stream_writers.keys())
-                    if active_sessions:
-                        session_id = active_sessions[-1]
+                    if len(active_sessions) == 1:
+                        session_id = active_sessions[0]
                         query_params["session_id"] = session_id.hex
                         scope["query_string"] = urllib.parse.urlencode(query_params).encode("utf-8")
-                        logger.info(f"Injected session_id {session_id.hex} into POST {path} request")
+                        logger.info(f"Injected single active session_id {session_id.hex} into POST {path} request")
+                    elif len(active_sessions) > 1:
+                        logger.error("Multiple active SSE sessions exist and no session_id was provided in query params!")
+                        from starlette.responses import JSONResponse as _JR
+                        resp = _JR(
+                            status_code=400,
+                            content={"error": "bad_request", "message": "Missing session_id query parameter (multiple active sessions exist)"}
+                        )
+                        await resp(scope, receive, send)
+                        return
                     elif hasattr(self._transport, "_current_session_id") and self._transport._current_session_id:
                         session_id = self._transport._current_session_id
                         query_params["session_id"] = session_id.hex
@@ -380,6 +395,13 @@ class _MessagePostMiddleware:
                         logger.info(f"Injected fallback current_session_id {session_id.hex} into POST {path} request")
                     else:
                         logger.error(f"No active SSE session found to route POST {path} request!")
+                        from starlette.responses import JSONResponse as _JR
+                        resp = _JR(
+                            status_code=400,
+                            content={"error": "bad_request", "message": "No active SSE session found"}
+                        )
+                        await resp(scope, receive, send)
+                        return
                 
                 logger.info(f"POST {path} authenticated, delegating to handle_post_message")
                 await self._transport.handle_post_message(scope, receive, send)

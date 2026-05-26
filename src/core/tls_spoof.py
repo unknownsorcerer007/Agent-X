@@ -217,6 +217,11 @@ class TLSFingerprintEngine:
 
 # Real Chrome sec-ch-ua brand strings per version
 CHROME_BRAND_VERSIONS = {
+    "148": [
+        {"brand": "Chromium", "version": "148"},
+        {"brand": "Google Chrome", "version": "148"},
+        {"brand": "Not-A.Brand", "version": "99"},
+    ],
     "146": [
         {"brand": "Chromium", "version": "146"},
         {"brand": "Google Chrome", "version": "146"},

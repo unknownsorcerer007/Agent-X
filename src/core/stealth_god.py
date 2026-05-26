@@ -533,56 +533,112 @@ if (typeof WebGL2RenderingContext !== 'undefined') {{
     }};
 }}
 
-// ═══════════════════════════════════════════════════════════════
 // 10. CANVAS — Consistent Noise Pattern
 // ═══════════════════════════════════════════════════════════════
 
 const origToDataURL = HTMLCanvasElement.prototype.toDataURL;
-HTMLCanvasElement.prototype.toDataURL = function(type, quality) {{
-    const ctx = this.getContext('2d');
-    if (ctx && this.width > 16 && this.height > 16) {{
+HTMLCanvasElement.prototype.toDataURL = makeNative(function(type, quality) {{
+    if (this.width > 16 && this.height > 16) {{
         try {{
-            const imageData = ctx.getImageData(0, 0, this.width, this.height);
-            const step = Math.max(67, Math.floor(imageData.data.length / 10000));
-            for (let i = 0; i < imageData.data.length; i += step) {{
-                const noise = Math.floor(canvasRNG() * 3) - 1;
-                imageData.data[i] = Math.max(0, Math.min(255, imageData.data[i] + noise));
+            // Use native document.createElement to avoid overridden creation hooks
+            const offscreen = origCreateElement ? origCreateElement.call(document, 'canvas') : document.createElement('canvas');
+            offscreen.width = this.width;
+            offscreen.height = this.height;
+            const ctx = offscreen.getContext('2d');
+            if (ctx) {{
+                ctx.drawImage(this, 0, 0);
+                const imageData = ctx.getImageData(0, 0, offscreen.width, offscreen.height);
+                const step = Math.max(67, Math.floor(imageData.data.length / 10000));
+                for (let i = 0; i < imageData.data.length; i += step) {{
+                    const noise = Math.floor(canvasRNG() * 3) - 1;
+                    imageData.data[i] = Math.max(0, Math.min(255, imageData.data[i] + noise));
+                }}
+                ctx.putImageData(imageData, 0, 0);
+                return origToDataURL.call(offscreen, type, quality);
             }}
-            ctx.putImageData(imageData, 0, 0);
-        }} catch(e) {{}}
+        }} catch(e) {{ /* tainted or failed */ }}
     }}
     return origToDataURL.apply(this, arguments);
-}};
+}}, 'toDataURL');
 
 const origToBlob = HTMLCanvasElement.prototype.toBlob;
-HTMLCanvasElement.prototype.toBlob = function(callback, type, quality) {{
-    const ctx = this.getContext('2d');
-    if (ctx && this.width > 16 && this.height > 16) {{
+HTMLCanvasElement.prototype.toBlob = makeNative(function(callback, type, quality) {{
+    if (this.width > 16 && this.height > 16) {{
         try {{
-            const imageData = ctx.getImageData(0, 0, this.width, this.height);
+            const offscreen = origCreateElement ? origCreateElement.call(document, 'canvas') : document.createElement('canvas');
+            offscreen.width = this.width;
+            offscreen.height = this.height;
+            const ctx = offscreen.getContext('2d');
+            if (ctx) {{
+                ctx.drawImage(this, 0, 0);
+                const imageData = ctx.getImageData(0, 0, offscreen.width, offscreen.height);
+                const step = Math.max(67, Math.floor(imageData.data.length / 10000));
+                for (let i = 0; i < imageData.data.length; i += step) {{
+                    const noise = Math.floor(canvasRNG() * 3) - 1;
+                    imageData.data[i] = Math.max(0, Math.min(255, imageData.data[i] + noise));
+                }}
+                ctx.putImageData(imageData, 0, 0);
+                return origToBlob.call(offscreen, callback, type, quality);
+            }}
+        }} catch(e) {{ /* tainted or failed */ }}
+    }}
+    return origToBlob.apply(this, arguments);
+}}, 'toBlob');
+
+const origGetImageData = CanvasRenderingContext2D.prototype.getImageData;
+CanvasRenderingContext2D.prototype.getImageData = makeNative(function(sx, sy, sw, sh) {{
+    const imageData = origGetImageData.apply(this, arguments);
+    if (imageData && imageData.width > 16 && imageData.height > 16) {{
+        try {{
             const step = Math.max(67, Math.floor(imageData.data.length / 10000));
             for (let i = 0; i < imageData.data.length; i += step) {{
                 const noise = Math.floor(canvasRNG() * 3) - 1;
                 imageData.data[i] = Math.max(0, Math.min(255, imageData.data[i] + noise));
             }}
-            ctx.putImageData(imageData, 0, 0);
-        }} catch(e) {{}}
+        }} catch(e) {{ }}
     }}
-    return origToBlob.apply(this, arguments);
-}};
+    return imageData;
+}}, 'getImageData');
 
 // ═══════════════════════════════════════════════════════════════
 // 11. AUDIO — Consistent Noise Pattern
 // ═══════════════════════════════════════════════════════════════
 
+if (typeof AudioBuffer !== 'undefined') {{
+    const origGetChannelData = AudioBuffer.prototype.getChannelData;
+    AudioBuffer.prototype.getChannelData = makeNative(function(channel) {{
+        const data = origGetChannelData.apply(this, arguments);
+        if (data && data.length > 100) {{
+            const step = Math.max(100, Math.floor(data.length / 100));
+            for (let i = 0; i < data.length; i += step) {{
+                data[i] += (audioRNG() - 0.5) * 0.0000001;
+            }}
+        }}
+        return data;
+    }}, 'getChannelData');
+}}
+
 if (typeof AnalyserNode !== 'undefined') {{
     const origGetFloat = AnalyserNode.prototype.getFloatFrequencyData;
-    AnalyserNode.prototype.getFloatFrequencyData = function(array) {{
+    AnalyserNode.prototype.getFloatFrequencyData = makeNative(function(array) {{
         origGetFloat.call(this, array);
-        for (let i = 0; i < array.length; i++) {{
-            array[i] += (audioRNG() - 0.5) * 0.0001;
+        if (array) {{
+            for (let i = 0; i < array.length; i++) {{
+                array[i] += (audioRNG() - 0.5) * 0.0001;
+            }}
         }}
-    }};
+    }}, 'getFloatFrequencyData');
+
+    const origGetByte = AnalyserNode.prototype.getByteFrequencyData;
+    AnalyserNode.prototype.getByteFrequencyData = makeNative(function(array) {{
+        origGetByte.call(this, array);
+        if (array) {{
+            for (let i = 0; i < array.length; i++) {{
+                const noise = Math.floor(audioRng() * 3) - 1;
+                array[i] = Math.max(0, Math.min(255, array[i] + noise));
+            }}
+        }}
+    }}, 'getByteFrequencyData');
 }}
 
 // ═══════════════════════════════════════════════════════════════

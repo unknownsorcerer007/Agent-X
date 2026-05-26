@@ -36,21 +36,46 @@ class DatabaseManager:
     def __init__(self, dsn: str, pool_size: int = 20, max_overflow: int = 10,
                  pool_timeout: int = 30, pool_recycle: int = 3600):
         self.dsn = dsn
-        self.engine = create_async_engine(
-            dsn,
-            pool_size=pool_size,
-            max_overflow=max_overflow,
-            pool_timeout=pool_timeout,
-            pool_recycle=pool_recycle,
-            pool_pre_ping=True,  # Verify connections before use
-            echo=False,
-            connect_args={
-                "server_settings": {
-                    "application_name": "agent-os",
-                    "statement_timeout": "30000",  # 30s statement timeout
+        engine_args = {
+            "pool_timeout": pool_timeout,
+            "pool_recycle": pool_recycle,
+            "pool_pre_ping": True,
+            "echo": False,
+        }
+        if "postgresql" in dsn:
+            engine_args.update({
+                "pool_size": pool_size,
+                "max_overflow": max_overflow,
+                "connect_args": {
+                    "server_settings": {
+                        "application_name": "agent-os",
+                        "statement_timeout": "30000",
+                    }
                 }
-            } if "postgresql" in dsn else {},
-        )
+            })
+        elif "sqlite" in dsn:
+            from sqlalchemy.pool import NullPool
+            engine_args.update({
+                "poolclass": NullPool,
+                "connect_args": {
+                    "check_same_thread": False
+                }
+            })
+        else:
+            engine_args.update({
+                "pool_size": pool_size,
+                "max_overflow": max_overflow,
+            })
+        self.engine = create_async_engine(dsn, **engine_args)
+        if "sqlite" in dsn:
+            @event.listens_for(self.engine.sync_engine, "connect")
+            def set_sqlite_pragma(dbapi_connection, connection_record):
+                cursor = dbapi_connection.cursor()
+                cursor.execute("PRAGMA journal_mode=WAL")
+                cursor.execute("PRAGMA synchronous=NORMAL")
+                cursor.execute("PRAGMA cache_size=-64000")
+                cursor.execute("PRAGMA temp_store=MEMORY")
+                cursor.close()
         self.session_factory = async_sessionmaker(
             self.engine,
             class_=AsyncSession,

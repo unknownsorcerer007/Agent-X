@@ -42,6 +42,13 @@ except ImportError:
 
 # Browser profiles with their curl_cffi mappings
 BROWSER_PROFILES = {
+    "chrome148": {
+        "curl_type": None,  # Set at runtime
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36",
+        "sec_ch_ua": '"Chromium";v="148", "Google Chrome";v="148", "Not-A.Brand";v="99"',
+        "platform": '"Windows"',
+        "mobile": "?0",
+    },
     "chrome146": {
         "curl_type": None,  # Set at runtime
         "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
@@ -139,6 +146,7 @@ def _init_profiles():
         return
 
     _wanted = {
+        "chrome148":   "chrome148",
         "chrome146":   "chrome146",
         "chrome145":   "chrome145",
         "chrome142":   "chrome142",
@@ -223,6 +231,8 @@ class TLSSessionPool:
         self._request_count = 0
         self._error_count = 0
         self._init_lock = asyncio.Lock()
+        from concurrent.futures import ThreadPoolExecutor
+        self._executor = ThreadPoolExecutor(max_workers=100, thread_name_prefix="tls_proxy_worker")
 
     def _get_profile_for_domain(self, domain: str) -> str:
         """Get or assign a consistent profile for a domain."""
@@ -305,7 +315,7 @@ class TLSSessionPool:
             # Run in thread executor to not block async loop
             loop = asyncio.get_running_loop()
             resp = await loop.run_in_executor(
-                None,
+                self._executor,
                 lambda: session.request(req.method, req.url, **kwargs),
             )
 
@@ -357,6 +367,10 @@ class TLSSessionPool:
             except Exception:
                 pass
         self._sessions.clear()
+        try:
+            self._executor.shutdown(wait=False)
+        except Exception:
+            pass
 
     @property
     def stats(self) -> Dict:
@@ -572,8 +586,8 @@ class TLSHTTPClient:
             self._httpx_client = _httpx.AsyncClient(
                 http2=True,
                 limits=_httpx.Limits(
-                    max_connections=20,
-                    max_keepalive_connections=10,
+                    max_connections=100,
+                    max_keepalive_connections=50,
                 ),
                 timeout=_httpx.Timeout(30.0),
             )
@@ -634,11 +648,20 @@ class TLSHTTPClient:
         if self._httpx_client is not None and not self._httpx_client.is_closed:
             try:
                 import asyncio
-                loop = asyncio.get_event_loop()
-                if loop.is_running():
+                try:
+                    loop = asyncio.get_running_loop()
+                except RuntimeError:
+                    loop = None
+
+                if loop is not None and loop.is_running():
                     # Schedule the close in the running loop
                     asyncio.ensure_future(self._httpx_client.aclose())
                 else:
+                    try:
+                        loop = asyncio.get_event_loop()
+                    except RuntimeError:
+                        loop = asyncio.new_event_loop()
+                        asyncio.set_event_loop(loop)
                     loop.run_until_complete(self._httpx_client.aclose())
             except Exception:
                 pass

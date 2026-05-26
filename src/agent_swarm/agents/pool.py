@@ -359,23 +359,24 @@ class AgentPool:
         """Synchronous wrapper for parallel search.
 
         Properly handles being called from within an already-running event loop
-        by scheduling the coroutine as a task on the existing loop rather than
-        spawning a separate thread with a new event loop.
+        by running the search in a separate thread with its own loop, avoiding
+        blocking or crashing the existing running loop.
         """
         coro = self.search_parallel(query, agent_profiles, search_backend, max_results)
         try:
             loop = asyncio.get_running_loop()
             if loop.is_running():
-                # We're inside a running event loop — schedule as a task
-                # and use a Future to bridge the result back synchronously
-                future = asyncio.ensure_future(coro)
-                # Run the event loop until the future completes
-                # This works when called from within an async context that can yield
-                try:
-                    return future.result(timeout=self.search_timeout + 5)
-                except asyncio.TimeoutError:
-                    logger.warning("Synchronous wrapper timed out waiting for async result")
-                    return []
+                # We're inside a running event loop — run the coro in a background thread
+                from concurrent.futures import ThreadPoolExecutor
+                with ThreadPoolExecutor(max_workers=1) as executor:
+                    def _run():
+                        return asyncio.run(coro)
+                    future = executor.submit(_run)
+                    try:
+                        return future.result(timeout=self.search_timeout + 5)
+                    except Exception as e:
+                        logger.error(f"Error in search_parallel_sync ThreadPoolExecutor: {e}")
+                        return []
             else:
                 return loop.run_until_complete(coro)
         except RuntimeError:

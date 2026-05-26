@@ -303,6 +303,9 @@ class AgentBrowser:
         self._proxy_manager: Optional[ProxyManager] = None
         self._proxy_manager_enabled = self.config.get("browser.proxy_rotation_enabled", True)
         self._proxy_rotation_strategy = self.config.get("browser.proxy_rotation_strategy", "weighted")
+        self._shield_local_ip = self.config.get("browser.shield_local_ip", True)
+        self._use_free_proxy_fallback = self.config.get("browser.use_free_proxy_fallback", True)
+        self._handoff_manager: Optional[Any] = None
         self._current_proxy: Optional[ProxyInfo] = None
         self._current_proxy_config: Optional[Dict] = None
         # Domain → proxy mapping for sticky sessions
@@ -456,6 +459,18 @@ class AgentBrowser:
                 api_key = self.config.get("browser.proxy_api_key")
                 result = await self._proxy_manager.load_from_api(proxy_api, api_key)
                 logger.info(f"Loaded {result.get('loaded', 0)} proxies from API")
+            # Zero-Trust safety fallback: if shielding is active, no proxy configured, and fallback is enabled:
+            if self._shield_local_ip and len(self._proxy_manager.pool.get_all()) == 0 and self._use_free_proxy_fallback:
+                logger.info("Local IP shielding active and no proxies configured. Triggering free proxy scraper fallback...")
+                try:
+                    from src.tools.free_proxy_scraper import scrape_and_verify
+                    free_proxies = await scrape_and_verify(max_proxies=10)
+                    for p in free_proxies:
+                        self._proxy_manager.add_proxy(p["url"])
+                    logger.info(f"Populated proxy pool with {len(free_proxies)} verified free proxies for safety.")
+                except Exception as scraper_err:
+                    logger.error(f"Failed to scrape safety free proxies: {scraper_err}")
+
             # Start health monitoring
             await self._proxy_manager.start()
             logger.info(f"Proxy rotation enabled (strategy: {self._proxy_rotation_strategy})")
@@ -564,6 +579,29 @@ class AgentBrowser:
             # DNS-over-HTTPS to prevent DNS leaks when using proxies
             self._launch_args.append("--dns-over-https-templates=https://cloudflare-dns.com/dns-query")
             logger.info(f"Proxy configured: {proxy_config.get('server', 'N/A')}")
+        elif self._shield_local_ip and self._proxy_manager and self._proxy_manager_enabled:
+            # Shield at launch using proxy manager
+            init_res = await self._proxy_manager.get_proxy(with_failover=True)
+            if init_res.get("status") == "success":
+                proxy_data = init_res["proxy"]
+                proxy_config = init_res["playwright_config"]
+                launch_options["proxy"] = proxy_config
+                self._proxy_config = proxy_config
+                
+                # Wrap proxy_data
+                class _ProxyRef:
+                    def __init__(self, data: Dict[str, Any]):
+                        self.proxy_id = data.get("proxy_id", "unknown")
+                        self.url = data.get("url", "")
+                        self.country = data.get("country", "")
+                        self.data = data
+                    def to_dict(self):
+                        return self.data
+                self._current_proxy = _ProxyRef(proxy_data)
+                
+                # DNS-over-HTTPS to prevent DNS leaks when using proxies
+                self._launch_args.append("--dns-over-https-templates=https://cloudflare-dns.com/dns-query")
+                logger.info(f"Browser shielded at launch using proxy: {proxy_data.get('url', 'N/A')}")
 
         self.browser = await self.playwright.chromium.launch(**launch_options)
 
@@ -1580,7 +1618,7 @@ class AgentBrowser:
                     load_wait = random.uniform(0.5, 1.5) + (attempt * 2.0)
                     await asyncio.sleep(load_wait)
 
-                    # Check if we got a block/challenge page
+                    # Retrieve page metadata to evaluate blocks
                     title = await page.title()
                     text = ""
                     try:
@@ -1592,22 +1630,21 @@ class AgentBrowser:
 
                     status_code = response.status if response else 200
 
-                    # Handle HTTP 429 Rate Limiting — wait and retry
-                    if status_code == 429 and attempt < retries:
-                        retry_after = 5.0 + random.uniform(2.0, 10.0) * (attempt + 1)
+                    # Check if we got a block/challenge page
+                    is_blocked = self._is_blocked_page(title, text, url=current_url)
+
+                    # Safety Failover: if blocked on local IP, immediately rotate proxy
+                    if is_blocked and not self._current_proxy and self._proxy_manager and self._proxy_manager_enabled:
                         logger.warning(
-                            f"HTTP 429 rate limited on {current_url[:60]} "
-                            f"(attempt {attempt + 1}, waiting {retry_after:.1f}s)"
+                            f"Local IP blocked on {current_url[:60]}. "
+                            "Activating safety shielding and switching to rotated proxy context to protect residential connection."
                         )
-                        await asyncio.sleep(retry_after)
-                        continue
+                        # Rotate proxy and recreate context
+                        await self._rotate_to_next_proxy(domain=domain, country=geo_target)
+                        continue  # Retry navigation with the new proxy
 
-                    # Record proxy success
-                    if self._current_proxy:
-                        self._record_proxy_result(success=True, status_code=status_code)
-
-                    # If blocked and we have retries left, try with different proxy
-                    if self._is_blocked_page(title, text, url=current_url) and attempt < retries:
+                    # If blocked and we have retries left, try with different proxy or user handoff
+                    if is_blocked and attempt < retries:
                         block_reason = self._get_block_reason(title, text, status_code)
                         logger.warning(
                             f"Block/challenge detected on {current_url[:60]} "
@@ -1648,6 +1685,72 @@ class AgentBrowser:
                                         }
                                 except Exception as e:
                                     logger.warning(f"Reload after CF bypass failed: {e}")
+
+                        # ── Zero-Trust Interactive User Handoff ──
+                        # If a challenge/block page persists on a high-security domain or after initial bypass failure,
+                        # hand over control to the human user to pass the challenges manually, then capture cookies.
+                        high_security_domains = ["linkedin.com", "reddit.com", "facebook.com", "instagram.com", "x.com", "twitter.com", "netflix.com"]
+                        is_high_sec = any(hs in domain.lower() for hs in high_security_domains)
+
+                        if is_high_sec or attempt >= 1:
+                            handoff = self._get_handoff_manager()
+                            if handoff:
+                                logger.warning(
+                                    f"Persistent challenge on high-security site '{domain}'. "
+                                    f"Pausing AI automation and initiating user handoff..."
+                                )
+                                ho_res = await handoff.start_handoff(
+                                    url=current_url,
+                                    page_id=page_id,
+                                    auto_detected=True,
+                                    timeout_seconds=300
+                                )
+                                if ho_res.get("status") == "success":
+                                    ho_id = ho_res["handoff_id"]
+                                    # Wait for user to pass the challenge
+                                    handoff_completed = False
+                                    start_wait = time.time()
+                                    while time.time() - start_wait < 300: # 5 min limit
+                                        status_res = await handoff.get_handoff_status(ho_id)
+                                        if status_res.get("status") == "success":
+                                            h_state = status_res["handoff"]["state"]
+                                            if h_state == "completed":
+                                                logger.info("User completed challenge/login. Resuming automation.")
+                                                handoff_completed = True
+                                                break
+                                            elif h_state in ("cancelled", "timed_out"):
+                                                logger.warning(f"Handoff aborted: {h_state}")
+                                                break
+                                        await asyncio.sleep(2.0)
+
+                                    if handoff_completed:
+                                        # Reload page to fetch authenticated content
+                                        try:
+                                            response = await page.reload(wait_until=wait_until, timeout=30000)
+                                            await asyncio.sleep(random.uniform(2.0, 4.0))
+                                            title = await page.title()
+                                            text = ""
+                                            try:
+                                                body = await page.query_selector("body")
+                                                if body:
+                                                    text = await body.inner_text()
+                                            except Exception:
+                                                pass
+                                            status_code = response.status if response else 200
+                                            if not self._is_blocked_page(title, text, url=current_url):
+                                                logger.info("Challenge bypassed successfully via handoff cookies.")
+                                                await self._save_cookies("default")
+                                                return {
+                                                    "status": "success",
+                                                    "url": page.url,
+                                                    "title": title,
+                                                    "status_code": status_code,
+                                                    "blocked_requests": self._blocked_requests,
+                                                    "handoff_bypassed": True,
+                                                    "proxy_used": self._current_proxy.proxy_id if self._current_proxy else None,
+                                                }
+                                        except Exception as reload_err:
+                                            logger.warning(f"Reload after handoff failed: {reload_err}")
 
                         # If not Cloudflare or bypass failed, rotate proxy and retry
                         continue
@@ -3523,26 +3626,115 @@ class AgentBrowser:
 
             self._current_proxy = _ProxyRef(proxy_data)
 
-            # For Playwright, we need to recreate the browser with the new proxy
-            # because Chromium doesn't support changing proxy at runtime.
-            # Trigger browser recovery (restart) so the new proxy config takes effect.
-            new_proxy_url = proxy_data.get("url", proxy_id)
-            if self._tls_proxy:
-                # Update TLS proxy to use this proxy
-                logger.info(f"Rotating to proxy {proxy_id} for {domain} (via TLS proxy)")
-            else:
-                # Direct proxy — need browser restart for the new proxy to take effect
-                logger.info(f"Rotating proxy to {new_proxy_url}, triggering browser restart")
-                try:
-                    await self.recover()
-                except Exception as e:
-                    logger.error(f"Failed to restart browser with new proxy: {e}")
+            # Direct proxy — recreate the context instead of full browser restart
+            logger.info(f"Rotating proxy to {new_proxy_url}, recreating context")
+            try:
+                await self._recreate_context(playwright_config)
+            except Exception as e:
+                logger.error(f"Failed to recreate context with new proxy: {e}")
+                # Fallback to full recover if recreation fails
+                await self.recover()
 
             return proxy_id
 
         except Exception as e:
             logger.error(f"Proxy rotation failed: {e}")
             return None
+
+    def _get_handoff_manager(self):
+        """Lazy get or create LoginHandoffManager."""
+        if hasattr(self, "_handoff_manager") and self._handoff_manager is not None:
+            return self._handoff_manager
+        try:
+            from src.tools.login_handoff import LoginHandoffManager
+            self._handoff_manager = LoginHandoffManager(self, config=self.config)
+            # Auto-start the background loops
+            asyncio.create_task(self._handoff_manager.start())
+            return self._handoff_manager
+        except Exception as e:
+            logger.warning(f"Could not initialize LoginHandoffManager: {e}")
+            return None
+
+    async def _recreate_context(self, proxy_config: Optional[Dict] = None):
+        """Recreate the Playwright BrowserContext with the given proxy configuration.
+        
+        This avoids slow Chromium process relaunching (which takes ~2.5s) and completes
+        in under 200ms.
+        """
+        logger.info("Recreating browser context for proxy failover...")
+        
+        # 1. Save cookies to profile first to carry over session state
+        try:
+            await self._save_cookies("default")
+            await self._flush_cookies("default")
+        except Exception as e:
+            logger.warning(f"Failed to save cookies before context recreation: {e}")
+            
+        # 2. Close active pages and context
+        for page in list(self._pages.values()):
+            try:
+                await page.close()
+            except Exception:
+                pass
+        self._pages.clear()
+        
+        if self.context:
+            try:
+                await self.context.close()
+            except Exception:
+                pass
+            self.context = None
+            
+        # 3. Rebuild context options
+        storage_state = self._load_cookies("default")
+        context_options = {
+            "user_agent": self._active_profile.user_agent,
+            "viewport": self._active_profile.viewport,
+            "locale": self._active_profile.locale,
+            "timezone_id": self._active_profile.timezone_id,
+            "device_scale_factor": self._active_profile.pixel_ratio,
+            "has_touch": False,
+            "is_mobile": False,
+            "java_script_enabled": True,
+            "ignore_https_errors": True,
+            "permissions": ["geolocation", "notifications"],
+            "color_scheme": "dark",
+            "service_workers": "allow",
+        }
+        if storage_state:
+            context_options["storage_state"] = storage_state
+        if proxy_config:
+            context_options["proxy"] = proxy_config
+            
+        # 4. Create new context
+        self.context = await self.browser.new_context(**context_options)
+        
+        # 5. Set realistic headers
+        await self.context.set_extra_http_headers(self._build_headers(self._active_profile))
+        
+        # 6. Set up routing, download handler
+        await self.context.route("**/*", self._handle_request)
+        self.context.on("download", self._handle_download)
+        
+        # 7. Create main page
+        self.page = await self.context.new_page()
+        self._pages["main"] = self.page
+        self._attach_console_listener("main", self.page)
+        
+        # 8. Inject stealth and spoofing
+        fp = self._evasion.generate_fingerprint(page_id="main")
+        chrome_ver = fp["chrome_version"] if fp else "124"
+        
+        try:
+            await self._adaptive_stealth.inject_stealth(self.context, self.page, "", fp)
+            self._stealth_layers_active["main"] = ["Adaptive"]
+        except Exception as e:
+            logger.warning(f"Adaptive stealth reinjection failed: {e}")
+            
+        await apply_browser_tls_spoofing(self.page, chrome_version=chrome_ver, browser_profile=self._active_profile)
+        await self._cdp_stealth.setup_headless_verification(self.page)
+        
+        logger.info("Browser context recreated successfully.")
 
     def _record_proxy_result(
         self,

@@ -223,13 +223,15 @@ class SmartWait:
     DEFAULT_POLL_MS = 150
 
     def _adaptive_poll_interval(self, elapsed_ms: float) -> float:
-        """Adaptive polling: fast initially, slower over time to reduce CDP overhead."""
-        if elapsed_ms < 5000:
-            return 0.15
+        """Adaptive polling: fast initially, slower over time to reduce CPU/CDP overhead."""
+        if elapsed_ms < 1000:
+            return 0.03   # 30ms for very fast responses
+        elif elapsed_ms < 5000:
+            return 0.10   # 100ms
         elif elapsed_ms < 15000:
-            return 0.30
+            return 0.25   # 250ms
         else:
-            return 0.50
+            return 0.50   # 500ms
 
     # Hard maximum wait time (ms) — never wait longer than this
     HARD_MAX_MS = 120_000

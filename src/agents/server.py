@@ -160,6 +160,19 @@ class AgentServer:
         self._ws_auth_cache_ttl = 300  # Re-validate every 5 minutes
         self._ws_auth_cache_times: Dict[str, float] = {}  # token prefix → last_validation_time
 
+        # Dynamically register any missing _cmd_ methods in COMMAND_SCOPES
+        for attr_name in dir(self):
+            if attr_name.startswith("_cmd_") and callable(getattr(self, attr_name)):
+                cmd_name = attr_name[5:].replace("_", "-")
+                if cmd_name not in COMMAND_SCOPES:
+                    # Assign appropriate scope based on command name
+                    if any(prefix in cmd_name for prefix in ("hub-", "workflow-", "record-", "replay-")):
+                        COMMAND_SCOPES[cmd_name] = ["workflows"]
+                    elif any(prefix in cmd_name for prefix in ("scan-", "add-extension")):
+                        COMMAND_SCOPES[cmd_name] = ["admin"]
+                    else:
+                        COMMAND_SCOPES[cmd_name] = ["browser"]
+
     async def start(self):
         """Start both WebSocket and HTTP servers."""
         ws_host = self.config.get("server.host", "0.0.0.0")

@@ -39,7 +39,7 @@ class AdaptiveStealthManager:
                 return True
         return False
         
-    async def inject_stealth(self, context, page, url: str, fingerprint: dict) -> bool:
+    async def inject_stealth(self, context, page, url: str, fingerprint: dict, page_id: str = "main") -> bool:
         """
         Injects the appropriate stealth layer for the target URL.
         Returns True if successful.
@@ -50,23 +50,23 @@ class AdaptiveStealthManager:
                 # Inject God Mode
                 god_ok = await self.god_mode_stealth.inject_into_page(
                     page=page,
-                    page_id="main"
+                    page_id=page_id
                 )
                 if not god_ok:
                     logger.warning("[AdaptiveStealth] God Mode injection failed, falling back to CDP.")
-                    return await self.cdp_stealth.inject_into_page(page=page, page_id="main", fingerprint=fingerprint)
+                    return await self.cdp_stealth.inject_into_page(page=page, page_id=page_id, fingerprint=fingerprint)
                 return True
             else:
                 logger.debug(f"[AdaptiveStealth] Standard target detected for {url}. Engaging CDP Stealth.")
                 # Inject CDP Stealth
                 cdp_ok = await self.cdp_stealth.inject_into_page(
                     page=page,
-                    page_id="main",
+                    page_id=page_id,
                     fingerprint=fingerprint
                 )
                 if not cdp_ok:
                     logger.warning("[AdaptiveStealth] CDP Stealth injection failed, falling back to God Mode.")
-                    return await self.god_mode_stealth.inject_into_page(page=page, page_id="main")
+                    return await self.god_mode_stealth.inject_into_page(page=page, page_id=page_id)
                 return True
                 
         except Exception as e:

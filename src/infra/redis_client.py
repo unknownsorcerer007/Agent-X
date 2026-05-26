@@ -165,6 +165,23 @@ class RedisClient:
     def _backend(self):
         return self._fallback if self._use_fallback else self._redis
 
+    async def _run_with_fallback(self, redis_func, fallback_func):
+        """Execute redis_func. If it fails and fallback_on_failure is enabled,
+        automatically switch to in-memory fallback mode and execute fallback_func.
+        """
+        if self._use_fallback:
+            return await fallback_func()
+        try:
+            return await redis_func()
+        except Exception as e:
+            if self._fallback_on_failure:
+                logger.error(f"Redis call failed ({e}). Falling back to memory.")
+                self._use_fallback = True
+                self._mode = "memory"
+                self._connected = True
+                return await fallback_func()
+            raise
+
     async def _ensure_connected(self) -> bool:
         """Ensure Redis connection is alive, reconnect if needed with exponential backoff."""
         if self._mode != "redis" or self._redis is None:
@@ -223,20 +240,7 @@ class RedisClient:
         now = time.time()
         window_key = f"rl:{key}"
 
-        if self._use_fallback:
-            # In-memory sliding window
-            bucket = self._fallback._sorted_sets.get(window_key, {})
-            cutoff = now - window_seconds
-            # Clean old entries
-            bucket = {k: v for k, v in bucket.items() if v > cutoff}
-            count = len(bucket)
-            if count >= max_requests:
-                return False, count, 0
-            bucket[f"{now}:{count}"] = now
-            self._fallback._sorted_sets[window_key] = bucket
-            return True, count + 1, max_requests - count - 1
-        else:
-            # Redis sorted set sliding window
+        async def _redis_rl():
             pipe = self._redis.pipeline()
             cutoff = now - window_seconds
             pipe.zremrangebyscore(window_key, 0, cutoff)
@@ -249,47 +253,69 @@ class RedisClient:
                 return False, count, 0
             return True, count + 1, max_requests - count - 1
 
+        async def _fallback_rl():
+            bucket = self._fallback._sorted_sets.get(window_key, {})
+            cutoff = now - window_seconds
+            bucket = {k: v for k, v in bucket.items() if v > cutoff}
+            count = len(bucket)
+            if count >= max_requests:
+                return False, count, 0
+            bucket[f"{now}:{count}"] = now
+            self._fallback._sorted_sets[window_key] = bucket
+            return True, count + 1, max_requests - count - 1
+
+        return await self._run_with_fallback(_redis_rl, _fallback_rl)
+
     # ─── Session Cache ───────────────────────────────────────
 
     async def cache_session(self, session_id: str, data: dict, ttl: int = 900):
         """Cache session data with TTL (default 15 min)."""
-        await self._backend.set(f"session:{session_id}", json.dumps(data), ex=ttl)
+        key = f"session:{session_id}"
+        val = json.dumps(data)
+        return await self._run_with_fallback(
+            lambda: self._redis.set(key, val, ex=ttl),
+            lambda: self._fallback.set(key, val, ex=ttl)
+        )
 
     async def get_cached_session(self, session_id: str) -> Optional[dict]:
         """Get cached session data."""
-        raw = await self._backend.get(f"session:{session_id}")
-        return json.loads(raw) if raw else None
+        key = f"session:{session_id}"
+        async def _redis_get():
+            raw = await self._redis.get(key)
+            return json.loads(raw) if raw else None
+        async def _fallback_get():
+            raw = await self._fallback.get(key)
+            return json.loads(raw) if raw else None
+        return await self._run_with_fallback(_redis_get, _fallback_get)
 
     async def invalidate_session(self, session_id: str):
         """Remove session from cache."""
-        await self._backend.delete(f"session:{session_id}")
+        key = f"session:{session_id}"
+        return await self._run_with_fallback(
+            lambda: self._redis.delete(key),
+            lambda: self._fallback.delete(key)
+        )
 
     # ─── Distributed Lock ────────────────────────────────────
 
     async def acquire_lock(self, resource: str, owner: str, ttl: int = 30) -> bool:
         """Acquire a distributed lock. Returns True if acquired."""
         key = f"lock:{resource}"
-        if self._use_fallback:
+        async def _redis_lock():
+            result = await self._redis.set(key, owner, ex=ttl, nx=True)
+            return result is True
+        async def _fallback_lock():
             existing = await self._fallback.get(key)
             if existing:
                 return False
             await self._fallback.set(key, owner, ex=ttl)
             return True
-        else:
-            result = await self._redis.set(key, owner, ex=ttl, nx=True)
-            return result is True
+        return await self._run_with_fallback(_redis_lock, _fallback_lock)
 
     async def release_lock(self, resource: str, owner: str) -> bool:
         """Release a distributed lock (only if owned)."""
         key = f"lock:{resource}"
-        if self._use_fallback:
-            existing = await self._fallback.get(key)
-            if existing == owner:
-                await self._fallback.delete(key)
-                return True
-            return False
-        else:
-            # Lua script for atomic check-and-delete
+        async def _redis_release():
             lua = """
             if redis.call("get", KEYS[1]) == ARGV[1] then
                 return redis.call("del", KEYS[1])
@@ -298,23 +324,45 @@ class RedisClient:
             """
             result = await self._redis.eval(lua, 1, key, owner)
             return result == 1
+        async def _fallback_release():
+            existing = await self._fallback.get(key)
+            if existing == owner:
+                await self._fallback.delete(key)
+                return True
+            return False
+        return await self._run_with_fallback(_redis_release, _fallback_release)
 
     # ─── Generic Helpers ─────────────────────────────────────
 
     async def get(self, key: str) -> Optional[str]:
-        return await self._backend.get(key)
+        return await self._run_with_fallback(
+            lambda: self._redis.get(key),
+            lambda: self._fallback.get(key)
+        )
 
     async def set(self, key: str, value: str, ex: int = 0):
-        await self._backend.set(key, value, ex=ex)
+        return await self._run_with_fallback(
+            lambda: self._redis.set(key, value, ex=ex) if ex > 0 else self._redis.set(key, value),
+            lambda: self._fallback.set(key, value, ex=ex)
+        )
 
     async def delete(self, key: str):
-        await self._backend.delete(key)
+        return await self._run_with_fallback(
+            lambda: self._redis.delete(key),
+            lambda: self._fallback.delete(key)
+        )
 
     async def incr(self, key: str) -> int:
-        return await self._backend.incr(key)
+        return await self._run_with_fallback(
+            lambda: self._redis.incr(key),
+            lambda: self._fallback.incr(key)
+        )
 
     async def keys(self, pattern: str = "*") -> list:
-        return await self._backend.keys(pattern)
+        return await self._run_with_fallback(
+            lambda: self._redis.keys(pattern),
+            lambda: self._fallback.keys(pattern)
+        )
 
 
 # Global instance
