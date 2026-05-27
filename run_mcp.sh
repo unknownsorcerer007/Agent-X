@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # ─────────────────────────────────────────────────────────────
-# Agent-OS MCP Passthrough — One-Command Startup
+# Agent-X MCP Passthrough — One-Command Startup
 # ─────────────────────────────────────────────────────────────
-# Starts Agent-OS server + MCP passthrough wrapper.
+# Starts Agent-X server + MCP passthrough wrapper.
 # NO LLM API KEY NEEDED — MCP client's LLM handles reasoning.
 #
 # Usage:
@@ -16,12 +16,12 @@
 # After running, configure Claude Desktop:
 #   {
 #     "mcpServers": {
-#       "agent-os": {
+#       "agent-x": {
 #         "command": "python3",
-#         "args": ["/absolute/path/to/Agent-OS/connectors/mcp_passthrough.py"],
+#         "args": ["/absolute/path/to/Agent-X/connectors/mcp_passthrough.py"],
 #         "env": {
-#           "AGENT_OS_URL": "http://localhost:8001",
-#           "AGENT_OS_TOKEN": "YOUR_TOKEN_HERE"
+#           "AGENT_X_URL": "http://localhost:8001",
+#           "AGENT_X_TOKEN": "YOUR_TOKEN_HERE"
 #         }
 #       }
 #     }
@@ -54,8 +54,8 @@ SERVER_ONLY=false
 TOKEN=""
 
 # Compression: "aggressive" (default, ~87% savings) | "normal" (~50%) | "off"
-COMPRESS="${AGENT_OS_COMPRESS:-aggressive}"
-MAX_OUTPUT="${AGENT_OS_MAX_OUTPUT:-8000}"
+COMPRESS="${AGENT_X_COMPRESS:-aggressive}"
+MAX_OUTPUT="${AGENT_X_MAX_OUTPUT:-8000}"
 
 # ─── Parse Args ──────────────────────────────────────────
 while [[ $# -gt 0 ]]; do
@@ -76,10 +76,10 @@ if [ -z "$TOKEN" ]; then
     TOKEN=$(python3 -c "import secrets; print(secrets.token_urlsafe(32))")
 fi
 
-export AGENT_OS_TOKEN="$TOKEN"
-export AGENT_OS_URL="http://localhost:$((PORT + 1))"  # HTTP port = WS port + 1
-export AGENT_OS_COMPRESS="$COMPRESS"
-export AGENT_OS_MAX_OUTPUT="$MAX_OUTPUT"
+export AGENT_X_TOKEN="$TOKEN"
+export AGENT_X_URL="http://localhost:$((PORT + 1))"  # HTTP port = WS port + 1
+export AGENT_X_COMPRESS="$COMPRESS"
+export AGENT_X_MAX_OUTPUT="$MAX_OUTPUT"
 
 # ─── Functions ───────────────────────────────────────────
 
@@ -106,14 +106,14 @@ check_deps() {
 }
 
 start_server() {
-    echo -e "${BLUE}Starting Agent-OS server on port $PORT...${NC}"
+    echo -e "${BLUE}Starting Agent-X server on port $PORT...${NC}"
     
     # Check if port is in use
     if lsof -Pi :$PORT -sTCP:LISTEN -t &>/dev/null 2>&1; then
         echo -e "${YELLOW}⚠️  Port $PORT already in use — trying $((PORT + 100))${NC}"
         PORT=$((PORT + 100))
-        AGENT_OS_URL="http://localhost:$((PORT + 1))"
-        export AGENT_OS_URL
+        AGENT_X_URL="http://localhost:$((PORT + 1))"
+        export AGENT_X_URL
     fi
     
     python3 main.py \
@@ -124,13 +124,13 @@ start_server() {
         > agent_os_server.log 2>&1 &
     
     SERVER_PID=$!
-    echo $SERVER_PID > .agent-os-server.pid
+    echo $SERVER_PID > .agent-x-server.pid
     echo -e "${GREEN}✅ Server started (PID: $SERVER_PID)${NC}"
     
     # Wait for server to be ready
     echo -e "${BLUE}Waiting for server...${NC}"
     for i in $(seq 1 30); do
-        if curl -s "$AGENT_OS_URL/health" &>/dev/null; then
+        if curl -s "$AGENT_X_URL/health" &>/dev/null; then
             echo -e "${GREEN}✅ Server is ready!${NC}"
             return 0
         fi
@@ -143,7 +143,7 @@ start_server() {
 
 start_mcp() {
     echo -e "${BLUE}Starting MCP Passthrough Wrapper...${NC}"
-    echo -e "${CYAN}  Agent-OS URL: $AGENT_OS_URL${NC}"
+    echo -e "${CYAN}  Agent-X URL: $AGENT_X_URL${NC}"
     echo -e "${CYAN}  Token: ${TOKEN:0:10}...${NC}"
     echo ""
     echo -e "${GREEN}═══════════════════════════════════════════════════${NC}"
@@ -153,12 +153,12 @@ start_mcp() {
     echo -e "${YELLOW}Claude Desktop config:${NC}"
     echo '{'
     echo '  "mcpServers": {'
-    echo '    "agent-os": {'
+    echo '    "agent-x": {'
     echo '      "command": "python3",'
     echo "      \"args\": [\"$SCRIPT_DIR/connectors/mcp_passthrough.py\"],"
     echo '      "env": {'
-    echo "        \"AGENT_OS_URL\": \"$AGENT_OS_URL\","
-    echo "        \"AGENT_OS_TOKEN\": \"$TOKEN\""
+    echo "        \"AGENT_X_URL\": \"$AGENT_X_URL\","
+    echo "        \"AGENT_X_TOKEN\": \"$TOKEN\""
     echo '      }'
     echo '    }'
     echo '  }'
@@ -175,9 +175,9 @@ cleanup() {
     echo ""
     echo -e "${YELLOW}Shutting down...${NC}"
     
-    if [ -f .agent-os-server.pid ]; then
-        kill $(cat .agent-os-server.pid) 2>/dev/null || true
-        rm -f .agent-os-server.pid
+    if [ -f .agent-x-server.pid ]; then
+        kill $(cat .agent-x-server.pid) 2>/dev/null || true
+        rm -f .agent-x-server.pid
     fi
     
     echo -e "${GREEN}✅ Stopped${NC}"
@@ -189,7 +189,7 @@ trap cleanup EXIT
 
 echo -e "${CYAN}"
 echo "╔═══════════════════════════════════════════════════╗"
-echo "║   Agent-OS MCP Passthrough                       ║"
+echo "║   Agent-X MCP Passthrough                       ║"
 echo "║   No API Key Needed — Your LLM Does the Work     ║"
 echo "╚═══════════════════════════════════════════════════╝"
 echo -e "${NC}"
@@ -202,7 +202,7 @@ elif [ "$SERVER_ONLY" = true ]; then
     start_server
     echo ""
     echo -e "${GREEN}Server running. Start MCP separately with:${NC}"
-    echo -e "  AGENT_OS_URL=$AGENT_OS_URL AGENT_OS_TOKEN=$TOKEN python3 connectors/mcp_passthrough.py"
+    echo -e "  AGENT_X_URL=$AGENT_X_URL AGENT_X_TOKEN=$TOKEN python3 connectors/mcp_passthrough.py"
     echo ""
     echo -e "${BLUE}Press Ctrl+C to stop${NC}"
     wait

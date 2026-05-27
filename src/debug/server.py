@@ -1,5 +1,5 @@
 """
-Agent-OS Visual Debug Server
+Agent-X Visual Debug Server
 Serves the debug UI dashboard and provides real-time WebSocket streams
 for browser screenshots, console logs, network traffic, and command history.
 """
@@ -14,7 +14,7 @@ from typing import Dict, Set, Optional
 
 from aiohttp import web
 
-logger = logging.getLogger("agent-os.debug")
+logger = logging.getLogger("agent-x.debug")
 
 STATIC_DIR = Path(__file__).parent / "static"
 MAX_LOG_ENTRIES = 500
@@ -363,7 +363,7 @@ class DebugServer:
             }
             # Pretty-print for readability
             body = json.dumps(export_data, indent=2, ensure_ascii=False)
-            filename = f"agent-os-cookies-{int(time.time())}.json"
+            filename = f"agent-x-cookies-{int(time.time())}.json"
             return web.Response(
                 body=body,
                 content_type="application/json",

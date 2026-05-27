@@ -1,14 +1,14 @@
-# Agent-OS — Usage Guide
+# Agent-X — Usage Guide
 
 ## Step 1: Install & Start
 
 ### Using Docker (Recommended)
 ```bash
 # Clone the repository
-git clone https://github.com/factspark23-hash/Agent-OS.git
-cd Agent-OS
+git clone https://github.com/factspark23-hash/Agent-X.git
+cd Agent-X
 
-# Start everything (PostgreSQL + Redis + Agent-OS)
+# Start everything (PostgreSQL + Redis + Agent-X)
 docker compose up -d
 
 # Verify it's running
@@ -19,8 +19,8 @@ curl http://localhost:8001/health
 
 ### Without Docker (Manual)
 ```bash
-git clone https://github.com/factspark23-hash/Agent-OS.git
-cd Agent-OS
+git clone https://github.com/factspark23-hash/Agent-X.git
+cd Agent-X
 chmod +x setup.sh && ./setup.sh
 python3 main.py --agent-token "your-token-here"
 ```
@@ -134,7 +134,7 @@ curl -X POST http://localhost:8001/command \
   -d '{
     "command": "fill-form",
     "fields": {
-      "q": "Agent-OS browser automation"
+      "q": "Agent-X browser automation"
     }
   }'
 ```
@@ -173,12 +173,12 @@ result = await call_tool("browser_click", {"selector": "a[href='/login']"})
 // Add to Claude Desktop config
 {
   "mcpServers": {
-    "agent-os": {
+    "agent-x": {
       "command": "python3",
-      "args": ["/path/to/Agent-OS/connectors/mcp_server.py"],
+      "args": ["/path/to/Agent-X/connectors/mcp_server.py"],
       "env": {
-        "AGENT_OS_URL": "http://localhost:8001",
-        "AGENT_OS_TOKEN": "your-token"
+        "AGENT_X_URL": "http://localhost:8001",
+        "AGENT_X_TOKEN": "your-token"
       }
     }
   }
@@ -187,9 +187,9 @@ result = await call_tool("browser_click", {"selector": "a[href='/login']"})
 
 #### From CLI (Bash/Python/Node/Any Language)
 ```bash
-./connectors/agent-os-tool.sh navigate "https://github.com"
-./connectors/agent-os-tool.sh screenshot
-./connectors/agent-os-tool.sh get-content
+./connectors/agent-x-tool.sh navigate "https://github.com"
+./connectors/agent-x-tool.sh screenshot
+./connectors/agent-x-tool.sh get-content
 ```
 
 ---
@@ -296,7 +296,7 @@ curl -X POST http://localhost:8001/command \
 ## Production Deployment
 
 ```bash
-# Full stack deploy (PostgreSQL + Redis + Agent-OS + Nginx)
+# Full stack deploy (PostgreSQL + Redis + Agent-X + Nginx)
 docker compose --profile with-nginx up -d
 
 # Set environment variables
@@ -304,7 +304,7 @@ export JWT_SECRET_KEY="your-super-secret-key-here"
 export POSTGRES_PASSWORD="strong-db-password"
 
 # View logs
-docker compose logs -f agent-os
+docker compose logs -f agent-x
 ```
 
 ---
@@ -318,4 +318,4 @@ docker compose logs -f agent-os
 
 ---
 
-_Built with dedication by the Agent-OS team_
+_Built with dedication by the Agent-X team_

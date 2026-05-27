@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 # ═══════════════════════════════════════════════════════════════
-# Agent-OS — ONE COMMAND INSTALL + AUTO-CONNECT
+# Agent-X — ONE COMMAND INSTALL + AUTO-CONNECT
 # ═══════════════════════════════════════════════════════════════
 #
 # Install + start + auto-configure MCP for Claude Code, Codex, OpenClaw
 #
 # Usage:
-#   curl -sSL https://raw.githubusercontent.com/factspark23-hash/Agent-OS/main/quickstart.sh | bash
+#   curl -sSL https://raw.githubusercontent.com/factspark23-hash/Agent-X/main/quickstart.sh | bash
 #
 # What happens:
-#   1. Downloads Agent-OS (no git needed)
+#   1. Downloads Agent-X (no git needed)
 #   2. Installs Python deps + Chromium
 #   3. Generates JWT secret + agent token
 #   4. Creates .env config
@@ -29,8 +29,8 @@ warn()  { echo -e "${YELLOW}  ⚠${NC} $1"; }
 fail()  { echo -e "${RED}  ✗${NC} $1"; exit 1; }
 
 # ─── Config ──────────────────────────────────────────────
-INSTALL_DIR="${AGENT_OS_DIR:-$HOME/.agent-os-server}"
-REPO_URL="https://github.com/factspark23-hash/Agent-OS"
+INSTALL_DIR="${AGENT_X_DIR:-$HOME/.agent-x-server}"
+REPO_URL="https://github.com/factspark23-hash/Agent-X"
 WS_PORT="${WS_PORT:-8000}"
 HTTP_PORT="${HTTP_PORT:-8001}"
 
@@ -44,7 +44,7 @@ while [[ $# -gt 0 ]]; do
         --token)     CUSTOM_TOKEN="$2"; shift 2 ;;
         --no-start)  NO_START=true; shift ;;
         --help|-h)
-            echo -e "${BOLD}Agent-OS Quick Start${NC}"
+            echo -e "${BOLD}Agent-X Quick Start${NC}"
             echo "  ./quickstart.sh [--dir PATH] [--token TOKEN] [--headed] [--port PORT] [--no-start]"
             exit 0 ;;
         *) shift ;;
@@ -58,7 +58,7 @@ gen_token()  { python3 -c 'import secrets; print("aos-" + secrets.token_hex(16))
 # ─── Banner ──────────────────────────────────────────────
 echo ""
 echo -e "${CYAN}╔═══════════════════════════════════════════════╗${NC}"
-echo -e "${CYAN}║${NC}    ${GREEN}${BOLD}🤖 Agent-OS — One Command Setup${NC}           ${CYAN}║${NC}"
+echo -e "${CYAN}║${NC}    ${GREEN}${BOLD}🤖 Agent-X — One Command Setup${NC}           ${CYAN}║${NC}"
 echo -e "${CYAN}╚═══════════════════════════════════════════════╝${NC}"
 echo ""
 
@@ -77,7 +77,7 @@ done
 [ -z "$PYTHON" ] && fail "Python 3.10+ required"
 
 # ─── Step 2: Download (NO GIT NEEDED) ───────────────────
-step "Downloading Agent-OS..."
+step "Downloading Agent-X..."
 mkdir -p "$INSTALL_DIR"
 
 # Download as tarball — no git required
@@ -85,11 +85,11 @@ DOWNLOAD_OK=false
 for url in \
     "${REPO_URL}/archive/refs/heads/main.tar.gz" \
     "${REPO_URL}/archive/main.tar.gz"; do
-    if curl -sSL "$url" -o /tmp/agent-os.tar.gz 2>/dev/null; then
-        tar -xzf /tmp/agent-os.tar.gz -C /tmp/ 2>/dev/null
+    if curl -sSL "$url" -o /tmp/agent-x.tar.gz 2>/dev/null; then
+        tar -xzf /tmp/agent-x.tar.gz -C /tmp/ 2>/dev/null
         # Move contents (strip top-level folder)
-        cp -r /tmp/Agent-OS-main/* "$INSTALL_DIR/" 2>/dev/null || cp -r /tmp/Agent-OS-*/ "$INSTALL_DIR/" 2>/dev/null
-        rm -rf /tmp/Agent-OS-main /tmp/Agent-OS-* /tmp/agent-os.tar.gz
+        cp -r /tmp/Agent-X-main/* "$INSTALL_DIR/" 2>/dev/null || cp -r /tmp/Agent-X-*/ "$INSTALL_DIR/" 2>/dev/null
+        rm -rf /tmp/Agent-X-main /tmp/Agent-X-* /tmp/agent-x.tar.gz
         DOWNLOAD_OK=true
         break
     fi
@@ -98,10 +98,10 @@ done
 if ! $DOWNLOAD_OK; then
     # Fallback: try wget
     if command -v wget > /dev/null 2>&1; then
-        wget -q "${REPO_URL}/archive/refs/heads/main.tar.gz" -O /tmp/agent-os.tar.gz
-        tar -xzf /tmp/agent-os.tar.gz -C /tmp/
-        cp -r /tmp/Agent-OS-main/* "$INSTALL_DIR/" 2>/dev/null || cp -r /tmp/Agent-OS-*/"$INSTALL_DIR/" 2>/dev/null
-        rm -rf /tmp/Agent-OS-* /tmp/agent-os.tar.gz
+        wget -q "${REPO_URL}/archive/refs/heads/main.tar.gz" -O /tmp/agent-x.tar.gz
+        tar -xzf /tmp/agent-x.tar.gz -C /tmp/
+        cp -r /tmp/Agent-X-main/* "$INSTALL_DIR/" 2>/dev/null || cp -r /tmp/Agent-X-*/"$INSTALL_DIR/" 2>/dev/null
+        rm -rf /tmp/Agent-X-* /tmp/agent-x.tar.gz
         DOWNLOAD_OK=true
     fi
 fi
@@ -114,7 +114,7 @@ if ! $DOWNLOAD_OK; then
     fi
 fi
 
-$DOWNLOAD_OK || fail "Cannot download Agent-OS. Check internet connection."
+$DOWNLOAD_OK || fail "Cannot download Agent-X. Check internet connection."
 ok "Downloaded to $INSTALL_DIR"
 cd "$INSTALL_DIR"
 
@@ -186,8 +186,8 @@ REDIS_URL=${REDIS_URL}
 EOF
 
 # Write config.yaml
-mkdir -p ~/.agent-os
-cat > ~/.agent-os/config.yaml << EOF
+mkdir -p ~/.agent-x
+cat > ~/.agent-x/config.yaml << EOF
 server:
   host: 127.0.0.1
   ws_port: ${WS_PORT}
@@ -231,7 +231,7 @@ else
     pkill -f "python3 main.py" 2>/dev/null || true
     sleep 1
     export $(grep -v '^#' .env | grep -v '^$' | xargs) 2>/dev/null
-    nohup python3 main.py --agent-token "$AGENT_TOKEN" --port "$WS_PORT" > agent-os.log 2>&1 &
+    nohup python3 main.py --agent-token "$AGENT_TOKEN" --port "$WS_PORT" > agent-x.log 2>&1 &
 
     echo -n "  Waiting"
     for i in $(seq 1 20); do
@@ -259,12 +259,12 @@ try:
     with open('$CLAUDE_CONFIG') as f: cfg = json.load(f)
 except: cfg = {}
 if 'mcpServers' not in cfg: cfg['mcpServers'] = {}
-cfg['mcpServers']['agent-os'] = {
+cfg['mcpServers']['agent-x'] = {
     'command': '$(which python3)',
     'args': ['$INSTALL_DIR/connectors/mcp_server.py'],
     'env': {
-        'AGENT_OS_URL': 'http://127.0.0.1:${HTTP_PORT}',
-        'AGENT_OS_TOKEN': '${AGENT_TOKEN}'
+        'AGENT_X_URL': 'http://127.0.0.1:${HTTP_PORT}',
+        'AGENT_X_TOKEN': '${AGENT_TOKEN}'
     }
 }
 with open('$CLAUDE_CONFIG', 'w') as f: json.dump(cfg, f, indent=2)
@@ -274,12 +274,12 @@ print('ok')
         cat > "$CLAUDE_CONFIG" << MCPEOF
 {
   "mcpServers": {
-    "agent-os": {
+    "agent-x": {
       "command": "$(which python3)",
       "args": ["$INSTALL_DIR/connectors/mcp_server.py"],
       "env": {
-        "AGENT_OS_URL": "http://127.0.0.1:${HTTP_PORT}",
-        "AGENT_OS_TOKEN": "${AGENT_TOKEN}"
+        "AGENT_X_URL": "http://127.0.0.1:${HTTP_PORT}",
+        "AGENT_X_TOKEN": "${AGENT_TOKEN}"
       }
     }
   }
@@ -293,10 +293,10 @@ fi
 OPENCLAW_DIR="$HOME/.openclaw"
 if [ -d "$OPENCLAW_DIR" ]; then
     mkdir -p "$OPENCLAW_DIR/skills"
-    cat > "$OPENCLAW_DIR/skills/agent-os.json" << OCEOF
+    cat > "$OPENCLAW_DIR/skills/agent-x.json" << OCEOF
 {
-  "name": "agent-os",
-  "description": "Agent-OS stealth browser automation",
+  "name": "agent-x",
+  "description": "Agent-X stealth browser automation",
   "url": "http://127.0.0.1:${HTTP_PORT}",
   "token": "${AGENT_TOKEN}",
   "commands": ["navigate", "click", "screenshot", "fill-form", "smart-click", "evaluate-js"]
@@ -309,14 +309,14 @@ fi
 CODEX_CONFIG="$HOME/.codex/config.toml"
 if [ -d "$HOME/.codex" ] || command -v codex > /dev/null 2>&1; then
     mkdir -p "$(dirname "$CODEX_CONFIG")"
-    if ! grep -q "agent-os" "$CODEX_CONFIG" 2>/dev/null; then
+    if ! grep -q "agent-x" "$CODEX_CONFIG" 2>/dev/null; then
         cat >> "$CODEX_CONFIG" << CODEXEOF
 
-# Agent-OS MCP Server (auto-configured by quickstart.sh)
-[mcp_servers.agent-os]
+# Agent-X MCP Server (auto-configured by quickstart.sh)
+[mcp_servers.agent-x]
 command = "$(which python3)"
 args = ["$INSTALL_DIR/connectors/mcp_server.py"]
-env = { AGENT_OS_URL = "http://127.0.0.1:${HTTP_PORT}", AGENT_OS_TOKEN = "${AGENT_TOKEN}" }
+env = { AGENT_X_URL = "http://127.0.0.1:${HTTP_PORT}", AGENT_X_TOKEN = "${AGENT_TOKEN}" }
 CODEXEOF
         ok "Codex MCP configured" && MCP_CONFIGURED=$((MCP_CONFIGURED+1))
     fi
@@ -330,7 +330,7 @@ fi
 # ─── Done! ───────────────────────────────────────────────
 echo ""
 echo -e "${CYAN}╔═══════════════════════════════════════════════╗${NC}"
-echo -e "${CYAN}║${NC}       ${GREEN}${BOLD}✅ Agent-OS Ready!${NC}                   ${CYAN}║${NC}"
+echo -e "${CYAN}║${NC}       ${GREEN}${BOLD}✅ Agent-X Ready!${NC}                   ${CYAN}║${NC}"
 echo -e "${CYAN}╚═══════════════════════════════════════════════╝${NC}"
 echo ""
 echo -e "  ${BOLD}Server:${NC}"
@@ -339,9 +339,9 @@ echo -e "    Health:    ${CYAN}http://127.0.0.1:${HTTP_PORT}/health${NC}"
 echo -e "    Token:     ${GREEN}${AGENT_TOKEN}${NC}"
 echo ""
 echo -e "  ${BOLD}Connect:${NC}"
-echo -e "    ${YELLOW}Claude Code:${NC}  Restart Claude Code → Agent-OS auto-connected"
-echo -e "    ${YELLOW}Codex:${NC}       Restart Codex → Agent-OS auto-connected"
-echo -e "    ${YELLOW}OpenClaw:${NC}    Restart OpenClaw → Agent-OS auto-connected"
+echo -e "    ${YELLOW}Claude Code:${NC}  Restart Claude Code → Agent-X auto-connected"
+echo -e "    ${YELLOW}Codex:${NC}       Restart Codex → Agent-X auto-connected"
+echo -e "    ${YELLOW}OpenClaw:${NC}    Restart OpenClaw → Agent-X auto-connected"
 echo ""
 echo -e "  ${BOLD}Or use directly:${NC}"
 echo -e "    ${CYAN}curl -X POST http://127.0.0.1:${HTTP_PORT}/command \\${NC}"
@@ -351,5 +351,5 @@ echo ""
 echo -e "  ${BOLD}Manage:${NC}"
 echo -e "    Start:   ${CYAN}cd $INSTALL_DIR && ./start.sh${NC}"
 echo -e "    Stop:    ${CYAN}cd $INSTALL_DIR && ./stop.sh${NC}"
-echo -e "    Logs:    ${CYAN}tail -f $INSTALL_DIR/agent-os.log${NC}"
+echo -e "    Logs:    ${CYAN}tail -f $INSTALL_DIR/agent-x.log${NC}"
 echo ""

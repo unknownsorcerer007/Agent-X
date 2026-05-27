@@ -1,5 +1,5 @@
 """
-Agent-OS Web-Need Router — Lightweight Zero-Dependency Decision Engine
+Agent-X Web-Need Router — Lightweight Zero-Dependency Decision Engine
 
 Decides whether an AI agent query needs web/browser access or can be answered
 from the agent's own knowledge. Uses pure rule-based heuristics — no LLM calls,
@@ -25,7 +25,7 @@ import logging
 from typing import Dict, List, Optional, Any
 from dataclasses import dataclass, field
 
-logger = logging.getLogger("agent-os.web_need_router")
+logger = logging.getLogger("agent-x.web_need_router")
 
 
 # ─── Data Classes ──────────────────────────────────────────────

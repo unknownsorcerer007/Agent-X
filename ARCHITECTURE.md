@@ -1,4 +1,4 @@
-# Agent-OS — Architecture Reference
+# Agent-X — Architecture Reference
 
 > **Purpose:** Internal reference for AI assistant (x). No need to re-read the full codebase every time.
 > Last updated: 2026-04-10
@@ -9,7 +9,7 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                      Agent-OS v3.0                          │
+│                      Agent-X v3.0                          │
 ├──────────────┬──────────────┬──────────────┬────────────────┤
 │  Connectors  │  Agent Server│  Debug UI    │  Auth Layer    │
 │  (MCP/OpenAI │  (WS + REST) │  (Dashboard) │  (JWT/API Key) │
@@ -39,7 +39,7 @@
 ## 📁 Directory Structure
 
 ```
-Agent-OS/
+Agent-X/
 ├── main.py                    # 🚀 Entry point — AgentOS class, CLI args, startup/shutdown
 ├── qwen_bridge.py             # Qwen AI bridge connector
 ├── human_demo.py              # Demo script
@@ -199,7 +199,7 @@ Agent (AI) ──► WebSocket/HTTP ──► Auth Check ──► Rate Limit �
 
 ## ⚙️ Configuration
 
-**Config file:** `~/.agent-os/config.yaml` (auto-created with defaults)
+**Config file:** `~/.agent-x/config.yaml` (auto-created with defaults)
 **Env vars:** `.env` file (see `.env.example`)
 
 ### Key Config Sections
@@ -268,7 +268,7 @@ All connectors expose the same tool set — they're just different transport lay
 
 ### Docker (Recommended)
 ```bash
-docker run -d -p 8000:8000 -p 8001:8001 --name agent-os factspark23-hash/agent-os
+docker run -d -p 8000:8000 -p 8001:8001 --name agent-x factspark23-hash/agent-x
 ```
 
 ### Local Development
@@ -362,6 +362,6 @@ pytest tests/test_extended.py -v
 - Version: 3.0.0 (Production Edition)
 - No GPU required — runs on CPU with Playwright Chromium
 - Zero telemetry — everything runs locally
-- Config at `~/.agent-os/config.yaml`
-- Cookies encrypted with Fernet (AES-256) at `~/.agent-os/cookies/`
-- Sessions stored at `~/.agent-os/sessions/`
+- Config at `~/.agent-x/config.yaml`
+- Cookies encrypted with Fernet (AES-256) at `~/.agent-x/cookies/`
+- Sessions stored at `~/.agent-x/sessions/`

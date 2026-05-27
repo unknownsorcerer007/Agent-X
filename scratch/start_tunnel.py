@@ -5,7 +5,7 @@ import sys
 
 def main():
     print("Running diagnostic tunnel test...")
-    repo_dir = r"C:\Users\eourn\.gemini\antigravity\scratch\repo\Agent-OS-Final-Pro-main"
+    repo_dir = r"C:\Users\eourn\.gemini\antigravity\scratch\repo\Agent-X-Final-Pro-main"
     cloudflared_path = os.path.join(repo_dir, "cloudflared.exe")
     
     cmd = [

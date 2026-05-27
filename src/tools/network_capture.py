@@ -1,5 +1,5 @@
 """
-Agent-OS Network Capture Engine
+Agent-X Network Capture Engine
 Captures, filters, and replays HTTP/HTTPS requests from browser sessions.
 Production-grade with memory limits, filtering, and export capabilities.
 """
@@ -14,7 +14,7 @@ from collections import deque
 from dataclasses import dataclass, asdict
 from pathlib import Path
 
-logger = logging.getLogger("agent-os.network_capture")
+logger = logging.getLogger("agent-x.network_capture")
 
 
 @dataclass
@@ -66,7 +66,7 @@ class NetworkCapture:
         self._active: Dict[str, bool] = {}  # page_id -> is capturing
         self._filters: Dict[str, Dict] = {}  # page_id -> filter config
         self._request_map: Dict[str, NetworkRequest] = {}  # id -> request (for quick lookup)
-        self._export_dir = Path.home() / ".agent-os" / "captures"
+        self._export_dir = Path.home() / ".agent-x" / "captures"
         self._export_dir.mkdir(parents=True, exist_ok=True)
 
     async def start_capture(
@@ -303,7 +303,7 @@ class NetworkCapture:
         har = {
             "log": {
                 "version": "1.2",
-                "creator": {"name": "Agent-OS", "version": "2.0"},
+                "creator": {"name": "Agent-X", "version": "2.0"},
                 "entries": har_entries,
             }
         }

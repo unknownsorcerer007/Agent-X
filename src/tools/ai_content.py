@@ -1,5 +1,5 @@
 """
-Agent-OS AI Content Extractor
+Agent-X AI Content Extractor
 Transforms raw browser data into structured, symmetrical JSON that
 AI agents can instantly parse — no fluff, no HTML noise, no guessing.
 
@@ -28,7 +28,7 @@ from dataclasses import dataclass, field, asdict
 from urllib.parse import urlparse, urlunparse, parse_qs, urlencode
 from difflib import SequenceMatcher
 
-logger = logging.getLogger("agent-os.ai_content")
+logger = logging.getLogger("agent-x.ai_content")
 
 
 # ─── Structured Output Types ────────────────────────────────────

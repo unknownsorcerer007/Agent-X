@@ -1,5 +1,5 @@
 """
-Agent-OS Enhanced Cloudflare Bypass Engine
+Agent-X Enhanced Cloudflare Bypass Engine
 Production-grade Cloudflare v1/v2/v3 + Turnstile + Managed Challenge bypass.
 
 This is the NEXT-GEN bypass system that handles:
@@ -32,7 +32,7 @@ from enum import Enum
 from pathlib import Path
 from urllib.parse import urlparse
 
-logger = logging.getLogger("agent-os.cf-bypass")
+logger = logging.getLogger("agent-x.cf-bypass")
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -78,7 +78,7 @@ class ClearanceStore:
     """
 
     def __init__(self, storage_dir: str = None):
-        self._dir = Path(storage_dir or os.path.expanduser("~/.agent-os/cf_clearance"))
+        self._dir = Path(storage_dir or os.path.expanduser("~/.agent-x/cf_clearance"))
         self._dir.mkdir(parents=True, exist_ok=True)
         self._cache: Dict[str, Dict] = {}  # domain -> cookie data
         self._load()

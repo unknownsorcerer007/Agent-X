@@ -1,5 +1,5 @@
 """
-Agent-OS Login Handoff Engine
+Agent-X Login Handoff Engine
 ==============================
 When AI agent encounters a login/signup page, it pauses automation and hands
 control to the human user. After the user completes login, control returns
@@ -27,7 +27,7 @@ from enum import Enum
 from typing import Any, Dict, List, Optional, Set, Tuple
 from urllib.parse import urlparse
 
-logger = logging.getLogger("agent-os.login-handoff")
+logger = logging.getLogger("agent-x.login-handoff")
 
 
 # ═══════════════════════════════════════════════════════════════

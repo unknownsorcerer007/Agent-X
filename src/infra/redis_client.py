@@ -1,5 +1,5 @@
 """
-Agent-OS Redis Layer
+Agent-X Redis Layer
 Distributed rate limiting, session caching, pub/sub for multi-instance coordination.
 Falls back gracefully to in-memory when Redis is unavailable.
 """
@@ -10,7 +10,7 @@ import time
 from collections import defaultdict
 from typing import Any, Dict, Optional, Tuple
 
-logger = logging.getLogger("agent-os.infra.redis")
+logger = logging.getLogger("agent-x.infra.redis")
 
 
 class InMemoryFallback:

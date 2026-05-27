@@ -1,5 +1,5 @@
 """
-Agent-OS Persistent Chromium Engine
+Agent-X Persistent Chromium Engine
 Production-grade persistent browser for millions of concurrent users.
 
 Architecture:
@@ -11,7 +11,7 @@ Architecture:
 
 Key design decisions:
   - Uses Playwright launch_persistent_context for real persistence
-  - Each user gets isolated profile dir under ~/.agent-os/users/{user_id}/
+  - Each user gets isolated profile dir under ~/.agent-x/users/{user_id}/
   - Multiple Chromium instances for horizontal scaling
   - CDP reconnection if browser crashes but process survives
   - Auto-cleanup of idle contexts with configurable TTL
@@ -42,7 +42,7 @@ try:
 except ImportError:
     _FERNET_AVAILABLE = False
 
-logger = logging.getLogger("agent-os.persistent")
+logger = logging.getLogger("agent-x.persistent")
 
 
 def _is_docker_cgroup() -> bool:
@@ -353,7 +353,7 @@ class UserContext:
 
     def _get_or_create_cookie_key(self) -> bytes:
         """Get or create encryption key for cookie storage."""
-        key_path = Path(os.path.expanduser("~/.agent-os/.cookie_key"))
+        key_path = Path(os.path.expanduser("~/.agent-x/.cookie_key"))
         if key_path.exists():
             return key_path.read_bytes()
         if _FERNET_AVAILABLE:
@@ -361,7 +361,7 @@ class UserContext:
         else:
             # Fallback: generate a deterministic key from user_id if Fernet unavailable
             import hashlib
-            key = hashlib.sha256(f"agent-os-cookie-key-{self.user_id}".encode()).digest()
+            key = hashlib.sha256(f"agent-x-cookie-key-{self.user_id}".encode()).digest()
         key_path.parent.mkdir(parents=True, exist_ok=True)
         key_path.write_bytes(key)
         key_path.chmod(0o600)
@@ -470,9 +470,9 @@ class BrowserInstance:
         ]
         # In Docker containers, Chromium cannot use its own namespace sandbox
         # because the container itself IS the sandbox. Auto-detect Docker
-        # via /.dockerenv file or AGENT_OS_DOCKER env var.
+        # via /.dockerenv file or AGENT_X_DOCKER env var.
         in_docker = (
-            os.getenv("AGENT_OS_DOCKER") == "1"
+            os.getenv("AGENT_X_DOCKER") == "1"
             or os.path.exists("/.dockerenv")
             or os.path.exists("/run/.containerenv")
             or self._check_cgroup_container()
@@ -543,7 +543,7 @@ class BrowserInstance:
             oldest_uid = min(self.user_contexts, key=lambda uid: self.user_contexts[uid].last_active)
             await self.remove_context(oldest_uid)
 
-        profile_dir = os.path.expanduser(f"~/.agent-os/users/{user_id}")
+        profile_dir = os.path.expanduser(f"~/.agent-x/users/{user_id}")
         ctx = UserContext(user_id, profile_dir, self)
         await ctx.initialize(self.config)
         self.user_contexts[user_id] = ctx
@@ -698,7 +698,7 @@ class PersistentBrowserManager:
         self._user_instance_map: Dict[str, str] = {}  # user_id -> instance_id
         self._health_task: Optional[asyncio.Task] = None
         self._cleanup_task: Optional[asyncio.Task] = None
-        self._state_dir = Path(os.path.expanduser("~/.agent-os/state"))
+        self._state_dir = Path(os.path.expanduser("~/.agent-x/state"))
         self._state_dir.mkdir(parents=True, exist_ok=True)
 
         # Config

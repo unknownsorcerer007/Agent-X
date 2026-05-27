@@ -1,5 +1,5 @@
 """
-Agent-OS Human Mimicry Engine
+Agent-X Human Mimicry Engine
 Generates realistic human behavior patterns:
 - Mouse movement curves (Bezier-based)
 - Typing rhythm simulation

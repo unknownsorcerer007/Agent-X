@@ -1,5 +1,5 @@
 """
-Agent-OS Proxy Rotation Engine
+Agent-X Proxy Rotation Engine
 Production-grade proxy pool management, health checking, and intelligent rotation.
 
 Features:
@@ -29,7 +29,7 @@ from typing import Any, Dict, List, Optional, Set, Tuple
 from collections import defaultdict
 from urllib.parse import urlparse
 
-logger = logging.getLogger("agent-os.proxy_rotation")
+logger = logging.getLogger("agent-x.proxy_rotation")
 
 
 # ─── Proxy Data Model ───────────────────────────────────────
@@ -395,7 +395,7 @@ class ProxyPool:
         self._health_checker = health_checker or ProxyHealthChecker()
         self._health_task: Optional[asyncio.Task] = None
         self._health_check_interval: float = 60  # seconds
-        self._storage_dir = Path(os.path.expanduser("~/.agent-os/proxies"))
+        self._storage_dir = Path(os.path.expanduser("~/.agent-x/proxies"))
         self._storage_dir.mkdir(parents=True, exist_ok=True)
 
     def add(self, url: str, **kwargs) -> ProxyInfo:

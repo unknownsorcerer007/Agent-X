@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Agent-OS Setup Script
+# Agent-X Setup Script
 # Installs dependencies, Playwright, and verifies everything works.
 set -e
 
@@ -30,7 +30,7 @@ run_privileged() {
     fi
 }
 
-echo "🤖 Agent-OS Setup"
+echo "🤖 Agent-X Setup"
 echo "================="
 echo ""
 

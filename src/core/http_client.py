@@ -1,5 +1,5 @@
 """
-Agent-OS TLS-Spoofing HTTP Client
+Agent-X TLS-Spoofing HTTP Client
 Impersonates real Chrome TLS fingerprint via curl-cffi for bypassing
 JA3/JA4-based bot detection (Bloomberg, Oracle, HomeDepot, etc.).
 Falls back to standard httpx if curl-cffi is unavailable.
@@ -9,7 +9,7 @@ import random
 from typing import Any, Dict, Optional
 from urllib.parse import urlparse
 
-logger = logging.getLogger("agent-os.http_client")
+logger = logging.getLogger("agent-x.http_client")
 
 # ── curl-cffi availability check ──────────────────────────────
 try:

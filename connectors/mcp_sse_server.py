@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Agent-OS MCP SSE Server
+Agent-X MCP SSE Server
 =======================
 Exposes the Model Context Protocol (MCP) over HTTP/SSE.
 Allows Claude Web version (Claude.ai) to connect directly using a public URL.
@@ -29,7 +29,7 @@ from connectors._tool_registry import get_command_map, get_mcp_tools
 
 # Resolve token and url
 def resolve_agent_token() -> str:
-    token = os.environ.get("AGENT_OS_TOKEN")
+    token = os.environ.get("AGENT_X_TOKEN")
     if token:
         return token
     repo_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -45,20 +45,20 @@ def resolve_agent_token() -> str:
                         k, v = line.split("=", 1)
                         k = k.strip()
                         v = v.strip().strip('"').strip("'")
-                        if k in ("AGENT_TOKEN", "AGENT_OS_TOKEN") and v:
+                        if k in ("AGENT_TOKEN", "AGENT_X_TOKEN") and v:
                             return v
         except Exception:
             pass
     return "claude-web-token"
 
-AGENT_OS_URL = os.environ.get("AGENT_OS_URL", "http://localhost:8001")
-AGENT_OS_TOKEN = resolve_agent_token()
+AGENT_X_URL = os.environ.get("AGENT_X_URL", "http://localhost:8001")
+AGENT_X_TOKEN = resolve_agent_token()
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(name)s] %(message)s", stream=sys.stderr)
-logger = logging.getLogger("agent-os-mcp-sse")
+logger = logging.getLogger("agent-x-mcp-sse")
 
 # Create MCP server
-server = Server("agent-os")
+server = Server("agent-x")
 
 # Build Tool Definitions
 TOOLS_LIST: List[Tool] = []
@@ -85,12 +85,12 @@ async def _get_client() -> httpx.AsyncClient:
     return _client
 
 async def agent_os_command(command: str, params: Dict[str, Any] = None) -> Dict[str, Any]:
-    payload = {"token": AGENT_OS_TOKEN, "command": command}
+    payload = {"token": AGENT_X_TOKEN, "command": command}
     if params:
         payload.update(params)
     client = await _get_client()
     try:
-        response = await client.post(f"{AGENT_OS_URL}/command", json=payload)
+        response = await client.post(f"{AGENT_X_URL}/command", json=payload)
         return response.json()
     except Exception as e:
         return {"status": "error", "error": str(e)}
@@ -98,7 +98,7 @@ async def agent_os_command(command: str, params: Dict[str, Any] = None) -> Dict[
 async def agent_os_status() -> Dict[str, Any]:
     client = await _get_client()
     try:
-        response = await client.get(f"{AGENT_OS_URL}/health")
+        response = await client.get(f"{AGENT_X_URL}/health")
         return response.json()
     except Exception as e:
         return {"status": "error", "error": str(e)}
@@ -211,7 +211,7 @@ class DynamicSseServerTransport(SseServerTransport):
                 self._current_session_id = None
             logger.info(f"Cleaned up session with ID: {session_id}")
 
-app = FastAPI(title="Agent-OS MCP SSE Server")
+app = FastAPI(title="Agent-X MCP SSE Server")
 
 # Add CORS middleware to allow the browser to connect
 from fastapi.middleware.cors import CORSMiddleware
@@ -296,7 +296,7 @@ async def oauth_authorize(
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Authorize Agent-OS Connection</title>
+    <title>Authorize Agent-X Connection</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -562,7 +562,7 @@ async def oauth_authorize(
         </div>
 
         <div class="footer">
-            Agent-OS v3.2.0 • Secure End-to-End Tunneling
+            Agent-X v3.2.0 • Secure End-to-End Tunneling
         </div>
     </div>
 

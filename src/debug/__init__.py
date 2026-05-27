@@ -1,6 +1,6 @@
 """
-Agent-OS Visual Debug UI
-Real-time web dashboard for monitoring and debugging Agent-OS.
+Agent-X Visual Debug UI
+Real-time web dashboard for monitoring and debugging Agent-X.
 """
 
 from .server import DebugServer

@@ -1,5 +1,5 @@
 """
-Agent-OS Form Filler
+Agent-X Form Filler
 Automates job applications and complex multi-step forms.
 """
 import asyncio
@@ -7,7 +7,7 @@ import logging
 import random
 from typing import Dict, List, Optional
 
-logger = logging.getLogger("agent-os.form-filler")
+logger = logging.getLogger("agent-x.form-filler")
 
 
 class FormFiller:

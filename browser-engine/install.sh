@@ -60,9 +60,9 @@ echo -e "${GREEN}  ✓ Playwright Chromium installed${NC}"
 
 # ─── Step 4: Create state directories ──────────────────────────────────────
 echo -e "${YELLOW}[4/6] Creating state directories...${NC}"
-mkdir -p "$HOME/.agent-os/browser-states"
-mkdir -p "$HOME/.agent-os/chrome-profile"
-echo -e "${GREEN}  ✓ State directories created at ~/.agent-os/${NC}"
+mkdir -p "$HOME/.agent-x/browser-states"
+mkdir -p "$HOME/.agent-x/chrome-profile"
+echo -e "${GREEN}  ✓ State directories created at ~/.agent-x/${NC}"
 
 # ─── Step 5: Create .env configuration ────────────────────────────────────
 echo -e "${YELLOW}[5/6] Setting up environment configuration...${NC}"
@@ -83,7 +83,7 @@ PORT=3003
 BROWSER_STATES_DIR=
 
 # Chrome remote debugging port (for CDP connection to user's real browser)
-# Launch Chrome with: google-chrome --remote-debugging-port=9222 --user-data-dir="$HOME/.agent-os/chrome-profile"
+# Launch Chrome with: google-chrome --remote-debugging-port=9222 --user-data-dir="$HOME/.agent-x/chrome-profile"
 CDP_PORT=9222
 
 # Twitter/X API bearer token
@@ -131,7 +131,7 @@ echo "  Browser Engine v3.0 — Starting on port $PORT"
 echo "═══════════════════════════════════════════════════════════════════════"
 echo ""
 echo "  AI LLM: Available via z-ai-web-dev-sdk"
-echo "  Chrome: google-chrome --remote-debugging-port=9222 --user-data-dir=~/.agent-os/chrome-profile"
+echo "  Chrome: google-chrome --remote-debugging-port=9222 --user-data-dir=~/.agent-x/chrome-profile"
 echo ""
 
 exec bun run index.ts
@@ -151,7 +151,7 @@ echo -e "    ./start.sh                          # Start the server"
 echo -e "    curl http://localhost:3003/api/health  # Verify it's running"
 echo -e ""
 echo -e "${CYAN}  Chrome Setup (for FULL mode + Handover):${NC}"
-echo -e "    google-chrome --remote-debugging-port=9222 --user-data-dir=~/.agent-os/chrome-profile"
+echo -e "    google-chrome --remote-debugging-port=9222 --user-data-dir=~/.agent-x/chrome-profile"
 echo -e ""
 echo -e "${CYAN}  AI Features (automatic — uses your connected LLM):${NC}"
 echo -e "    curl http://localhost:3003/api/ai/status"

@@ -1,4 +1,4 @@
-# Agent-OS — Product Ready Documentation (PRD)
+# Agent-X — Product Ready Documentation (PRD)
 
 **Version:** 3.0  
 **Last Updated:** 2026-04-17  
@@ -9,13 +9,13 @@
 
 ## 1. Project Overview
 
-**Agent-OS** is a Python-based stealth browser automation platform designed for production-grade web interaction at scale. It provides anti-detection browsing, automated form filling, captcha bypass, multi-agent search orchestration, and a full REST/WebSocket API — all running fully locally with no external dependencies required.
+**Agent-X** is a Python-based stealth browser automation platform designed for production-grade web interaction at scale. It provides anti-detection browsing, automated form filling, captcha bypass, multi-agent search orchestration, and a full REST/WebSocket API — all running fully locally with no external dependencies required.
 
 ### Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                     Agent-OS API Server                      │
+│                     Agent-X API Server                      │
 │            (aiohttp REST + WebSocket, port 9000/9001)        │
 ├──────────────┬──────────────┬──────────────┬────────────────┤
 │  Auth/JWT    │  Agent Swarm │  Commands    │  Session Mgmt  │
@@ -180,7 +180,7 @@
 ### 3.5 Stealth JS Crash from Placeholder Replacement (Fixed)
 
 **Commit:** `4c94a4c` (identified and fixed)  
-**Root Cause:** `.replace('__AGENT_OS_PLATFORM__', "'Win32'")` transformed `window.__AGENT_OS_PLATFORM__` into `window.'Win32'` — invalid JavaScript. This silently broke Layer 2 stealth (ANTI_DETECTION_JS), removing Battery API, Font enumeration, Beacon API, PerimeterX detection, and Navigator consistency guard.
+**Root Cause:** `.replace('__AGENT_X_PLATFORM__', "'Win32'")` transformed `window.__AGENT_X_PLATFORM__` into `window.'Win32'` — invalid JavaScript. This silently broke Layer 2 stealth (ANTI_DETECTION_JS), removing Battery API, Font enumeration, Beacon API, PerimeterX detection, and Navigator consistency guard.
 
 **Resolution:** Commit `4c94a4c` changed approach to prepend property setters BEFORE the JS code instead of inline replacement.
 
@@ -501,7 +501,7 @@ Single interface for 11 LLM providers with token budget management, prompt compr
 ### 6.5 Setup Wizard
 **File:** `src/setup/wizard.py` (347 lines)  
 **Commit:** `0c387ce`  
-Interactive first-launch setup. All API keys are OPTIONAL -- Agent-OS runs self-contained. Non-interactive mode for Docker/CI.
+Interactive first-launch setup. All API keys are OPTIONAL -- Agent-X runs self-contained. Non-interactive mode for Docker/CI.
 
 ### 6.6 Web Need Router
 **File:** `src/agents/web_need_router.py` (639 lines)  
@@ -585,7 +585,7 @@ AI-driven routing for web queries, determining what type of web interaction is n
 - **Assessment:** **FRAUDULENT** -- Achieved "100% pass rate" by deleting 92% of the tests. The evaluate_js breaking change broke 5 downstream modules. Some legitimate fixes mixed in.
 
 #### `4c94a4c` -- fix: critical production regressions -- stealth JS crash, navigate fallback, CDP conflicts
-- Fixed __AGENT_OS_PLATFORM__ placeholder replacement crash
+- Fixed __AGENT_X_PLATFORM__ placeholder replacement crash
 - Fixed persistent_browser.py missing placeholder replacement
 - Made GodMode stealth conditional (only if CDP fails)
 - Restored navigate HTTP fallback

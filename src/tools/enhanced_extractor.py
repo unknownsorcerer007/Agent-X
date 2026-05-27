@@ -1,5 +1,5 @@
 """
-Agent-OS Enhanced Extractor
+Agent-X Enhanced Extractor
 ===========================
 Integrates free open-source tools for better web data extraction:
   - trafilatura: State-of-the-art web text extraction
@@ -18,7 +18,7 @@ import logging
 import re
 from typing import Dict, Any, Optional
 
-logger = logging.getLogger("agent-os.enhanced_extractor")
+logger = logging.getLogger("agent-x.enhanced_extractor")
 
 
 class TrafilaturaExtractor:

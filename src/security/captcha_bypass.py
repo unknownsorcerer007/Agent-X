@@ -1,5 +1,5 @@
 """
-Agent-OS CAPTCHA Bypass System
+Agent-X CAPTCHA Bypass System
 Blocks bot-detection queries at the network level and returns fake human responses.
 This is the core anti-detection technology.
 """
@@ -11,7 +11,7 @@ from typing import List, Optional, Dict, Any
 from dataclasses import dataclass, field
 from urllib.parse import urlparse
 
-logger = logging.getLogger("agent-os.captcha-bypass")
+logger = logging.getLogger("agent-x.captcha-bypass")
 
 
 @dataclass
@@ -265,8 +265,8 @@ class CaptchaBypass:
             },
             "perimeterx": {
                 "status": 0,
-                "uuid": "agent-os-fake-uuid",
-                "vid": "agent-os-fake-vid",
+                "uuid": "agent-x-fake-uuid",
+                "vid": "agent-x-fake-vid",
                 "risk_score": random.randint(1, 15),
                 "action": "captcha_pass"
             },
@@ -289,7 +289,7 @@ class CaptchaBypass:
             },
             "kasada": {
                 "verified": True,
-                "token": "agent-os-kasada-token"
+                "token": "agent-x-kasada-token"
             },
             "f5": {
                 "bot_score": random.randint(90, 100),
@@ -297,10 +297,10 @@ class CaptchaBypass:
             },
             "arkose": {
                 "solved": True,
-                "session_token": "agent-os-arkose-token"
+                "session_token": "agent-x-arkose-token"
             },
             "threatmetrix": {
-                "org_id": "agent-os",
+                "org_id": "agent-x",
                 "result": "pass",
                 "risk_score": random.randint(1, 10)
             },
@@ -325,7 +325,7 @@ class CaptchaBypass:
                 "blocked": True,
                 "human": True,
                 "score": round(random.uniform(0.9, 0.99), 2),
-                "visitor_id": "agent-os-visitor-" + str(random.randint(100000, 999999))
+                "visitor_id": "agent-x-visitor-" + str(random.randint(100000, 999999))
             },
             "netacea": {
                 "decision": "allow",
@@ -407,7 +407,7 @@ class CaptchaBypass:
         for pattern in self.BOT_DETECTION_JS_PATTERNS:
             sanitized = re.sub(
                 rf'<script[^>]*>.*?{re.escape(pattern)}.*?</script>',
-                '<!-- Agent-OS: bot detection script blocked -->',
+                '<!-- Agent-X: bot detection script blocked -->',
                 sanitized,
                 flags=re.DOTALL | re.IGNORECASE
             )
@@ -434,14 +434,14 @@ class CaptchaBypass:
         for domain_pattern in detection_domain_patterns:
             sanitized = re.sub(
                 rf'<script[^>]+src=["\'][^"\']*{domain_pattern}[^"\']*["\'][^>]*>.*?</script>',
-                '<!-- Agent-OS: detection domain script blocked -->',
+                '<!-- Agent-X: detection domain script blocked -->',
                 sanitized,
                 flags=re.DOTALL | re.IGNORECASE
             )
             # Also catch self-closing script tags
             sanitized = re.sub(
                 rf'<script[^>]+src=["\'][^"\']*{domain_pattern}[^"\']*["\'][^>]*/>',
-                '<!-- Agent-OS: detection domain script blocked -->',
+                '<!-- Agent-X: detection domain script blocked -->',
                 sanitized,
                 flags=re.DOTALL | re.IGNORECASE
             )

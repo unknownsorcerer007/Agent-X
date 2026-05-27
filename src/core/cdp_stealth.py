@@ -1,5 +1,5 @@
 """
-Agent-OS CDP Stealth Engine
+Agent-X CDP Stealth Engine
 Complete anti-detection system using Chrome DevTools Protocol.
 
 This is the REAL fix for navigator.webdriver detection and all other
@@ -28,7 +28,7 @@ import logging
 import random
 from typing import Optional, Dict
 
-logger = logging.getLogger("agent-os.cdp-stealth")
+logger = logging.getLogger("agent-x.cdp-stealth")
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -786,7 +786,7 @@ Error.prepareStackTrace = function(error, stack) {{
         if (typeof result === 'string') {{
             return result
                 .replace(/playwright[^\\n]*/gi, '')
-                .replace(/agent-os[^\\n]*/gi, '')
+                .replace(/agent-x[^\\n]*/gi, '')
                 .replace(/at eval[^\\n]*/gi, '')
                 .replace(/at Object\\.\\u003canonymous\\u003e[^\\n]*/gi, '');
         }}

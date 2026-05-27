@@ -1,5 +1,5 @@
 """
-Agent-OS Multi-Agent Browsing Sharing Engine
+Agent-X Multi-Agent Browsing Sharing Engine
 Production-grade collaboration hub for multiple AI agents sharing browser sessions.
 
 Architecture:
@@ -29,7 +29,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Dict, List, Optional, Set, Tuple
 
-logger = logging.getLogger("agent-os.multi_agent")
+logger = logging.getLogger("agent-x.multi_agent")
 
 
 # ─── Agent Roles & Permissions ──────────────────────────────

@@ -1,5 +1,5 @@
 """
-Agent-OS Security Scanner
+Agent-X Security Scanner
 Bug bounty tools: XSS scanner, SQL injection detector, sensitive data finder.
 """
 import asyncio
@@ -9,7 +9,7 @@ import urllib.parse
 from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
 
-logger = logging.getLogger("agent-os.scanner")
+logger = logging.getLogger("agent-x.scanner")
 
 
 @dataclass

@@ -1,5 +1,5 @@
 """
-Agent-OS Configuration Management — Production Edition
+Agent-X Configuration Management — Production Edition
 Handles all settings, with database/Redis/JWT config support.
 JWT is used for API authentication (REST + WebSocket), not frontend.
 """
@@ -14,7 +14,7 @@ from typing import Optional, Dict, Any
 
 DEFAULT_CONFIG = {
     "server": {
-        "host": os.environ.get("AGENT_OS_HOST", "127.0.0.1"),
+        "host": os.environ.get("AGENT_X_HOST", "127.0.0.1"),
         "ws_port": 8000,
         "http_port": 8001,
         "debug_port": 8002,
@@ -46,7 +46,7 @@ DEFAULT_CONFIG = {
         "algorithm": "HS256",
         "access_token_expire_minutes": 15,
         "refresh_token_expire_days": 30,
-        "issuer": "agent-os",
+        "issuer": "agent-x",
     },
     "browser": {
         "headless": True,
@@ -146,16 +146,16 @@ DEFAULT_CONFIG = {
     "logging": {
         "level": "INFO",
         "json_logs": False,
-        "service_name": "agent-os",
+        "service_name": "agent-x",
     },
 }
 
 
 class Config:
-    """Manages Agent-OS configuration with YAML persistence."""
+    """Manages Agent-X configuration with YAML persistence."""
 
     def __init__(self, config_path: Optional[str] = None):
-        self.config_path = Path(config_path or os.path.expanduser("~/.agent-os/config.yaml"))
+        self.config_path = Path(config_path or os.path.expanduser("~/.agent-x/config.yaml"))
         self.config_path.parent.mkdir(parents=True, exist_ok=True)
         self.config = self._load_or_create()
 

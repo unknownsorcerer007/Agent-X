@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-Agent-OS Qwen Bridge
-Connects Qwen AI to Agent-OS browser — Qwen can now browse the web.
+Agent-X Qwen Bridge
+Connects Qwen AI to Agent-X browser — Qwen can now browse the web.
 
 Usage:
-    # 1. Start Agent-OS
+    # 1. Start Agent-X
     python main.py --agent-token "qwen-agent"
 
     # 2. Run this bridge (in another terminal)
@@ -17,8 +17,8 @@ Usage:
 
 Environment:
     DASHSCOPE_API_KEY  — Your DashScope API key (from https://dashscope.console.aliyun.com/)
-    AGENT_OS_URL       — Agent-OS endpoint (default: http://localhost:8001)
-    AGENT_OS_TOKEN     — Agent token (default: qwen-agent)
+    AGENT_X_URL       — Agent-X endpoint (default: http://localhost:8001)
+    AGENT_X_TOKEN     — Agent token (default: qwen-agent)
 """
 import os
 import sys
@@ -30,13 +30,13 @@ import httpx
 # ─── Configuration ───────────────────────────────────────────
 
 DASHSCOPE_API_KEY = os.environ.get("DASHSCOPE_API_KEY", "")
-AGENT_OS_URL = os.environ.get("AGENT_OS_URL", "http://localhost:8001")
-AGENT_OS_TOKEN = os.environ.get("AGENT_OS_TOKEN", "qwen-agent")
+AGENT_X_URL = os.environ.get("AGENT_X_URL", "http://localhost:8001")
+AGENT_X_TOKEN = os.environ.get("AGENT_X_TOKEN", "qwen-agent")
 
 # China endpoint (change to dashscope-intl.aliyuncs.com for international)
 BASE_URL = os.environ.get("QWEN_BASE_URL", "https://dashscope.aliyuncs.com/compatible-mode/v1")
 
-# ─── Agent-OS Tools (OpenAI format for Qwen) ────────────────
+# ─── Agent-X Tools (OpenAI format for Qwen) ────────────────
 
 TOOLS = [
     {
@@ -210,17 +210,17 @@ TOOLS = [
     },
 ]
 
-# ─── Agent-OS API Client ─────────────────────────────────────
+# ─── Agent-X API Client ─────────────────────────────────────
 
 async def agent_os_command(command: str, params: dict = None) -> dict:
-    """Send a command to Agent-OS and get the result."""
-    data = {"token": AGENT_OS_TOKEN, "command": command}
+    """Send a command to Agent-X and get the result."""
+    data = {"token": AGENT_X_TOKEN, "command": command}
     if params:
         data.update(params)
 
     async with httpx.AsyncClient(timeout=60) as client:
         try:
-            response = await client.post(f"{AGENT_OS_URL}/command", json=data)
+            response = await client.post(f"{AGENT_X_URL}/command", json=data)
             result = response.json()
 
             # Truncate huge responses (screenshots, long HTML)
@@ -233,13 +233,13 @@ async def agent_os_command(command: str, params: dict = None) -> dict:
 
             return result
         except httpx.ConnectError:
-            return {"status": "error", "error": f"Cannot connect to Agent-OS at {AGENT_OS_URL}. Is it running?"}
+            return {"status": "error", "error": f"Cannot connect to Agent-X at {AGENT_X_URL}. Is it running?"}
         except Exception as e:
             return {"status": "error", "error": str(e)}
 
 
 async def execute_tool(tool_name: str, arguments: dict) -> str:
-    """Map tool name to Agent-OS command and execute it."""
+    """Map tool name to Agent-X command and execute it."""
     command_map = {
         "browser_navigate": "navigate",
         "browser_click": "click",
@@ -300,7 +300,7 @@ async def chat_with_qwen(model: str, messages: list) -> dict:
 # ─── Main Chat Loop ──────────────────────────────────────────
 
 async def main():
-    parser = argparse.ArgumentParser(description="Agent-OS Qwen Bridge")
+    parser = argparse.ArgumentParser(description="Agent-X Qwen Bridge")
     parser.add_argument("--model", default="qwen-plus", help="Qwen model to use")
     parser.add_argument("--system", default=None, help="System prompt override")
     args = parser.parse_args()
@@ -311,14 +311,14 @@ async def main():
         print("   Then run: export DASHSCOPE_API_KEY='<YOUR_KEY>'")
         sys.exit(1)
 
-    # Check Agent-OS is running
+    # Check Agent-X is running
     try:
         async with httpx.AsyncClient(timeout=5) as client:
-            resp = await client.get(f"{AGENT_OS_URL}/status")
+            resp = await client.get(f"{AGENT_X_URL}/status")
             status = resp.json()
-            print(f"✅ Agent-OS connected: {status.get('version', 'unknown')} | {len(TOOLS)} tools available")
+            print(f"✅ Agent-X connected: {status.get('version', 'unknown')} | {len(TOOLS)} tools available")
     except:
-        print(f"❌ Cannot connect to Agent-OS at {AGENT_OS_URL}")
+        print(f"❌ Cannot connect to Agent-X at {AGENT_X_URL}")
         print("   Start it with: python main.py --agent-token 'qwen-agent'")
         sys.exit(1)
 
@@ -337,7 +337,7 @@ Be concise and helpful. Use the browser actively — don't just talk about what 
 
     messages = [{"role": "system", "content": system_prompt}]
 
-    print(f"\n🤖 Qwen ({args.model}) + Agent-OS Browser")
+    print(f"\n🤖 Qwen ({args.model}) + Agent-X Browser")
     print("=" * 50)
     print("Type your message. The AI can browse the web!")
     print("Commands: /clear (reset chat), /quit (exit)")

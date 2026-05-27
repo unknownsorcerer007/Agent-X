@@ -1,5 +1,5 @@
 """
-Agent-OS Proxy Rotator
+Agent-X Proxy Rotator
 Thread-safe proxy rotation with pluggable strategies.
 
 Supports:
@@ -22,7 +22,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 from urllib.parse import urlparse
 from dataclasses import dataclass, field
 
-logger = logging.getLogger("agent-os.proxy-rotator")
+logger = logging.getLogger("agent-x.proxy-rotator")
 
 # Proxy type: string URL or Playwright-style dict
 ProxyType = Union[str, Dict[str, str]]

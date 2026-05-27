@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Agent-OS OpenClaw Integration — Complete (199 tools)
-Adds Agent-OS browser tools to OpenClaw sessions.
+Agent-X OpenClaw Integration — Complete (199 tools)
+Adds Agent-X browser tools to OpenClaw sessions.
 
 Usage:
     from connectors.openclaw_connector import get_manifest, execute_tool
@@ -17,8 +17,8 @@ from typing import Dict, Any, Optional, List
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from connectors._tool_registry import TOOLS, get_command_map
 
-AGENT_OS_URL = os.environ.get("AGENT_OS_URL", "http://localhost:8001")
-AGENT_TOKEN = os.environ.get("AGENT_OS_TOKEN", "openclaw-agent")
+AGENT_X_URL = os.environ.get("AGENT_X_URL", "http://localhost:8001")
+AGENT_TOKEN = os.environ.get("AGENT_X_TOKEN", "openclaw-agent")
 
 command_map = get_command_map()
 
@@ -59,7 +59,7 @@ def get_manifest() -> Dict[str, Any]:
         })
 
     return {
-        "name": "agent-os-browser",
+        "name": "agent-x-browser",
         "version": "3.2.0",
         "description": "AI Agent Browser — 199 tools for anti-detection browser automation",
         "tools": tools,
@@ -67,7 +67,7 @@ def get_manifest() -> Dict[str, Any]:
 
 
 async def execute_tool(tool_name: str, params: Dict[str, Any] = None) -> Dict[str, Any]:
-    """Execute an Agent-OS tool.
+    """Execute an Agent-X tool.
 
     Args:
         tool_name: MCP-style tool name (e.g., "browser_navigate").
@@ -91,7 +91,7 @@ async def execute_tool(tool_name: str, params: Dict[str, Any] = None) -> Dict[st
 
 
 async def _execute_command(command: str, params: Dict[str, Any] = None) -> Dict[str, Any]:
-    """Send a command to Agent-OS server."""
+    """Send a command to Agent-X server."""
     payload = {"token": AGENT_TOKEN, "command": command}
     if params:
         payload.update(params)
@@ -99,7 +99,7 @@ async def _execute_command(command: str, params: Dict[str, Any] = None) -> Dict[
     client = await _get_client()
     try:
         response = await client.post(
-            f"{AGENT_OS_URL}/command",
+            f"{AGENT_X_URL}/command",
             json=payload,
         )
         return response.json()
@@ -108,10 +108,10 @@ async def _execute_command(command: str, params: Dict[str, Any] = None) -> Dict[
 
 
 async def _check_status() -> Dict[str, Any]:
-    """Check Agent-OS server status."""
+    """Check Agent-X server status."""
     client = await _get_client()
     try:
-        response = await client.get(f"{AGENT_OS_URL}/health")
+        response = await client.get(f"{AGENT_X_URL}/health")
         return response.json()
     except Exception as e:
         return {"status": "error", "error": str(e)}
@@ -124,6 +124,6 @@ def get_tool_count() -> int:
 
 if __name__ == "__main__":
     manifest = get_manifest()
-    print(f"Agent-OS OpenClaw Connector")
+    print(f"Agent-X OpenClaw Connector")
     print(f"Tools: {len(manifest['tools'])}")
     print(f"Version: {manifest['version']}")

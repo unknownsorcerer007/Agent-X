@@ -1,4 +1,4 @@
-# Agent-OS API Documentation
+# Agent-X API Documentation
 
 ## Quick Start
 
@@ -411,7 +411,7 @@ Execute a multi-step workflow. Steps are an array of command objects.
     {"command":"wait","selector":"#search"},
     {"command":"get-content"}
   ],
-  "variables":{"query":"Agent-OS"},
+  "variables":{"query":"Agent-X"},
   "on_error":"abort",
   "retry_count":1,
   "step_delay_ms":500
@@ -634,7 +634,7 @@ Delete a saved session.
 
 ## Anti-Detection Features
 
-Agent-OS **prevents** CAPTCHAs from loading — it doesn't solve them:
+Agent-X **prevents** CAPTCHAs from loading — it doesn't solve them:
 
 ### Blocked Bot Detection Systems
 - Google reCAPTCHA v2/v3
@@ -682,7 +682,7 @@ Agent-OS **prevents** CAPTCHAs from loading — it doesn't solve them:
 
 ## Configuration
 
-Default config at `~/.agent-os/config.yaml`:
+Default config at `~/.agent-x/config.yaml`:
 
 ```yaml
 server:
@@ -712,11 +712,11 @@ security:
 - **Local Only** — All processing on your machine, no external services
 - **Zero Telemetry** — No data collection whatsoever
 - **Session Auto-Wipe** — Browser data destroyed after timeout (default 15 min)
-- **Encrypted Vault** — Credentials stored with AES-256 at `~/.agent-os/vault.enc`
+- **Encrypted Vault** — Credentials stored with AES-256 at `~/.agent-x/vault.enc`
 - **Token Auth** — All commands require valid agent token
 - **RAM Monitor** — Built-in process monitor caps memory usage
-- **Cookie Persistence** — Saved to `~/.agent-os/cookies/` (auto-loaded on restart)
-- **Download Isolation** — Downloads saved to `~/.agent-os/downloads/`
+- **Cookie Persistence** — Saved to `~/.agent-x/cookies/` (auto-loaded on restart)
+- **Download Isolation** — Downloads saved to `~/.agent-x/downloads/`
 
 ---
 
@@ -748,7 +748,7 @@ All responses follow this format:
 | MCP (Claude/Codex) | 38 | `connectors/mcp_server.py` |
 | OpenAI / Claude API | 38 | `connectors/openai_connector.py` |
 | OpenClaw | 38 | `connectors/openclaw_connector.py` |
-| CLI (Bash) | 74 commands | `connectors/agent-os-tool.sh` |
+| CLI (Bash) | 74 commands | `connectors/agent-x-tool.sh` |
 | HTTP API | 74 commands | Server at `/command` |
 | Persistent API | 30+ commands | Server at `/persistent/command` |
 
@@ -767,12 +767,12 @@ python3 main.py --persistent --agent-token "my-token"
 ```
 PersistentBrowserManager (singleton)
 ├── BrowserInstance 1 (Chromium PID 1234)
-│   ├── UserContext "user-abc" → ~/.agent-os/users/user-abc/
+│   ├── UserContext "user-abc" → ~/.agent-x/users/user-abc/
 │   │   ├── main page (tab)
 │   │   ├── tab-1 (tab)
 │   │   ├── cookies.json
 │   │   └── context_state.json
-│   ├── UserContext "user-def" → ~/.agent-os/users/user-def/
+│   ├── UserContext "user-def" → ~/.agent-x/users/user-def/
 │   └── ... (up to 50 contexts)
 ├── BrowserInstance 2 (Chromium PID 5678)
 │   └── ... (next 50 users)
@@ -781,7 +781,7 @@ PersistentBrowserManager (singleton)
 
 ### Key Design Decisions
 
-1. **Playwright persistent contexts** — Each user gets a real Chromium profile directory under `~/.agent-os/users/{user_id}/`. Cookies, localStorage, and sessionStorage persist on disk — survive restarts.
+1. **Playwright persistent contexts** — Each user gets a real Chromium profile directory under `~/.agent-x/users/{user_id}/`. Cookies, localStorage, and sessionStorage persist on disk — survive restarts.
 
 2. **Browser pool** — Multiple Chromium processes for horizontal scaling. Users are assigned to the least-loaded instance via round-robin.
 
@@ -793,7 +793,7 @@ PersistentBrowserManager (singleton)
 
 6. **Memory cap** — System monitors total Chromium memory. When cap is exceeded, oldest idle contexts are evicted.
 
-7. **Zero-downtime state** — Manager state is periodically saved to `~/.agent-os/state/manager_state.json`. On restart, all user contexts are automatically restored.
+7. **Zero-downtime state** — Manager state is periodically saved to `~/.agent-x/state/manager_state.json`. On restart, all user contexts are automatically restored.
 
 ### Configuration
 
@@ -879,10 +879,10 @@ curl -X POST http://localhost:8001/persistent/command \
 
 ### State Persistence
 
-User state is saved to `~/.agent-os/users/{user_id}/`:
+User state is saved to `~/.agent-x/users/{user_id}/`:
 
 ```
-~/.agent-os/users/user-123/
+~/.agent-x/users/user-123/
 ├── context_state.json    # Tabs, viewport, device, last active
 ├── cookies.json          # Full Playwright storage state
 └── (Chromium profile data — cookies, localStorage, etc.)

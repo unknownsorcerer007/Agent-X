@@ -1,5 +1,5 @@
 """
-Agent-OS Authentication Handler
+Agent-X Authentication Handler
 Handles auto-login, session cookie injection, and local credential vault.
 """
 import json
@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Dict, Optional, List
 from cryptography.fernet import Fernet
 
-logger = logging.getLogger("agent-os.auth")
+logger = logging.getLogger("agent-x.auth")
 
 
 class AuthHandler:
@@ -17,26 +17,26 @@ class AuthHandler:
 
     def __init__(self, config):
         self.config = config
-        self.vault_path = Path(os.path.expanduser("~/.agent-os/vault.enc"))
+        self.vault_path = Path(os.path.expanduser("~/.agent-x/vault.enc"))
         self._key = self._get_or_create_key()
         self._fernet = Fernet(self._key)
 
     def _get_or_create_key(self) -> bytes:
         """Get or create encryption key for the vault.
 
-        Key is stored in XDG_DATA_HOME or ~/.local/share/agent-os/ to
-        separate it from the vault file in ~/.agent-os/.
-        Falls back to ~/.agent-os/.vault_key if XDG path unavailable.
+        Key is stored in XDG_DATA_HOME or ~/.local/share/agent-x/ to
+        separate it from the vault file in ~/.agent-x/.
+        Falls back to ~/.agent-x/.vault_key if XDG path unavailable.
         """
         # Prefer XDG data directory (separates key from config)
         xdg_data = os.environ.get("XDG_DATA_HOME", os.path.expanduser("~/.local/share"))
-        key_path = Path(xdg_data) / "agent-os" / ".vault_key"
+        key_path = Path(xdg_data) / "agent-x" / ".vault_key"
 
         if key_path.exists():
             return key_path.read_bytes()
 
         # Fallback: check legacy location
-        legacy_path = Path(os.path.expanduser("~/.agent-os/.vault_key"))
+        legacy_path = Path(os.path.expanduser("~/.agent-x/.vault_key"))
         if legacy_path.exists():
             # Migrate to new location
             key = legacy_path.read_bytes()

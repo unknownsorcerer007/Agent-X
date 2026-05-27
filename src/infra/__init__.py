@@ -1,1 +1,1 @@
-"""Agent-OS Infrastructure Package."""
+"""Agent-X Infrastructure Package."""

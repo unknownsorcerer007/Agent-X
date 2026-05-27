@@ -1,5 +1,5 @@
 """
-Agent-OS Smart Element Finder
+Agent-X Smart Element Finder
 Finds elements by visible text, accessibility labels, placeholder, title, alt text.
 No CSS selector needed — works like a human looking at the page.
 """
@@ -8,7 +8,7 @@ import logging
 import time
 from typing import Dict, List, Any
 
-logger = logging.getLogger("agent-os.smart_finder")
+logger = logging.getLogger("agent-x.smart_finder")
 
 
 class SmartElementFinder:

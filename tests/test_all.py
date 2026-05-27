@@ -1,5 +1,5 @@
 """
-Agent-OS Test Suite
+Agent-X Test Suite
 Comprehensive tests for all components.
 Run with: python -m pytest tests/ -v
 """

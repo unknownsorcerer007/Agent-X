@@ -1,1 +1,1 @@
-"""Agent-OS Input Validation Package."""
+"""Agent-X Input Validation Package."""

@@ -1,5 +1,5 @@
 """
-Agent-OS Structured Logging
+Agent-X Structured Logging
 Production-grade JSON logging with correlation IDs, context propagation,
 and log level management via config.
 """
@@ -10,7 +10,7 @@ import structlog
 from typing import Optional
 
 
-def setup_logging(level: str = "INFO", json_logs: bool = True, service_name: str = "agent-os"):
+def setup_logging(level: str = "INFO", json_logs: bool = True, service_name: str = "agent-x"):
     """
     Configure structured logging.
 

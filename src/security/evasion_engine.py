@@ -1,5 +1,5 @@
 """
-Agent-OS Evasion Engine
+Agent-X Evasion Engine
 Real fingerprint generation, cloudscraper integration, unified HTTP engine.
 """
 
@@ -10,7 +10,7 @@ import hashlib
 from typing import Optional, Dict, Any
 from dataclasses import dataclass
 
-logger = logging.getLogger("agent-os.evasion")
+logger = logging.getLogger("agent-x.evasion")
 
 
 # ═══════════════════════════════════════════════════════════════

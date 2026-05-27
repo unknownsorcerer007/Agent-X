@@ -1,5 +1,5 @@
 """
-Agent-OS Auto-Retry Engine
+Agent-X Auto-Retry Engine
 Intelligent retry with adaptive strategies, circuit breakers, and error classification.
 
 Production features:
@@ -24,7 +24,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
-logger = logging.getLogger("agent-os.auto_retry")
+logger = logging.getLogger("agent-x.auto_retry")
 
 
 # ─── Error Classification ───────────────────────────────────
@@ -529,7 +529,7 @@ class RequestDeduplicator:
 
 class AutoRetry:
     """
-    Intelligent retry engine for Agent-OS.
+    Intelligent retry engine for Agent-X.
 
     Features:
     - Error classification: knows what's worth retrying

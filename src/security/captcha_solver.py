@@ -1,5 +1,5 @@
 """
-Agent-OS CAPTCHA Solver Engine
+Agent-X CAPTCHA Solver Engine
 Real CAPTCHA solving integration with multiple providers.
 
 Supports:
@@ -17,7 +17,7 @@ from typing import Any, Dict, Optional
 from dataclasses import dataclass, field
 from enum import Enum
 
-logger = logging.getLogger("agent-os.captcha-solver")
+logger = logging.getLogger("agent-x.captcha-solver")
 
 
 class CaptchaType(str, Enum):

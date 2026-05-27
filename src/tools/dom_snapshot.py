@@ -1,5 +1,5 @@
 """
-Agent-OS DOM Snapshot — Token-Efficient Page Representation
+Agent-X DOM Snapshot — Token-Efficient Page Representation
 ============================================================
 Instead of sending raw HTML (50,000+ chars) to the LLM, this module
 produces an accessibility tree snapshot (2,000-5,000 chars) that
@@ -17,7 +17,7 @@ import json
 from typing import Any, Dict, List, Optional, Set, Tuple
 from dataclasses import dataclass, field
 
-logger = logging.getLogger("agent-os.dom-snapshot")
+logger = logging.getLogger("agent-x.dom-snapshot")
 
 # ═══════════════════════════════════════════════════════════════
 # ROLE CLASSIFICATIONS

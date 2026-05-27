@@ -20,8 +20,8 @@ Production-ready TypeScript browser engine with anti-detection, smart mode selec
 
 ```bash
 # One-command install
-git clone https://github.com/factspark23-hash/Agent-OS.git
-cd Agent-OS/browser-engine
+git clone https://github.com/factspark23-hash/Agent-X.git
+cd Agent-X/browser-engine
 chmod +x install.sh
 ./install.sh
 
@@ -104,7 +104,7 @@ curl http://localhost:3003/api/health
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `PORT` | `3003` | Server port |
-| `BROWSER_STATES_DIR` | `~/.agent-os/browser-states` | State persistence directory |
+| `BROWSER_STATES_DIR` | `~/.agent-x/browser-states` | State persistence directory |
 | `TWITTER_BEARER_TOKEN` | — | Twitter API bearer token |
 | `IG_APP_ID` | `936619743392459` | Instagram web app ID |
 | `IG_CREATE_POST_DOC_ID` | `6511191288958346` | Instagram GraphQL doc ID |

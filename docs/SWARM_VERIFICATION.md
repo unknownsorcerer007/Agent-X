@@ -2,7 +2,7 @@
 
 ## Architecture Overview
 
-The Agent Swarm is a multi-agent web search system integrated into Agent-OS. It provides parallel search with intelligent query routing and structured output.
+The Agent Swarm is a multi-agent web search system integrated into Agent-X. It provides parallel search with intelligent query routing and structured output.
 
 ### 3-Tier Query Routing
 1. **Tier 1: Rule-based** (fast, free, zero latency) — Handles 80%+ of queries via pattern matching
@@ -16,7 +16,7 @@ The Agent Swarm is a multi-agent web search system integrated into Agent-OS. It 
 - **Conservative Router** (`router/conservative.py`) — Always returns NEEDS_WEB
 - **Search Agents** (`agents/`) — 20 specialized agent profiles
 - **Agent Pool** (`agents/pool.py`) — Parallel execution with up to 50 concurrent agents
-- **Search Backends** (`search/`) — HTTP (Bing/DDG) and Agent-OS browser backends
+- **Search Backends** (`search/`) — HTTP (Bing/DDG) and Agent-X browser backends
 - **Output Pipeline** (`output/`) — Aggregation, deduplication, quality scoring, formatting
 
 ## Verification Results
@@ -72,7 +72,7 @@ The Agent Swarm is a multi-agent web search system integrated into Agent-OS. It 
 
 1. **UniversalProvider Integration** — Provider Router delegates LLM calls to `src/core/llm_provider.py` for token saving (compression, caching, truncation)
 2. **Server Integration** — Agent Swarm accessible via API server (`src/agents/server.py`)
-3. **Browser Integration** — Agent-OS backend uses browser engine for search
+3. **Browser Integration** — Agent-X backend uses browser engine for search
 4. **Config Integration** — Uses `SwarmConfig.from_env()` with env var auto-detection
 
 ### Installation Verification
@@ -115,7 +115,7 @@ SWARM_DEFAULT_AGENTS=["generalist"]
 
 # Search backend
 SWARM_USE_BROWSER=false
-SWARM_AGENT_OS_URL=http://localhost:8001
+SWARM_AGENT_X_URL=http://localhost:8001
 
 # Output settings
 SWARM_OUTPUT_FORMAT=json

@@ -1,5 +1,5 @@
 """
-Agent-OS User Manager
+Agent-X User Manager
 Full user lifecycle: registration, authentication, quota enforcement.
 """
 import logging
@@ -11,7 +11,7 @@ from typing import Any, Dict, Optional
 
 import bcrypt
 
-logger = logging.getLogger("agent-os.auth.users")
+logger = logging.getLogger("agent-x.auth.users")
 
 
 class UserManager:

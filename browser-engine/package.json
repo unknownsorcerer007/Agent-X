@@ -1,7 +1,7 @@
 {
-  "name": "agent-os-browser-engine",
+  "name": "agent-x-browser-engine",
   "version": "3.2.0",
-  "description": "Agent-OS Browser Engine — Anti-detection browser automation",
+  "description": "Agent-X Browser Engine — Anti-detection browser automation",
   "main": "index.ts",
   "scripts": {
     "dev": "bun --hot index.ts",

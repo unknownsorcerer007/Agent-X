@@ -1,5 +1,5 @@
 """
-Agent-OS Web Query Router
+Agent-X Web Query Router
 =========================
 Rule-based classification engine that determines whether a query requires
 web/browser access or can be answered from existing knowledge — WITHOUT
@@ -27,7 +27,7 @@ import logging
 from typing import Dict, List, Optional
 from dataclasses import dataclass
 
-logger = logging.getLogger("agent-os.web_query_router")
+logger = logging.getLogger("agent-x.web_query_router")
 
 
 # ═══════════════════════════════════════════════════════════════════

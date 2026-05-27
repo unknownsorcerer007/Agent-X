@@ -1,4 +1,4 @@
-"""Agent-OS browser-based search backend."""
+"""Agent-X browser-based search backend."""
 
 import logging
 import asyncio
@@ -14,9 +14,9 @@ logger = logging.getLogger(__name__)
 
 
 class AgentOSBackend(SearchBackend):
-    """Uses Agent-OS's browser automation for search.
+    """Uses Agent-X's browser automation for search.
 
-    Connects to the Agent-OS HTTP API and uses its browser
+    Connects to the Agent-X HTTP API and uses its browser
     to perform web searches with full JavaScript rendering.
     """
 
@@ -35,7 +35,7 @@ class AgentOSBackend(SearchBackend):
         atexit.register(self.close)
 
     def _get_client(self) -> httpx.Client:
-        """Get or create httpx client for Agent-OS communication."""
+        """Get or create httpx client for Agent-X communication."""
         with self._client_lock:
             if self._client is None:
                 headers = {
@@ -54,7 +54,7 @@ class AgentOSBackend(SearchBackend):
             return self._client
 
     def is_available(self) -> bool:
-        """Check if Agent-OS server is reachable."""
+        """Check if Agent-X server is reachable."""
         try:
             client = self._get_client()
             response = client.get("/health", timeout=5.0)
@@ -81,17 +81,17 @@ class AgentOSBackend(SearchBackend):
             logger.debug("AgentOSBackend cleanup in __del__ failed")
 
     async def search(self, query: str, max_results: int = 10) -> list[dict]:
-        """Search using Agent-OS browser automation."""
+        """Search using Agent-X browser automation."""
         if self._closed:
             return []
         loop = asyncio.get_running_loop()
         return await loop.run_in_executor(None, self._search_sync, query, max_results)
 
     def _search_sync(self, query: str, max_results: int = 10) -> list[dict]:
-        """Synchronous search via Agent-OS API."""
+        """Synchronous search via Agent-X API."""
         try:
             client = self._get_client()
-            # Use Agent-OS navigate + get-content pattern
+            # Use Agent-X navigate + get-content pattern
             search_url = f"https://www.bing.com/search?q={query}&count={max_results}"
 
             # Navigate to search engine
@@ -101,7 +101,7 @@ class AgentOSBackend(SearchBackend):
             }
             nav_response = client.post("/command", json=nav_payload, timeout=45.0)
             if nav_response.status_code != 200:
-                logger.warning(f"Agent-OS navigation failed: {nav_response.status_code}")
+                logger.warning(f"Agent-X navigation failed: {nav_response.status_code}")
                 return []
 
             # Get page content
@@ -121,7 +121,7 @@ class AgentOSBackend(SearchBackend):
             return self._parse_rendered_results(content, query, max_results)
 
         except Exception as e:
-            logger.warning(f"Agent-OS browser search failed: {e}")
+            logger.warning(f"Agent-X browser search failed: {e}")
             return []
 
     def _parse_rendered_results(self, html: str, query: str, max_results: int) -> list[dict]:
@@ -174,12 +174,12 @@ class AgentOSBackend(SearchBackend):
         return results
 
     async def extract_content(self, url: str) -> Optional[str]:
-        """Extract content from a URL using Agent-OS browser."""
+        """Extract content from a URL using Agent-X browser."""
         loop = asyncio.get_running_loop()
         return await loop.run_in_executor(None, self._extract_content_sync, url)
 
     def _extract_content_sync(self, url: str) -> Optional[str]:
-        """Synchronous content extraction via Agent-OS."""
+        """Synchronous content extraction via Agent-X."""
         try:
             client = self._get_client()
             nav_payload = {"command": "navigate", "url": url}
@@ -199,5 +199,5 @@ class AgentOSBackend(SearchBackend):
             return content
 
         except Exception as e:
-            logger.warning(f"Agent-OS content extraction failed for {url}: {e}")
+            logger.warning(f"Agent-X content extraction failed for {url}: {e}")
             return None

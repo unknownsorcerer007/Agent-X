@@ -1,5 +1,5 @@
 """
-Agent-OS Auth Middleware
+Agent-X Auth Middleware
 Integrates JWT + API key authentication into aiohttp server.
 Provides per-user rate limiting, scope checking, and audit logging.
 """
@@ -14,7 +14,7 @@ from aiohttp import web
 from src.auth.jwt_handler import JWTHandler
 from src.auth.api_key_manager import APIKeyManager
 
-logger = logging.getLogger("agent-os.auth.middleware")
+logger = logging.getLogger("agent-x.auth.middleware")
 
 
 class AuthMiddleware:

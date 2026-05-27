@@ -1,8 +1,8 @@
 <#
 .SYNOPSIS
-    Agent-OS Start Script
+    Agent-X Start Script
 .DESCRIPTION
-    Starts the Agent-OS server using the virtual environment.
+    Starts the Agent-X server using the virtual environment.
 #>
 
 if ($PSScriptRoot) {
@@ -10,7 +10,7 @@ if ($PSScriptRoot) {
 }
 
 Write-Host "=========================================" -ForegroundColor Cyan
-Write-Host "           Starting Agent-OS             " -ForegroundColor Cyan
+Write-Host "           Starting Agent-X             " -ForegroundColor Cyan
 Write-Host "=========================================" -ForegroundColor Cyan
 
 if (!(Test-Path -Path "venv\Scripts\python.exe")) {

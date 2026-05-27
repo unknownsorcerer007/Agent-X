@@ -1,5 +1,5 @@
 """
-Agent-OS Auto-Proxy Rotation Engine
+Agent-X Auto-Proxy Rotation Engine
 Production-grade automatic proxy rotation with block detection, exponential backoff,
 geo-targeting, and per-domain proxy affinity.
 
@@ -31,7 +31,7 @@ from collections import defaultdict
 from pathlib import Path
 from urllib.parse import urlparse
 
-logger = logging.getLogger("agent-os.auto-proxy")
+logger = logging.getLogger("agent-x.auto-proxy")
 
 
 # ═══════════════════════════════════════════════════════════════

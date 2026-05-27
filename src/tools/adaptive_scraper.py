@@ -1,5 +1,5 @@
 """
-Agent-OS Adaptive Element Scraper
+Agent-X Adaptive Element Scraper
 Element fingerprinting + adaptive relocation for resilient scraping.
 
 When a website changes its DOM structure, traditional CSS/XPath selectors break.
@@ -24,10 +24,10 @@ from pathlib import Path
 from typing import Dict, Any, List, Optional, Tuple
 from urllib.parse import urlparse
 
-logger = logging.getLogger("agent-os.adaptive-scraper")
+logger = logging.getLogger("agent-x.adaptive-scraper")
 
 # Default storage path
-_DEFAULT_DB = str(Path.home() / ".agent-os" / "adaptive_elements.db")
+_DEFAULT_DB = str(Path.home() / ".agent-x" / "adaptive_elements.db")
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -403,7 +403,7 @@ class AdaptiveScraper:
     3. Scan all page elements → score each against saved fingerprint
     4. Return best match if above threshold
 
-    This is the Agent-OS integration of the adaptive scraping algorithm.
+    This is the Agent-X integration of the adaptive scraping algorithm.
     """
 
     def __init__(self, browser, storage_file: str = _DEFAULT_DB):

@@ -1,5 +1,5 @@
 """
-Agent-OS CAPTCHA Preemption System
+Agent-X CAPTCHA Preemption System
 Detects and prevents captcha/bot detection BEFORE it loads.
 
 Strategy: Don't wait for captchas to appear — detect the WARNING SIGNS
@@ -33,7 +33,7 @@ from urllib.parse import urlparse
 
 from src.security.captcha_bypass import CaptchaBypass
 
-logger = logging.getLogger("agent-os.captcha-preempt")
+logger = logging.getLogger("agent-x.captcha-preempt")
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -265,7 +265,7 @@ function reportDetection(eventType, severity, details, source) {
     }
     // Dispatch a custom event that Python can listen to via page.on('console', ...)
     // We use console.debug with a magic prefix so Python can filter
-    console.debug('__AGENT_OS_DETECTION__:' + JSON.stringify(evt));
+    console.debug('__AGENT_X_DETECTION__:' + JSON.stringify(evt));
 }
 
 // -- 1. MONITOR document.createElement FOR CAPTCHA IFRAME CREATION --
@@ -1389,8 +1389,8 @@ class CaptchaPreemptor:
                 def on_console(msg):
                     try:
                         text = msg.text if hasattr(msg, "text") else str(msg)
-                        if text.startswith("__AGENT_OS_DETECTION__:"):
-                            payload = text[len("__AGENT_OS_DETECTION__:"):]
+                        if text.startswith("__AGENT_X_DETECTION__:"):
+                            payload = text[len("__AGENT_X_DETECTION__:"):]
                             try:
                                 evt_data = json.loads(payload)
                                 detection = DetectionEvent(

@@ -1,7 +1,7 @@
-# Agent-OS MCP Passthrough Wrapper
+# Agent-X MCP Passthrough Wrapper
 
 <p align="center">
-  <strong>Zero-API-key MCP server for Agent-OS. 207 browser tools + 87% token savings.</strong>
+  <strong>Zero-API-key MCP server for Agent-X. 207 browser tools + 87% token savings.</strong>
 </p>
 
 <p align="center">
@@ -19,7 +19,7 @@ A standalone MCP server that gives Claude Desktop, Cursor, Codex, and any MCP cl
 
 ```text
 ┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
-│  MCP Client      │     │  MCP Passthrough │     │  Agent-OS Server │
+│  MCP Client      │     │  MCP Passthrough │     │  Agent-X Server │
 │  (Claude/GPT)    │────▶│  (This wrapper)  │────▶│  (Browser engine)│
 │                  │     │                  │     │                  │
 │  • Reasoning     │     │  • 207 tools     │     │  • Chromium      │
@@ -28,7 +28,7 @@ A standalone MCP server that gives Claude Desktop, Cursor, Codex, and any MCP cl
 └──────────────────┘     └──────────────────┘     └──────────────────┘
 ```
 
-**Your MCP client's LLM handles reasoning. Agent-OS handles execution. No extra cost.**
+**Your MCP client's LLM handles reasoning. Agent-X handles execution. No extra cost.**
 
 ---
 
@@ -36,7 +36,7 @@ A standalone MCP server that gives Claude Desktop, Cursor, Codex, and any MCP cl
 
 | Problem | Solution |
 |---------|----------|
-| Agent-OS needs an API key for LLM tools | BuiltinLLM — rule-based, zero API calls |
+| Agent-X needs an API key for LLM tools | BuiltinLLM — rule-based, zero API calls |
 | Browser results burn 10k+ tokens per page | SmartCompressor — 87% token savings |
 | Setting up MCP is complicated | One command: `.\run_mcp.ps1` or `./run_mcp.sh` |
 | Server down = everything crashes | Graceful errors, LLM tools work standalone |
@@ -53,9 +53,9 @@ A standalone MCP server that gives Claude Desktop, Cursor, Codex, and any MCP cl
 ```json
 {
   "mcpServers": {
-    "agent-os": {
+    "agent-x": {
       "command": "powershell",
-      "args": ["-ExecutionPolicy", "Bypass", "-File", "C:/absolute/path/to/Agent-OS/run_mcp.ps1"]
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "C:/absolute/path/to/Agent-X/run_mcp.ps1"]
     }
   }
 }
@@ -69,9 +69,9 @@ A standalone MCP server that gives Claude Desktop, Cursor, Codex, and any MCP cl
 ```json
 {
   "mcpServers": {
-    "agent-os": {
+    "agent-x": {
       "command": "bash",
-      "args": ["/absolute/path/to/Agent-OS/run_mcp.sh"]
+      "args": ["/absolute/path/to/Agent-X/run_mcp.sh"]
     }
   }
 }
@@ -85,10 +85,10 @@ Restart Claude Desktop. **207 tools will appear automatically.**
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `AGENT_OS_URL` | `http://localhost:8001` | Agent-OS server URL |
-| `AGENT_OS_TOKEN` | (auto-generated) | Auth token (must match server) |
-| `AGENT_OS_COMPRESS` | `aggressive` | Compression mode: `aggressive`, `normal`, `off` |
-| `AGENT_OS_MAX_OUTPUT` | `8000` | Max chars returned per tool call |
+| `AGENT_X_URL` | `http://localhost:8001` | Agent-X server URL |
+| `AGENT_X_TOKEN` | (auto-generated) | Auth token (must match server) |
+| `AGENT_X_COMPRESS` | `aggressive` | Compression mode: `aggressive`, `normal`, `off` |
+| `AGENT_X_MAX_OUTPUT` | `8000` | Max chars returned per tool call |
 
 ### Compression Modes
 
@@ -113,11 +113,11 @@ MCP Client (Claude/GPT)
 MCP Passthrough
     │
     │  2. LLM tools → BuiltinLLM (rule-based, no API)
-    │  3. Browser tools → proxy to Agent-OS server
+    │  3. Browser tools → proxy to Agent-X server
     │  4. Results → SmartCompressor (strip HTML, dedupe, cap)
     │
     ▼
-Agent-OS Server
+Agent-X Server
     │
     │  5. Navigate, extract, screenshot
     │
@@ -172,7 +172,7 @@ Every tool result is compressed before returning to the MCP client:
 
 ## Troubleshooting
 
-### "Cannot connect to Agent-OS server"
+### "Cannot connect to Agent-X server"
 
 ```bash
 # Start the server manually
@@ -194,8 +194,8 @@ curl http://localhost:8001/health
 ```json
 {
   "env": {
-    "AGENT_OS_COMPRESS": "normal",
-    "AGENT_OS_MAX_OUTPUT": "15000"
+    "AGENT_X_COMPRESS": "normal",
+    "AGENT_X_MAX_OUTPUT": "15000"
   }
 }
 ```
@@ -204,4 +204,4 @@ curl http://localhost:8001/health
 
 ## License
 
-[MIT License](LICENSE) — same as Agent-OS.
+[MIT License](LICENSE) — same as Agent-X.

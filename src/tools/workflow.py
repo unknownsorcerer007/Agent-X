@@ -1,5 +1,5 @@
 """
-Agent-OS Workflow Engine
+Agent-X Workflow Engine
 Execute multi-step browser workflows from a single command.
 Supports conditionals, loops, error handling, variables, and templates.
 """
@@ -11,7 +11,7 @@ import re
 from typing import Dict, List, Any, Optional
 from pathlib import Path
 
-logger = logging.getLogger("agent-os.workflow")
+logger = logging.getLogger("agent-x.workflow")
 
 
 class WorkflowEngine:
@@ -66,7 +66,7 @@ class WorkflowEngine:
 
     def __init__(self, browser):
         self.browser = browser
-        self._templates_dir = Path.home() / ".agent-os" / "workflows"
+        self._templates_dir = Path.home() / ".agent-x" / "workflows"
         self._templates_dir.mkdir(parents=True, exist_ok=True)
         self._running_workflows: Dict[str, Dict] = {}
         self._max_concurrent = 5

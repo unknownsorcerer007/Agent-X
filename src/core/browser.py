@@ -1,5 +1,5 @@
 """
-Agent-OS Stealth Browser Engine
+Agent-X Stealth Browser Engine
 Advanced anti-detection with real Chrome, cookie persistence, proxy support.
 """
 import asyncio
@@ -34,7 +34,7 @@ from src.security.captcha_solver import CaptchaSolver
 from src.security.cloudflare_bypass import CloudflareBypassEngine, CloudflareChallengeType, ClearanceStore
 from src.core.firefox_engine import FirefoxEngine, DualEngineManager
 
-logger = logging.getLogger("agent-os.browser")
+logger = logging.getLogger("agent-x.browser")
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -260,8 +260,8 @@ class AgentBrowser:
         self._blocked_requests: int = 0
         self._pages: Dict[str, Page] = {}
         self._console_logs: Dict[str, List[Dict]] = {}  # page_id → list of log entries
-        self._cookie_dir = Path(os.path.expanduser("~/.agent-os/cookies"))
-        self._download_dir = Path(os.path.expanduser("~/.agent-os/downloads"))
+        self._cookie_dir = Path(os.path.expanduser("~/.agent-x/cookies"))
+        self._download_dir = Path(os.path.expanduser("~/.agent-x/downloads"))
         self._proxy_config = None
         self._current_device = "desktop_1080"
         self._network_capture = None  # Set externally
@@ -332,7 +332,7 @@ class AgentBrowser:
 
     def _get_or_create_cookie_key(self) -> bytes:
         """Get or create encryption key for cookie storage."""
-        key_path = Path(os.path.expanduser("~/.agent-os/.cookie_key"))
+        key_path = Path(os.path.expanduser("~/.agent-x/.cookie_key"))
         if key_path.exists():
             return key_path.read_bytes()
         key = Fernet.generate_key()
@@ -539,9 +539,9 @@ class AgentBrowser:
 
             # In Docker containers, Chromium cannot use its own namespace sandbox
             # because the container itself IS the sandbox. Auto-detect Docker
-            # via /.dockerenv file or AGENT_OS_DOCKER env var.
+            # via /.dockerenv file or AGENT_X_DOCKER env var.
             in_docker = (
-                os.getenv("AGENT_OS_DOCKER") == "1"
+                os.getenv("AGENT_X_DOCKER") == "1"
                 or os.path.exists("/.dockerenv")
                 or os.path.exists("/run/.containerenv")
             )
@@ -3361,7 +3361,7 @@ class AgentBrowser:
             "extension": ext_name,
             "version": ext_version,
             "path": str(ext_dir),
-            "note": "To use extensions, restart Agent-OS with: python main.py --headed --extension-path " + str(ext_dir)
+            "note": "To use extensions, restart Agent-X with: python main.py --headed --extension-path " + str(ext_dir)
         }
 
     async def get_console_logs(self, page_id: str = "main", clear: bool = False) -> Dict[str, Any]:
@@ -4064,7 +4064,7 @@ class AgentBrowser:
         # Flush any pending cookie writes first
         await self._flush_cookies()
 
-        session_dir = Path(os.path.expanduser("~/.agent-os/sessions"))
+        session_dir = Path(os.path.expanduser("~/.agent-x/sessions"))
         session_dir.mkdir(parents=True, exist_ok=True)
 
         # Save storage state (cookies + localStorage)
@@ -4111,7 +4111,7 @@ class AgentBrowser:
         Restore a previously saved browser session.
         Recreates cookies, localStorage, sessionStorage, and navigates to saved URLs.
         """
-        session_dir = Path(os.path.expanduser("~/.agent-os/sessions"))
+        session_dir = Path(os.path.expanduser("~/.agent-x/sessions"))
         state_path = session_dir / f"{name}.json"
 
         if not state_path.exists():
@@ -4203,7 +4203,7 @@ class AgentBrowser:
 
     async def list_sessions(self) -> Dict[str, Any]:
         """List all saved sessions."""
-        session_dir = Path(os.path.expanduser("~/.agent-os/sessions"))
+        session_dir = Path(os.path.expanduser("~/.agent-x/sessions"))
         sessions = []
 
         if session_dir.exists():
@@ -4225,7 +4225,7 @@ class AgentBrowser:
 
     async def delete_session(self, name: str) -> Dict[str, Any]:
         """Delete a saved session."""
-        session_dir = Path(os.path.expanduser("~/.agent-os/sessions"))
+        session_dir = Path(os.path.expanduser("~/.agent-x/sessions"))
         state_path = session_dir / f"{name}.json"
 
         if not state_path.exists():

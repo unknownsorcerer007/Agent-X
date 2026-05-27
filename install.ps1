@@ -1,13 +1,13 @@
 <#
 .SYNOPSIS
-    Agent-OS Installation Script
+    Agent-X Installation Script
 .DESCRIPTION
     Sets up the Python virtual environment, installs dependencies,
     and initializes patchright browsers.
 #>
 
 Write-Host "=========================================" -ForegroundColor Cyan
-Write-Host "       Agent-OS Setup & Installer        " -ForegroundColor Cyan
+Write-Host "       Agent-X Setup & Installer        " -ForegroundColor Cyan
 Write-Host "=========================================" -ForegroundColor Cyan
 
 # 1. Check for Python

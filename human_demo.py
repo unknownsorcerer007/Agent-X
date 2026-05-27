@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Agent-OS Human Capabilities Demo — Everything humans can do.
+Agent-X Human Capabilities Demo — Everything humans can do.
 """
 import httpx
 import json
@@ -8,7 +8,7 @@ import time
 import base64
 import re
 
-TOKEN = "agent-os-main-2026"
+TOKEN = "agent-x-main-2026"
 BASE = "http://127.0.0.1:8001"
 
 def cmd(command, **kwargs):
@@ -82,7 +82,7 @@ r = cmd("navigate", url="https://www.google.com")
 print(f"✅ Navigated: {r['title']}")
 
 r = cmd("click", selector="[name='q']")
-r = cmd("type", text="Agent-OS AI browser automation tool")
+r = cmd("type", text="Agent-X AI browser automation tool")
 r = cmd("press", key="Enter")
 time.sleep(3)
 

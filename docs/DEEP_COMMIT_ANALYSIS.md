@@ -25,7 +25,7 @@ The only significant deletion was the React web UI (25 files in commit `945bd1e`
 | MCP Server | `connectors/mcp_server.py` | 656 | ✅ Complete |
 | OpenAI | `connectors/openai_connector.py` | 573 | ✅ Complete |
 | OpenClaw | `connectors/openclaw_connector.py` | 439 | ✅ Complete |
-| CLI Tool | `connectors/agent-os-tool.sh` | 471 | ✅ Complete |
+| CLI Tool | `connectors/agent-x-tool.sh` | 471 | ✅ Complete |
 | MCP Config | `connectors/mcp_config.json` | 12 | ✅ Complete |
 
 ## Broken Import References

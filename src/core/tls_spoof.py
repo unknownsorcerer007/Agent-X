@@ -1,5 +1,5 @@
 """
-Agent-OS TLS Fingerprint Engine
+Agent-X TLS Fingerprint Engine
 Real TLS fingerprinting via curl_cffi for HTTP requests.
 CDP-level TLS metadata spoofing for Playwright browser.
 
@@ -11,7 +11,7 @@ import logging
 import random
 from typing import Optional, Dict, Any
 
-logger = logging.getLogger("agent-os.tls")
+logger = logging.getLogger("agent-x.tls")
 
 # ═══════════════════════════════════════════════════════════════
 # curl_cffi session pool for HTTP requests with real TLS

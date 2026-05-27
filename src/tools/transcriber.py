@@ -1,5 +1,5 @@
 """
-Agent-OS Video Transcriber
+Agent-X Video Transcriber
 Extracts audio from videos and transcribes using local Whisper.cpp.
 No external APIs — all processing on-device.
 """
@@ -11,7 +11,7 @@ import subprocess
 from typing import Dict, Optional
 from pathlib import Path
 
-logger = logging.getLogger("agent-os.transcriber")
+logger = logging.getLogger("agent-x.transcriber")
 
 
 class Transcriber:
@@ -19,7 +19,7 @@ class Transcriber:
 
     def __init__(self, config):
         self.config = config
-        self.model_dir = Path(os.path.expanduser("~/.agent-os/models"))
+        self.model_dir = Path(os.path.expanduser("~/.agent-x/models"))
         self.model_dir.mkdir(parents=True, exist_ok=True)
         self.model_path = self.model_dir / "whisper-model.bin"
         self.whisper_binary = self._find_whisper()

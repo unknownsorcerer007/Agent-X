@@ -1,5 +1,5 @@
 """
-Agent-OS Smart Navigator
+Agent-X Smart Navigator
 Intelligent URL fetcher that picks the right strategy (HTTP vs browser)
 per domain, retries on failure with escalating delays, and caches
 which approach works for each site.
@@ -18,7 +18,7 @@ from urllib.parse import urlparse
 from src.core.browser import AgentBrowser
 from src.core.http_client import TLSClient
 
-logger = logging.getLogger("agent-os.smart_navigator")
+logger = logging.getLogger("agent-x.smart_navigator")
 
 
 class SmartNavigator:

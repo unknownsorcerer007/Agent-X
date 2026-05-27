@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 """
-Agent-OS MCP Passthrough Wrapper
+Agent-X MCP Passthrough Wrapper
 =================================
 Drop-in MCP server that works WITHOUT any LLM API key.
 
 How it works:
-  - All 199 browser tools → proxied to Agent-OS server (needs it running)
+  - All 199 browser tools → proxied to Agent-X server (needs it running)
   - LLM tools (llm-complete, llm-classify, etc.) → built-in rule-based (no API)
   - MCP client's own LLM (Claude, GPT-4, etc.) handles all reasoning
-  - Agent-OS is just the tool execution layer
+  - Agent-X is just the tool execution layer
 
 Usage:
-    # With Agent-OS server running:
-    AGENT_OS_URL=http://localhost:8001 AGENT_OS_TOKEN=your-token python3 mcp_passthrough.py
+    # With Agent-X server running:
+    AGENT_X_URL=http://localhost:8001 AGENT_X_TOKEN=your-token python3 mcp_passthrough.py
 
     # Or use the startup script:
     ./run_mcp.sh
@@ -20,12 +20,12 @@ Usage:
 Config for Claude Desktop:
     {
       "mcpServers": {
-        "agent-os": {
+        "agent-x": {
           "command": "python3",
-          "args": ["/absolute/path/to/Agent-OS/connectors/mcp_passthrough.py"],
+          "args": ["/absolute/path/to/Agent-X/connectors/mcp_passthrough.py"],
           "env": {
-            "AGENT_OS_URL": "http://localhost:8001",
-            "AGENT_OS_TOKEN": "your-token"
+            "AGENT_X_URL": "http://localhost:8001",
+            "AGENT_X_TOKEN": "your-token"
           }
         }
       }
@@ -53,15 +53,15 @@ from connectors._tool_registry import TOOLS, get_command_map, get_mcp_tools
 
 def resolve_agent_token() -> str:
     # 1. Environment Variable
-    token = os.environ.get("AGENT_OS_TOKEN")
+    token = os.environ.get("AGENT_X_TOKEN")
     if token:
         return token
 
-    # 2. Try .env in repo root or ~/.agent-os/.env
+    # 2. Try .env in repo root or ~/.agent-x/.env
     repo_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     paths = [
         os.path.join(repo_dir, ".env"),
-        os.path.expanduser("~/.agent-os/.env")
+        os.path.expanduser("~/.agent-x/.env")
     ]
     for path in paths:
         if os.path.exists(path):
@@ -75,14 +75,14 @@ def resolve_agent_token() -> str:
                             k, v = line.split("=", 1)
                             k = k.strip()
                             v = v.strip().strip('"').strip("'")
-                            if k in ("AGENT_TOKEN", "AGENT_OS_TOKEN") and v:
+                            if k in ("AGENT_TOKEN", "AGENT_X_TOKEN") and v:
                                 return v
             except Exception:
                 pass
 
-    # 3. Try config.yaml in ~/.agent-os/ or repo root
+    # 3. Try config.yaml in ~/.agent-x/ or repo root
     config_paths = [
-        os.path.expanduser("~/.agent-os/config.yaml"),
+        os.path.expanduser("~/.agent-x/config.yaml"),
         os.path.join(repo_dir, "config.yaml")
     ]
     for path in config_paths:
@@ -101,24 +101,24 @@ def resolve_agent_token() -> str:
     # 4. Fallback to generating a temp token
     import secrets
     fallback_token = secrets.token_urlsafe(32)
-    print(f"WARNING: AGENT_OS_TOKEN not set or found. Generated temp token: {fallback_token}", file=sys.stderr)
+    print(f"WARNING: AGENT_X_TOKEN not set or found. Generated temp token: {fallback_token}", file=sys.stderr)
     return fallback_token
 
-AGENT_OS_URL = os.environ.get("AGENT_OS_URL", "http://localhost:8001")
-AGENT_OS_TOKEN = resolve_agent_token()
+AGENT_X_URL = os.environ.get("AGENT_X_URL", "http://localhost:8001")
+AGENT_X_TOKEN = resolve_agent_token()
 
 # Compression settings — controls how much tool output gets trimmed
-# AGENT_OS_COMPRESS: "aggressive" | "normal" | "off"
-COMPRESS_MODE = os.environ.get("AGENT_OS_COMPRESS", "aggressive").lower()
-# AGENT_OS_MAX_OUTPUT: max chars returned per tool call (default 8000)
-MAX_OUTPUT_CHARS = int(os.environ.get("AGENT_OS_MAX_OUTPUT", "8000"))
+# AGENT_X_COMPRESS: "aggressive" | "normal" | "off"
+COMPRESS_MODE = os.environ.get("AGENT_X_COMPRESS", "aggressive").lower()
+# AGENT_X_MAX_OUTPUT: max chars returned per tool call (default 8000)
+MAX_OUTPUT_CHARS = int(os.environ.get("AGENT_X_MAX_OUTPUT", "8000"))
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(name)s] %(message)s",
     stream=sys.stderr,  # MCP uses stdout for protocol, log to stderr
 )
-logger = logging.getLogger("agent-os-mcp-passthrough")
+logger = logging.getLogger("agent-x-mcp-passthrough")
 
 # ─── HTTP Client ─────────────────────────────────────────────
 
@@ -135,13 +135,13 @@ async def _get_client() -> httpx.AsyncClient:
     return _client
 
 
-# ─── Agent-OS Server Communication ───────────────────────────
+# ─── Agent-X Server Communication ───────────────────────────
 
 async def agent_os_command(command: str, params: Dict[str, Any] = None) -> Dict[str, Any]:
-    """Send command to Agent-OS server with retry logic. Returns error dict if server unavailable."""
+    """Send command to Agent-X server with retry logic. Returns error dict if server unavailable."""
     import asyncio as _asyncio
 
-    payload = {"token": AGENT_OS_TOKEN, "command": command}
+    payload = {"token": AGENT_X_TOKEN, "command": command}
     if params:
         payload.update(params)
 
@@ -151,14 +151,14 @@ async def agent_os_command(command: str, params: Dict[str, Any] = None) -> Dict[
 
     for attempt in range(max_retries):
         try:
-            response = await client.post(f"{AGENT_OS_URL}/command", json=payload, timeout=30.0)
+            response = await client.post(f"{AGENT_X_URL}/command", json=payload, timeout=30.0)
             result = response.json()
             # Don't retry if the server responded (even with an error)
             return result
         except httpx.ConnectError:
             last_error = (
-                f"Cannot connect to Agent-OS server at {AGENT_OS_URL}. "
-                f"Start it with: python main.py --agent-token '{AGENT_OS_TOKEN}'"
+                f"Cannot connect to Agent-X server at {AGENT_X_URL}. "
+                f"Start it with: python main.py --agent-token '{AGENT_X_TOKEN}'"
             )
             # Retry on connection errors (server may be restarting)
             if attempt < max_retries - 1:
@@ -167,7 +167,7 @@ async def agent_os_command(command: str, params: Dict[str, Any] = None) -> Dict[
             return {
                 "status": "error",
                 "error": last_error,
-                "hint": "Browser tools require Agent-OS server running. LLM tools work without it."
+                "hint": "Browser tools require Agent-X server running. LLM tools work without it."
             }
         except httpx.TimeoutException:
             last_error = f"Request timed out (attempt {attempt + 1}/{max_retries})"
@@ -182,18 +182,18 @@ async def agent_os_command(command: str, params: Dict[str, Any] = None) -> Dict[
 
 
 async def agent_os_status() -> Dict[str, Any]:
-    """Check Agent-OS server health."""
+    """Check Agent-X server health."""
     client = await _get_client()
     try:
-        response = await client.get(f"{AGENT_OS_URL}/health", timeout=5.0)
+        response = await client.get(f"{AGENT_X_URL}/health", timeout=5.0)
         return {"status": "success", "server": response.json(), "connected": True}
     except Exception:
         return {
             "status": "warning",
             "connected": False,
-            "message": f"Agent-OS server not reachable at {AGENT_OS_URL}",
+            "message": f"Agent-X server not reachable at {AGENT_X_URL}",
             "llm_tools": "Available (built-in, no API key needed)",
-            "browser_tools": "Unavailable (start Agent-OS server)"
+            "browser_tools": "Unavailable (start Agent-X server)"
         }
 
 
@@ -897,7 +897,7 @@ builtin_llm = BuiltinLLM()
 
 # ─── MCP Server Setup ────────────────────────────────────────
 
-server = Server("agent-os-passthrough")
+server = Server("agent-x-passthrough")
 
 # Build tool list from registry
 TOOLS_LIST: List[Tool] = []
@@ -939,7 +939,7 @@ async def list_tools() -> List[Tool]:
 
 @server.call_tool()
 async def call_tool(name: str, arguments: Dict[str, Any]) -> List[TextContent]:
-    """Execute a tool — LLM tools use built-in, browser tools proxy to Agent-OS."""
+    """Execute a tool — LLM tools use built-in, browser tools proxy to Agent-X."""
 
     # Check if this is an LLM tool (use built-in handler)
     llm_cmd = _find_llm_tool(name)
@@ -948,7 +948,7 @@ async def call_tool(name: str, arguments: Dict[str, Any]) -> List[TextContent]:
     # Check if this is a status/health check
     elif name == "browser_status":
         result = await agent_os_status()
-    # All other tools → proxy to Agent-OS server
+    # All other tools → proxy to Agent-X server
     elif name in command_map:
         cmd_name, param_keys = command_map[name]
         params = {k: arguments[k] for k in param_keys if k in arguments}
@@ -959,15 +959,15 @@ async def call_tool(name: str, arguments: Dict[str, Any]) -> List[TextContent]:
     # ─── Smart Compress: Minimize token burn ───
     # Browser results can be HUGE (HTML = 20k-50k chars).
     # Compress BEFORE sending back to MCP client's LLM.
-    # Set AGENT_OS_COMPRESS=off to disable, AGENT_OS_COMPRESS=normal for lighter.
+    # Set AGENT_X_COMPRESS=off to disable, AGENT_X_COMPRESS=normal for lighter.
     result = SmartCompressor.compress(result, name)
 
     # Format response
     output = json.dumps(result, indent=2, ensure_ascii=False)
 
-    # Hard cap: configurable via AGENT_OS_MAX_OUTPUT (default 8000)
+    # Hard cap: configurable via AGENT_X_MAX_OUTPUT (default 8000)
     if len(output) > MAX_OUTPUT_CHARS:
-        output = output[:MAX_OUTPUT_CHARS] + f"\n... [capped at {MAX_OUTPUT_CHARS:,} chars — set AGENT_OS_MAX_OUTPUT to change]"
+        output = output[:MAX_OUTPUT_CHARS] + f"\n... [capped at {MAX_OUTPUT_CHARS:,} chars — set AGENT_X_MAX_OUTPUT to change]"
 
     return [TextContent(type="text", text=output)]
 
@@ -1043,29 +1043,29 @@ async def _handle_llm_tool(command: str, arguments: Dict[str, Any]) -> Dict[str,
 
 async def main():
     logger.info("=" * 60)
-    logger.info("Agent-OS MCP Passthrough Wrapper")
+    logger.info("Agent-X MCP Passthrough Wrapper")
     logger.info("=" * 60)
-    logger.info(f"Agent-OS URL: {AGENT_OS_URL}")
-    logger.info(f"Token: {AGENT_OS_TOKEN[:10]}...")
+    logger.info(f"Agent-X URL: {AGENT_X_URL}")
+    logger.info(f"Token: {AGENT_X_TOKEN[:10]}...")
     logger.info(f"Total tools: {len(TOOLS_LIST)}")
 
     # Count tool categories
     browser_tools = sum(1 for t in TOOLS if not t.server_cmd.startswith("llm-"))
     llm_tools = sum(1 for t in TOOLS if t.server_cmd.startswith("llm-"))
-    logger.info(f"  Browser tools: {browser_tools} (proxy to Agent-OS server)")
+    logger.info(f"  Browser tools: {browser_tools} (proxy to Agent-X server)")
     logger.info(f"  LLM tools: {llm_tools} (built-in, no API key needed)")
     logger.info("")
     logger.info("MODE: Passthrough — MCP client's LLM (Claude/GPT) handles reasoning")
-    logger.info("      Agent-OS executes browser actions + provides rule-based LLM")
+    logger.info("      Agent-X executes browser actions + provides rule-based LLM")
     logger.info("")
 
     # Check server connection
     status = await agent_os_status()
     if status.get("connected"):
-        logger.info("✅ Agent-OS server is reachable")
+        logger.info("✅ Agent-X server is reachable")
     else:
-        logger.warning("⚠️  Agent-OS server not reachable — browser tools will return errors")
-        logger.warning(f"   Start it: python main.py --agent-token '{AGENT_OS_TOKEN}'")
+        logger.warning("⚠️  Agent-X server not reachable — browser tools will return errors")
+        logger.warning(f"   Start it: python main.py --agent-token '{AGENT_X_TOKEN}'")
         logger.info("   LLM tools still work without the server.")
 
     logger.info("=" * 60)

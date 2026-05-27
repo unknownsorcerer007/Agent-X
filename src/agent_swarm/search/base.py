@@ -13,7 +13,7 @@ class SearchProvider(str, Enum):
     BING = "bing"
     DUCKDUCKGO = "duckduckgo"
     SEARXNG = "searxng"
-    AGENT_OS = "agent_os"
+    AGENT_X = "agent_os"
     HTTP = "http"
 
 

@@ -1,4 +1,4 @@
-# Agent-OS — Complete User Flow (A to Z)
+# Agent-X — Complete User Flow (A to Z)
 
 > From installation to daily usage — everything you need to know.
 
@@ -9,13 +9,13 @@
 ### Option A: pip install (Recommended)
 
 ```bash
-pip install agent-os
+pip install agent-x
 ```
 
 **What you see:**
 ```
 ╔══════════════════════════════════════════════════╗
-║  Installing Agent-OS...                          ║
+║  Installing Agent-X...                          ║
 ║  ✓ playwright installed                          ║
 ║  ✓ curl_cffi installed                           ║
 ║  ✓ 82 Python modules ready                       ║
@@ -25,14 +25,14 @@ pip install agent-os
 ### Option B: git clone
 
 ```bash
-git clone https://github.com/factspark23-hash/Agent-OS.git
-cd Agent-OS
+git clone https://github.com/factspark23-hash/Agent-X.git
+cd Agent-X
 pip install -r requirements.txt
 ```
 
 **What you see:**
 ```
-Cloning into 'Agent-OS'...
+Cloning into 'Agent-X'...
 remote: Enumerating objects: 127 commits
 Installing dependencies...
  ✓ playwright>=1.40.0
@@ -45,8 +45,8 @@ Installing dependencies...
 ### Option C: Docker
 
 ```bash
-docker pull agent-os/agent-os:latest
-docker run -p 8000:8000 -p 8001:8001 agent-os/agent-os:latest
+docker pull agent-x/agent-x:latest
+docker run -p 8000:8000 -p 8001:8001 agent-x/agent-x:latest
 ```
 
 ---
@@ -97,7 +97,7 @@ python main.py --setup
 **Interactive wizard:**
 ```
 ╔══════════════════════════════════════════════════╗
-║  Agent-OS Setup Wizard                          ║
+║  Agent-X Setup Wizard                          ║
 ╠══════════════════════════════════════════════════╣
 ║                                                  ║
 ║  [1/5] Browser Settings                         ║
@@ -142,7 +142,7 @@ python main.py --setup
 
 ---
 
-## 🔗 Step 4: Connect to Agent-OS
+## 🔗 Step 4: Connect to Agent-X
 
 ### Mode 1: Claude Desktop / Claude Code (MCP)
 
@@ -151,9 +151,9 @@ Add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_
 ```json
 {
   "mcpServers": {
-    "agent-os": {
+    "agent-x": {
       "command": "python",
-      "args": ["/path/to/Agent-OS/connectors/mcp_server.py"]
+      "args": ["/path/to/Agent-X/connectors/mcp_server.py"]
     }
   }
 }
@@ -162,7 +162,7 @@ Add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_
 **What Claude sees:**
 ```
 ╔══════════════════════════════════════════════════╗
-║  Agent-OS MCP Tools Available (38 tools)        ║
+║  Agent-X MCP Tools Available (38 tools)        ║
 ╠══════════════════════════════════════════════════╣
 ║  • navigate        → Go to URL                  ║
 ║  • fill_form       → Fill form fields           ║
@@ -223,7 +223,7 @@ Open `http://localhost:8080` in your browser:
 
 ```
 ╔══════════════════════════════════════════════════════════════════════╗
-║  Agent-OS Dashboard                                    [● Live]  ║
+║  Agent-X Dashboard                                    [● Live]  ║
 ╠══════════════════════════════════════════════════════════════════════╣
 ║                                                                    ║
 ║  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌──────────┐ ║
@@ -440,7 +440,7 @@ curl -X POST http://localhost:8001/api/command \
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│  Agent-OS Quick Reference                           │
+│  Agent-X Quick Reference                           │
 ├─────────────────────────────────────────────────────┤
 │                                                     │
 │  Start:        python main.py                       │

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Agent-OS — AI Agent Browser — Production Edition
+Agent-X — AI Agent Browser — Production Edition
 Entry point. Launches browser + agent server with full production infrastructure.
 
 Usage:
@@ -29,6 +29,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 
+# ─── Compatibility Layer — load BEFORE any other imports ────
+from src.compat import check_all as _check_compat
+_check_compat()
+
 # ─── Auto-load .env file ────────────────────────────────
 _env_file = Path(__file__).parent / ".env"
 if _env_file.exists():
@@ -47,11 +51,11 @@ from src.core.session import SessionManager
 from src.infra.logging import setup_logging, get_logger
 
 
-__version__ = "3.2.0"
+__version__ = "4.0.0"
 
 
 class AgentOS:
-    """Main Agent-OS application with production infrastructure."""
+    """Main Agent-X application with production infrastructure."""
 
     def __init__(self, args):
         self.args = args
@@ -61,7 +65,7 @@ class AgentOS:
         log_level = args.log_level or self.config.get("logging.level", "INFO")
         json_logs = args.json_logs or self.config.get("logging.json_logs", False)
         setup_logging(level=log_level, json_logs=json_logs)
-        self.logger = get_logger("agent-os")
+        self.logger = get_logger("agent-x")
 
         # ─── Database ────────────────────────────────────
         self.db = None
@@ -110,7 +114,7 @@ class AgentOS:
                 algorithm=self.config.get("jwt.algorithm", "HS256"),
                 access_token_expire_minutes=self.config.get("jwt.access_token_expire_minutes", 15),
                 refresh_token_expire_days=self.config.get("jwt.refresh_token_expire_days", 30),
-                issuer=self.config.get("jwt.issuer", "agent-os"),
+                issuer=self.config.get("jwt.issuer", "agent-x"),
             )
 
             from src.auth.api_key_manager import APIKeyManager
@@ -219,7 +223,7 @@ class AgentOS:
         self._validate_production_config()
 
         self.logger.info("=" * 60)
-        self.logger.info(f"  Agent-OS — AI Agent Browser v{__version__} (Production)")
+        self.logger.info(f"  Agent-X — AI Agent Browser v{__version__} (Production)")
         self.logger.info("=" * 60)
 
         # Connect Redis
@@ -273,7 +277,7 @@ class AgentOS:
         debug_port = self.config.get("server.debug_port", 8002)
 
         self.logger.info(
-            "Agent-OS ready",
+            "Agent-X ready",
             ws_port=ws_port,
             http_port=http_port,
             debug_port=debug_port if self.debug_server else None,
@@ -353,7 +357,7 @@ class AgentOS:
         """Graceful shutdown."""
         self._running = False
         self._shutdown_event.set()
-        self.logger.info("Shutting down Agent-OS...")
+        self.logger.info("Shutting down Agent-X...")
 
         if self._ram_monitor_task:
             self._ram_monitor_task.cancel()
@@ -380,7 +384,7 @@ class AgentOS:
         if self.db:
             await self.db.close()
 
-        self.logger.info("Agent-OS stopped")
+        self.logger.info("Agent-X stopped")
 
     async def _ram_monitor(self):
         """Monitor RAM usage and warn if exceeding limits."""
@@ -399,8 +403,8 @@ class AgentOS:
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Agent-OS — AI Agent Browser")
-    parser.add_argument("--version", action="version", version=f"Agent-OS {__version__}")
+    parser = argparse.ArgumentParser(description="Agent-X — AI Agent Browser")
+    parser.add_argument("--version", action="version", version=f"Agent-X {__version__}")
     parser.add_argument("--headed", action="store_true", help="Show browser window")
     parser.add_argument("--agent-token", type=str, default=os.environ.get("AGENT_TOKEN"), help="Set legacy agent authentication token")
     parser.add_argument("--port", type=int, default=int(os.environ.get("WS_PORT", "0")) or None, help="WebSocket server port (HTTP = port+1, Debug = port+2)")

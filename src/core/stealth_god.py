@@ -1,5 +1,5 @@
 """
-Agent-OS GOD MODE Stealth Engine
+Agent-X GOD MODE Stealth Engine
 =================================
 The ultimate anti-detection system. Covers EVERY known detection vector
 and prepares for future ones.
@@ -36,7 +36,7 @@ import hashlib
 from typing import Optional, Dict, Any
 from dataclasses import dataclass
 
-logger = logging.getLogger("agent-os.stealth-god")
+logger = logging.getLogger("agent-x.stealth-god")
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -779,7 +779,7 @@ Error.prepareStackTrace = function(error, stack) {{
         if (typeof result === 'string') {{
             return result
                 .replace(/playwright[^\\n]*/gi, '')
-                .replace(/agent-os[^\\n]*/gi, '')
+                .replace(/agent-x[^\\n]*/gi, '')
                 .replace(/at eval[^\\n]*/gi, '')
                 .replace(/at Object\\.\\u003canonymous\\u003e[^\\n]*/gi, '')
                 .replace(/\\(\\w+:\\/\\/[^)]+\\)/g, '(<anonymous>)');

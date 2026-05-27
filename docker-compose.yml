@@ -1,6 +1,6 @@
-# Agent-OS Production Stack
+# Agent-X Production Stack
 # docker compose up -d
-# docker compose logs -f agent-os
+# docker compose logs -f agent-x
 #
 # REQUIRED: Set these environment variables before starting:
 #   export POSTGRES_PASSWORD="<strong-password>"
@@ -13,7 +13,7 @@ services:
   # ─── PostgreSQL ───────────────────────────────────────
   postgres:
     image: postgres:16.6-alpine
-    container_name: agent-os-postgres
+    container_name: agent-x-postgres
     restart: unless-stopped
     environment:
       POSTGRES_USER: agent_os
@@ -37,7 +37,7 @@ services:
   # ─── Redis ───────────────────────────────────────────
   redis:
     image: redis:7.4-alpine
-    container_name: agent-os-redis
+    container_name: agent-x-redis
     restart: unless-stopped
     command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru --appendonly yes
     volumes:
@@ -55,10 +55,10 @@ services:
           memory: 300M
           cpus: "0.5"
 
-  # ─── Agent-OS ────────────────────────────────────────
-  agent-os:
+  # ─── Agent-X ────────────────────────────────────────
+  agent-x:
     build: .
-    container_name: agent-os
+    container_name: agent-x
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
@@ -76,7 +76,7 @@ services:
     environment:
       - JWT_SECRET_KEY=${JWT_SECRET_KEY:-}
       - AGENT_TOKEN=${AGENT_TOKEN:-}
-      - AGENT_OS_HOST=0.0.0.0
+      - AGENT_X_HOST=0.0.0.0
       - SWARM_ENABLED=${SWARM_ENABLED:-true}
       - SWARM_MAX_WORKERS=${SWARM_MAX_WORKERS:-5}
       - SWARM_ROUTER_THRESHOLD=${SWARM_ROUTER_THRESHOLD:-0.7}
@@ -85,7 +85,7 @@ services:
       - SWARM_OUTPUT_FORMAT=${SWARM_OUTPUT_FORMAT:-json}
       - SWARM_MAX_RESULTS=${SWARM_MAX_RESULTS:-10}
     volumes:
-      - agent-os-data:/home/agentos/.agent-os
+      - agent-x-data:/home/agentos/.agent-x
     deploy:
       resources:
         limits:
@@ -108,12 +108,12 @@ services:
   # ─── Nginx Reverse Proxy (HTTP only, for local use) ──
   nginx:
     image: nginx:1.27-alpine
-    container_name: agent-os-nginx
+    container_name: agent-x-nginx
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
     depends_on:
-      - agent-os
+      - agent-x
     ports:
       - "127.0.0.1:8080:80"
     volumes:
@@ -127,7 +127,7 @@ services:
 volumes:
   postgres-data:
   redis-data:
-  agent-os-data:
+  agent-x-data:
 
 networks:
   default:

@@ -1,5 +1,5 @@
 """
-Agent-OS Firefox Fallback Engine
+Agent-X Firefox Fallback Engine
 Production-grade Firefox browser automation with full stealth support.
 
 When Chromium gets detected (Cloudflare, PerimeterX, DataDome, etc.),
@@ -33,7 +33,7 @@ try:
 except ImportError:
     _FERNET_AVAILABLE = False
 
-logger = logging.getLogger("agent-os.firefox")
+logger = logging.getLogger("agent-x.firefox")
 
 # ═══════════════════════════════════════════════════════════════
 # FIREFOX-SPECIFIC STEALTH PATCHES
@@ -106,7 +106,7 @@ Error.prepareStackTrace = function(error, stack) {
         if (typeof result === 'string') {
             return result
                 .replace(/playwright[^\n]*/gi, '')
-                .replace(/agent-os[^\n]*/gi, '')
+                .replace(/agent-x[^\n]*/gi, '')
                 .replace(/at eval[^\n]*/gi, '');
         }
         return result;
@@ -301,8 +301,8 @@ class FirefoxEngine:
         self._pages: Dict[str, Page] = {}
         self._console_logs: Dict[str, List[Dict]] = {}
         self._fingerprint: Optional[Dict] = None
-        self._cookie_dir = Path(os.path.expanduser("~/.agent-os/cookies/firefox"))
-        self._download_dir = Path(os.path.expanduser("~/.agent-os/downloads/firefox"))
+        self._cookie_dir = Path(os.path.expanduser("~/.agent-x/cookies/firefox"))
+        self._download_dir = Path(os.path.expanduser("~/.agent-x/downloads/firefox"))
         self._proxy_config = None
         self._blocked_requests = 0
         self._launch_args = None
@@ -715,7 +715,7 @@ class FirefoxEngine:
 
     def _get_or_create_cookie_key(self) -> bytes:
         """Get or create encryption key for cookie storage."""
-        key_path = Path(os.path.expanduser("~/.agent-os/.cookie_key"))
+        key_path = Path(os.path.expanduser("~/.agent-x/.cookie_key"))
         if key_path.exists():
             return key_path.read_bytes()
         key = Fernet.generate_key()

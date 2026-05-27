@@ -1,5 +1,5 @@
 """
-Agent-OS JWT Authentication
+Agent-X JWT Authentication
 Production-grade JWT handling with refresh tokens, token blacklisting,
 and secure defaults.
 """
@@ -17,7 +17,7 @@ from typing import Any, Dict, Optional
 
 import jwt as pyjwt
 
-logger = logging.getLogger("agent-os.auth.jwt")
+logger = logging.getLogger("agent-x.auth.jwt")
 
 
 class JWTHandler:
@@ -31,7 +31,7 @@ class JWTHandler:
     def __init__(self, secret_key: str, algorithm: str = "HS256",
                  access_token_expire_minutes: int = 15,
                  refresh_token_expire_days: int = 30,
-                 issuer: str = "agent-os"):
+                 issuer: str = "agent-x"):
         if len(secret_key) < 32:
             raise ValueError("JWT secret key must be at least 32 characters")
         self.secret_key = secret_key
@@ -42,7 +42,7 @@ class JWTHandler:
         self._blacklist: set = set()  # In production, use Redis
         self._blacklist_exp: Dict[str, float] = {}  # jti → expiry timestamp
         self._user_tokens: Dict[str, set] = {}  # user_id → set of JTIs
-        self._blacklist_file = Path(os.path.expanduser("~/.agent-os/jwt_blacklist.json"))
+        self._blacklist_file = Path(os.path.expanduser("~/.agent-x/jwt_blacklist.json"))
         self._last_cleanup = _time.time()
         self._persistence_task: Optional[asyncio.Task] = None
         self._load_blacklist()

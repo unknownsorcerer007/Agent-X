@@ -3,7 +3,7 @@ from typing import Optional, Any
 from src.core.cdp_stealth import CDPStealthInjector
 from src.core.stealth_god import GodModeStealth
 
-logger = logging.getLogger("agent-os.adaptive-stealth")
+logger = logging.getLogger("agent-x.adaptive-stealth")
 
 class AdaptiveStealthManager:
     """

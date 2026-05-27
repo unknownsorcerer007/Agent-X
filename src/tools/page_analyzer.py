@@ -1,5 +1,5 @@
 """
-Agent-OS Page Analyzer
+Agent-X Page Analyzer
 Extracts structured information from web pages for AI agents.
 Summarizes content, finds key data, extracts tables, forms, and metadata.
 """
@@ -7,7 +7,7 @@ import logging
 import re
 from typing import Dict, Any
 
-logger = logging.getLogger("agent-os.page_analyzer")
+logger = logging.getLogger("agent-x.page_analyzer")
 
 
 class PageAnalyzer:

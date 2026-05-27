@@ -1,8 +1,8 @@
 <#
 .SYNOPSIS
-    Agent-OS MCP Connector Script
+    Agent-X MCP Connector Script
 .DESCRIPTION
-    Runs the MCP stdio wrapper for Agent-OS, allowing connection to Claude Desktop or similar.
+    Runs the MCP stdio wrapper for Agent-X, allowing connection to Claude Desktop or similar.
 #>
 
 if ($PSScriptRoot) {
@@ -10,7 +10,7 @@ if ($PSScriptRoot) {
 }
 
 [Console]::Error.WriteLine("=========================================")
-[Console]::Error.WriteLine("       Agent-OS MCP Connector            ")
+[Console]::Error.WriteLine("       Agent-X MCP Connector            ")
 [Console]::Error.WriteLine("=========================================")
 
 if (!(Test-Path -Path "venv\Scripts\python.exe")) {

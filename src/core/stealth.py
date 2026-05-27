@@ -1,5 +1,5 @@
 """
-Agent-OS Shared Stealth Constants
+Agent-X Shared Stealth Constants
 Single source of truth for bot-blocking patterns, fake responses, and
 supplementary anti-detection features.
 
@@ -154,7 +154,7 @@ if (navigator.sendBeacon) {
 // ═══════════════════════════════════════════════════════════════
 // 5. CHALLENGE DETECTION OBSERVER
 // Detects when a Cloudflare/PerimeterX challenge page appears
-// and signals the Agent-OS server for automatic bypass.
+// and signals the Agent-X server for automatic bypass.
 // ═══════════════════════════════════════════════════════════════
 (function() {
     var _challengeDetected = false;
@@ -250,13 +250,13 @@ BOT_DETECTION_SCRIPT_PATTERNS = [
 FAKE_RESPONSES = {
     "recaptcha": {"success": True, "score": 0.95, "action": "login", "challenge_ts": "2026-04-08T12:00:00Z"},
     "captcha": {"status": "verified", "human": True, "score": 0.92},
-    "perimeterx": {"status": 0, "uuid": "fake-uuid-agent-os", "vid": "fake-vid", "risk_score": 5},
+    "perimeterx": {"status": 0, "uuid": "fake-uuid-agent-x", "vid": "fake-vid", "risk_score": 5},
     "datadome": {"status": 200, "headers": {"x-datadome": "pass"}, "cookie": "human-verified"},
-    "cloudflare": {"success": True, "cf_clearance": "agent-os-clearance-token"},
+    "cloudflare": {"success": True, "cf_clearance": "agent-x-clearance-token"},
     "bot-detection": {"human": True, "verified": True, "timestamp": 1700000000},
-    "kasada": {"verified": True, "token": "agent-os-kasada-token"},
-    "arkose": {"solved": True, "session_token": "agent-os-arkose-token"},
-    "threatmetrix": {"org_id": "agent-os", "result": "pass", "risk_score": 5},
+    "kasada": {"verified": True, "token": "agent-x-kasada-token"},
+    "arkose": {"solved": True, "session_token": "agent-x-arkose-token"},
+    "threatmetrix": {"org_id": "agent-x", "result": "pass", "risk_score": 5},
     "iovation": {"result": "pass", "confidence": 0.95},
     "sardine": {"decision": "approve", "risk_score": 10},
     "seon": {"fraud_score": 10, "decision": "approve"},

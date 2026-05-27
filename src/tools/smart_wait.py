@@ -1,5 +1,5 @@
 """
-Agent-OS Smart Wait Engine
+Agent-X Smart Wait Engine
 Intelligent waiting that automatically detects when pages/elements are truly ready.
 
 Strategies:
@@ -17,7 +17,7 @@ import logging
 import time
 from typing import Dict, List, Any
 
-logger = logging.getLogger("agent-os.smart_wait")
+logger = logging.getLogger("agent-x.smart_wait")
 
 
 # ─── JS Snippets (injected once, reused everywhere) ─────────
@@ -191,7 +191,7 @@ _CHECK_JS_CONDITION_JS = """
 
 class SmartWait:
     """
-    Intelligent waiting engine for Agent-OS.
+    Intelligent waiting engine for Agent-X.
     Handles SPAs, AJAX, lazy load, animations, infinite scroll.
 
     Usage:

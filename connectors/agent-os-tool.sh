@@ -1,26 +1,26 @@
 #!/usr/bin/env bash
-# Agent-OS CLI Connector — Complete (198 commands)
-# Usage: ./agent-os-tool.sh <command> [args...]
-# Env: AGENT_OS_URL (default: http://localhost:8001), AGENT_OS_TOKEN (required)
+# Agent-X CLI Connector — Complete (198 commands)
+# Usage: ./agent-x-tool.sh <command> [args...]
+# Env: AGENT_X_URL (default: http://localhost:8001), AGENT_X_TOKEN (required)
 
 set -euo pipefail
 
-AGENT_OS_URL="${AGENT_OS_URL:-http://localhost:8001}"
-AGENT_OS_TOKEN="${AGENT_OS_TOKEN:-}"
+AGENT_X_URL="${AGENT_X_URL:-http://localhost:8001}"
+AGENT_X_TOKEN="${AGENT_X_TOKEN:-}"
 
 send_command() {
     local cmd="$1"; shift
     local extra="$*"
-    if [ -z "$AGENT_OS_TOKEN" ]; then echo '{"status":"error","error":"AGENT_OS_TOKEN not set"}' >&2; exit 1; fi
-    local p="{\"token\":\"$AGENT_OS_TOKEN\",\"command\":\"$cmd\""
+    if [ -z "$AGENT_X_TOKEN" ]; then echo '{"status":"error","error":"AGENT_X_TOKEN not set"}' >&2; exit 1; fi
+    local p="{\"token\":\"$AGENT_X_TOKEN\",\"command\":\"$cmd\""
     [ -n "$extra" ] && p="$p,$extra"
     p="$p}"
-    curl -s -X POST "$AGENT_OS_URL/command" -H "Content-Type: application/json" -d "$p" 2>/dev/null || echo '{"status":"error","error":"Connection failed"}'
+    curl -s -X POST "$AGENT_X_URL/command" -H "Content-Type: application/json" -d "$p" 2>/dev/null || echo '{"status":"error","error":"Connection failed"}'
 }
 
 send_get() {
-    if [ -z "$AGENT_OS_TOKEN" ]; then echo '{"status":"error","error":"AGENT_OS_TOKEN not set"}' >&2; exit 1; fi
-    curl -s "$AGENT_OS_URL$1" 2>/dev/null || echo '{"status":"error","error":"Connection failed"}'
+    if [ -z "$AGENT_X_TOKEN" ]; then echo '{"status":"error","error":"AGENT_X_TOKEN not set"}' >&2; exit 1; fi
+    curl -s "$AGENT_X_URL$1" 2>/dev/null || echo '{"status":"error","error":"Connection failed"}'
 }
 
 CMD="${1:-help}"
@@ -276,7 +276,7 @@ transcribe) send_command "transcribe" "\"url\":\"${1:-}\",\"language\":\"${2:-en
 
 # Help (default)
 help|--help|-h)
-    echo "Agent-OS CLI — 198 commands"
+    echo "Agent-X CLI — 198 commands"
     echo ""
     echo "Usage: $0 <command> [args...]"
     echo ""

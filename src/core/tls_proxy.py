@@ -1,5 +1,5 @@
 """
-Agent-OS TLS Proxy Server
+Agent-X TLS Proxy Server
 Local HTTP/HTTPS proxy that re-signs all requests using curl_cffi
 with real browser TLS fingerprints.
 
@@ -22,7 +22,7 @@ from urllib.parse import urlparse
 from dataclasses import dataclass, field
 from collections import defaultdict
 
-logger = logging.getLogger("agent-os.tls-proxy")
+logger = logging.getLogger("agent-x.tls-proxy")
 
 # ═══════════════════════════════════════════════════════════════
 # curl_cffi Engine — Real Browser TLS Impersonation

@@ -1,5 +1,5 @@
 """
-Agent-OS Session Recording & Replay Engine
+Agent-X Session Recording & Replay Engine
 Full session capture, replay, analysis, and export.
 
 Production features:
@@ -28,7 +28,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 from collections import defaultdict
 
-logger = logging.getLogger("agent-os.session_recording")
+logger = logging.getLogger("agent-x.session_recording")
 
 
 # ─── Event Types ────────────────────────────────────────────
@@ -150,7 +150,7 @@ class SessionRecorder:
 
     def __init__(self, browser, storage_dir: str = None):
         self.browser = browser
-        self._storage_dir = Path(storage_dir or os.path.expanduser("~/.agent-os/recordings"))
+        self._storage_dir = Path(storage_dir or os.path.expanduser("~/.agent-x/recordings"))
         self._storage_dir.mkdir(parents=True, exist_ok=True)
 
         self._recording: Optional[SessionRecording] = None
@@ -762,7 +762,7 @@ class SessionRecorder:
     @staticmethod
     def list_recordings(storage_dir: str = None) -> List[Dict]:
         """List all saved recordings."""
-        sd = Path(storage_dir or os.path.expanduser("~/.agent-os/recordings"))
+        sd = Path(storage_dir or os.path.expanduser("~/.agent-x/recordings"))
         recordings = []
 
         if not sd.exists():
@@ -788,7 +788,7 @@ class SessionRecorder:
     @staticmethod
     def delete_recording(recording_id: str, storage_dir: str = None) -> bool:
         """Delete a saved recording."""
-        sd = Path(storage_dir or os.path.expanduser("~/.agent-os/recordings"))
+        sd = Path(storage_dir or os.path.expanduser("~/.agent-x/recordings"))
         rec_dir = sd / recording_id
         if rec_dir.exists():
             import shutil
@@ -820,7 +820,7 @@ class SessionReplay:
 
     def __init__(self, browser, storage_dir: str = None):
         self.browser = browser
-        self._storage_dir = Path(storage_dir or os.path.expanduser("~/.agent-os/recordings"))
+        self._storage_dir = Path(storage_dir or os.path.expanduser("~/.agent-x/recordings"))
 
         self._recording: Optional[SessionRecording] = None
         self._events: List[SessionEvent] = []
@@ -1290,7 +1290,7 @@ class SessionAnalyzer:
     """
 
     def __init__(self, storage_dir: str = None):
-        self._storage_dir = Path(storage_dir or os.path.expanduser("~/.agent-os/recordings"))
+        self._storage_dir = Path(storage_dir or os.path.expanduser("~/.agent-x/recordings"))
 
     def analyze(self, recording_id: str) -> Dict[str, Any]:
         """Full analysis of a recording."""

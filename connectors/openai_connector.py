@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Agent-OS OpenAI / Claude Function-Calling Connector — Complete (199 tools)
+Agent-X OpenAI / Claude Function-Calling Connector — Complete (199 tools)
 Provides tool definitions for OpenAI function-calling and Claude tool-use APIs.
 
 Usage:
@@ -27,11 +27,11 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from connectors._tool_registry import TOOLS as TOOL_REGISTRY, get_command_map
 
-logger = logging.getLogger("agent-os-openai")
+logger = logging.getLogger("agent-x-openai")
 
 # Configuration
-AGENT_OS_URL = os.environ.get("AGENT_OS_URL", "http://localhost:8001")
-AGENT_TOKEN = os.environ.get("AGENT_OS_TOKEN", "openai-agent-default")
+AGENT_X_URL = os.environ.get("AGENT_X_URL", "http://localhost:8001")
+AGENT_TOKEN = os.environ.get("AGENT_X_TOKEN", "openai-agent-default")
 
 command_map = get_command_map()
 
@@ -120,7 +120,7 @@ def _get_claude_tools() -> List[Dict[str, Any]]:
 
 
 async def call_tool(name: str, arguments: Dict[str, Any] = None) -> Dict[str, Any]:
-    """Execute an Agent-OS tool.
+    """Execute an Agent-X tool.
 
     Args:
         name: Tool name (e.g., "browser_navigate").
@@ -144,7 +144,7 @@ async def call_tool(name: str, arguments: Dict[str, Any] = None) -> Dict[str, An
 
 
 async def _execute_command(command: str, params: Dict[str, Any] = None) -> Dict[str, Any]:
-    """Send a command to Agent-OS server."""
+    """Send a command to Agent-X server."""
     payload = {"token": AGENT_TOKEN, "command": command}
     if params:
         payload.update(params)
@@ -152,7 +152,7 @@ async def _execute_command(command: str, params: Dict[str, Any] = None) -> Dict[
     client = await _get_client()
     try:
         response = await client.post(
-            f"{AGENT_OS_URL}/command",
+            f"{AGENT_X_URL}/command",
             json=payload,
         )
         return response.json()
@@ -161,10 +161,10 @@ async def _execute_command(command: str, params: Dict[str, Any] = None) -> Dict[
 
 
 async def _check_status() -> Dict[str, Any]:
-    """Check Agent-OS server status."""
+    """Check Agent-X server status."""
     client = await _get_client()
     try:
-        response = await client.get(f"{AGENT_OS_URL}/health")
+        response = await client.get(f"{AGENT_X_URL}/health")
         return response.json()
     except Exception as e:
         return {"status": "error", "error": str(e)}
@@ -206,7 +206,7 @@ def get_categories() -> Dict[str, int]:
 
 
 if __name__ == "__main__":
-    print(f"Agent-OS OpenAI Connector — {len(TOOL_REGISTRY)} tools available")
+    print(f"Agent-X OpenAI Connector — {len(TOOL_REGISTRY)} tools available")
     print(f"\nCategories:")
     for cat, count in sorted(get_categories().items()):
         print(f"  {cat}: {count} tools")

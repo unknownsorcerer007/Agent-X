@@ -1,5 +1,5 @@
 """
-Agent-OS Input Validation
+Agent-X Input Validation
 Pydantic schemas for all command inputs with sanitization.
 Prevents injection attacks, path traversal, and malformed data.
 """
@@ -7,7 +7,7 @@ import re
 import logging
 from urllib.parse import urlparse
 
-logger = logging.getLogger("agent-os.validation")
+logger = logging.getLogger("agent-x.validation")
 
 # Dangerous patterns in JavaScript
 JS_DANGEROUS_PATTERNS = [

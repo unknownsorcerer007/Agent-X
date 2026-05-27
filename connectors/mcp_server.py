@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-Agent-OS MCP Server — Complete (199 tools)
-Model Context Protocol server for Agent-OS browser automation.
+Agent-X MCP Server — Complete (199 tools)
+Model Context Protocol server for Agent-X browser automation.
 Allows Claude, Codex, and other MCP-compatible agents to control the browser.
 
 Usage:
     python mcp_server.py                    # Starts MCP server on stdio
-    AGENT_OS_URL=http://localhost:8001 python mcp_server.py
+    AGENT_X_URL=http://localhost:8001 python mcp_server.py
 """
 import os
 import json
@@ -25,15 +25,15 @@ from connectors._tool_registry import TOOLS, get_command_map, get_mcp_tools
 
 def resolve_agent_token() -> str:
     # 1. Environment Variable
-    token = os.environ.get("AGENT_OS_TOKEN")
+    token = os.environ.get("AGENT_X_TOKEN")
     if token:
         return token
 
-    # 2. Try .env in repo root or ~/.agent-os/.env
+    # 2. Try .env in repo root or ~/.agent-x/.env
     repo_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     paths = [
         os.path.join(repo_dir, ".env"),
-        os.path.expanduser("~/.agent-os/.env")
+        os.path.expanduser("~/.agent-x/.env")
     ]
     for path in paths:
         if os.path.exists(path):
@@ -47,14 +47,14 @@ def resolve_agent_token() -> str:
                             k, v = line.split("=", 1)
                             k = k.strip()
                             v = v.strip().strip('"').strip("'")
-                            if k in ("AGENT_TOKEN", "AGENT_OS_TOKEN") and v:
+                            if k in ("AGENT_TOKEN", "AGENT_X_TOKEN") and v:
                                 return v
             except Exception:
                 pass
 
-    # 3. Try config.yaml in ~/.agent-os/ or repo root
+    # 3. Try config.yaml in ~/.agent-x/ or repo root
     config_paths = [
-        os.path.expanduser("~/.agent-os/config.yaml"),
+        os.path.expanduser("~/.agent-x/config.yaml"),
         os.path.join(repo_dir, "config.yaml")
     ]
     for path in config_paths:
@@ -73,14 +73,14 @@ def resolve_agent_token() -> str:
     # 4. Fallback to generating a temp token
     import secrets
     fallback_token = secrets.token_urlsafe(32)
-    print(f"WARNING: AGENT_OS_TOKEN not set or found. Generated temp token: {fallback_token}", file=sys.stderr)
+    print(f"WARNING: AGENT_X_TOKEN not set or found. Generated temp token: {fallback_token}", file=sys.stderr)
     return fallback_token
 
-AGENT_OS_URL = os.environ.get("AGENT_OS_URL", "http://localhost:8001")
-AGENT_OS_TOKEN = resolve_agent_token()
+AGENT_X_URL = os.environ.get("AGENT_X_URL", "http://localhost:8001")
+AGENT_X_TOKEN = resolve_agent_token()
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(name)s] %(message)s", stream=sys.stderr)
-logger = logging.getLogger("agent-os-mcp")
+logger = logging.getLogger("agent-x-mcp")
 
 # ─── Persistent HTTP Client ──────────────────────────────────
 
@@ -98,7 +98,7 @@ async def _get_client() -> httpx.AsyncClient:
     return _client
 
 # Create MCP server
-server = Server("agent-os")
+server = Server("agent-x")
 
 # ─── Build Tool Definitions from Registry ─────────────────────
 
@@ -116,18 +116,18 @@ command_map = get_command_map()
 logger.info(f"Loaded {len(TOOLS_LIST)} MCP tools from registry")
 
 
-# ─── Agent-OS Communication ──────────────────────────────────
+# ─── Agent-X Communication ──────────────────────────────────
 
 async def agent_os_command(command: str, params: Dict[str, Any] = None) -> Dict[str, Any]:
-    """Send a command to Agent-OS server."""
-    payload = {"token": AGENT_OS_TOKEN, "command": command}
+    """Send a command to Agent-X server."""
+    payload = {"token": AGENT_X_TOKEN, "command": command}
     if params:
         payload.update(params)
 
     client = await _get_client()
     try:
         response = await client.post(
-            f"{AGENT_OS_URL}/command",
+            f"{AGENT_X_URL}/command",
             json=payload,
         )
         return response.json()
@@ -136,10 +136,10 @@ async def agent_os_command(command: str, params: Dict[str, Any] = None) -> Dict[
 
 
 async def agent_os_status() -> Dict[str, Any]:
-    """Check Agent-OS server status."""
+    """Check Agent-X server status."""
     client = await _get_client()
     try:
-        response = await client.get(f"{AGENT_OS_URL}/health")
+        response = await client.get(f"{AGENT_X_URL}/health")
         return response.json()
     except Exception as e:
         return {"status": "error", "error": str(e)}
@@ -149,13 +149,13 @@ async def agent_os_status() -> Dict[str, Any]:
 
 @server.list_tools()
 async def list_tools() -> List[Tool]:
-    """List all available Agent-OS tools."""
+    """List all available Agent-X tools."""
     return TOOLS_LIST
 
 
 @server.call_tool()
 async def call_tool(name: str, arguments: Dict[str, Any]) -> List[TextContent]:
-    """Execute an Agent-OS tool."""
+    """Execute an Agent-X tool."""
     logger.info(f"Tool call: {name} with args: {list(arguments.keys())}")
 
     if name == "browser_status":
@@ -186,9 +186,9 @@ async def call_tool(name: str, arguments: Dict[str, Any]) -> List[TextContent]:
 # ─── Entry Point ──────────────────────────────────────────────
 
 async def main():
-    logger.info(f"Agent-OS MCP Server starting...")
-    logger.info(f"Agent-OS URL: {AGENT_OS_URL}")
-    logger.info(f"Agent Token: {AGENT_OS_TOKEN[:10]}...")
+    logger.info(f"Agent-X MCP Server starting...")
+    logger.info(f"Agent-X URL: {AGENT_X_URL}")
+    logger.info(f"Agent Token: {AGENT_X_TOKEN[:10]}...")
     logger.info(f"Tools available: {len(TOOLS_LIST)}")
 
     async with stdio_server() as (read_stream, write_stream):

@@ -1,4 +1,4 @@
-"""Universal LLM Provider with Token Saving — Agent-OS Core Module.
+"""Universal LLM Provider with Token Saving — Agent-X Core Module.
 
 A single interface that works with ANY LLM provider for any task
 (summarization, content extraction, classification, etc.) with built-in
@@ -36,7 +36,7 @@ import threading
 from collections import OrderedDict
 from typing import Any, AsyncIterator, Dict, List, Optional, Tuple, Union
 
-logger = logging.getLogger("agent-os.llm_provider")
+logger = logging.getLogger("agent-x.llm_provider")
 
 
 # ════════════════════════════════════════════════════════════════════

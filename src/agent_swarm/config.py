@@ -1,4 +1,4 @@
-"""Agent Swarm configuration - integrated into Agent-OS config system.
+"""Agent Swarm configuration - integrated into Agent-X config system.
 
 Uses the user's configured provider as the brain — no separate LLM needed.
 Auto-detects user's provider from environment variables.
@@ -87,9 +87,9 @@ class SwarmAgentConfig(BaseModel):
 
 class SearchBackendConfig(BaseModel):
     """Search backend configuration."""
-    agent_os_url: Optional[str] = Field(default=None, description="Agent-OS server URL")
-    agent_os_api_key: Optional[str] = Field(default=None, description="Agent-OS API key")
-    use_browser: bool = Field(default=False, description="Use Agent-OS browser backend")
+    agent_os_url: Optional[str] = Field(default=None, description="Agent-X server URL")
+    agent_os_api_key: Optional[str] = Field(default=None, description="Agent-X API key")
+    use_browser: bool = Field(default=False, description="Use Agent-X browser backend")
     chrome_impersonate: str = Field(default="chrome146", description="curl_cffi impersonation target")
     user_agent: str = Field(
         default="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
@@ -137,8 +137,8 @@ class SwarmConfig(BaseModel):
             default_agents=_safe_json_loads(os.getenv("SWARM_DEFAULT_AGENTS", '["generalist"]'), ["generalist"]),
         )
         search_conf = SearchBackendConfig(
-            agent_os_url=os.getenv("SWARM_AGENT_OS_URL"),
-            agent_os_api_key=os.getenv("SWARM_AGENT_OS_API_KEY"),
+            agent_os_url=os.getenv("SWARM_AGENT_X_URL"),
+            agent_os_api_key=os.getenv("SWARM_AGENT_X_API_KEY"),
             use_browser=os.getenv("SWARM_USE_BROWSER", "false").lower() == "true",
         )
         output_conf = SwarmOutputConfig(

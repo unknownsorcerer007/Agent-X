@@ -1,1 +1,1 @@
-"""Agent-OS Authentication Package."""
+"""Agent-X Authentication Package."""

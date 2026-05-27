@@ -1,5 +1,5 @@
 """
-Agent-OS API Key Manager
+Agent-X API Key Manager
 Full lifecycle management for API keys with secure storage,
 scoped permissions, and usage tracking.
 """
@@ -10,7 +10,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import bcrypt
 
-logger = logging.getLogger("agent-os.auth.api_keys")
+logger = logging.getLogger("agent-x.auth.api_keys")
 
 # API key format: aos_<32 random hex chars>
 KEY_PREFIX = "aos_"

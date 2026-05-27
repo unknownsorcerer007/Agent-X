@@ -1,5 +1,5 @@
 """
-Agent-OS Auto-Heal Engine
+Agent-X Auto-Heal Engine
 Self-healing selectors that automatically recover when the DOM changes.
 
 How it works:
@@ -27,7 +27,7 @@ import time
 from typing import Dict, List, Any, Optional
 from pathlib import Path
 
-logger = logging.getLogger("agent-os.auto_heal")
+logger = logging.getLogger("agent-x.auto_heal")
 
 
 # ─── Fingerprint JS ─────────────────────────────────────────
@@ -435,7 +435,7 @@ class AutoHeal:
         stats = heal.get_stats()
     """
 
-    FINGERPRINT_DIR = os.path.expanduser("~/.agent-os/heal")
+    FINGERPRINT_DIR = os.path.expanduser("~/.agent-x/heal")
 
     def __init__(self, browser, smart_wait=None):
         self.browser = browser

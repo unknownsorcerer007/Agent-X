@@ -1,5 +1,5 @@
 """
-Agent-OS Database Layer
+Agent-X Database Layer
 Production-grade async SQLAlchemy with connection pooling, health checks,
 and automatic retry on transient failures.
 """
@@ -16,7 +16,7 @@ from sqlalchemy.ext.asyncio import (
 )
 from sqlalchemy.orm import DeclarativeBase
 
-logger = logging.getLogger("agent-os.infra.database")
+logger = logging.getLogger("agent-x.infra.database")
 
 
 class Base(DeclarativeBase):
@@ -48,7 +48,7 @@ class DatabaseManager:
                 "max_overflow": max_overflow,
                 "connect_args": {
                     "server_settings": {
-                        "application_name": "agent-os",
+                        "application_name": "agent-x",
                         "statement_timeout": "30000",
                     }
                 }

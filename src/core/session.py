@@ -1,5 +1,5 @@
 """
-Agent-OS Session Manager
+Agent-X Session Manager
 Handles session lifecycle, auto-wipe, and sandboxing.
 """
 import asyncio
@@ -10,7 +10,7 @@ from typing import Dict, Optional, Any, List
 from dataclasses import dataclass, field
 from datetime import datetime
 
-logger = logging.getLogger("agent-os.session")
+logger = logging.getLogger("agent-x.session")
 
 # Hard cap on total sessions (active + expired) to prevent memory leaks.
 MAX_SESSIONS: int = 1000

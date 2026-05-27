@@ -1,5 +1,5 @@
 """
-Agent-OS Tool Registry — Single Source of Truth
+Agent-X Tool Registry — Single Source of Truth
 ================================================
 Defines ALL server commands with their parameters, descriptions, and categories.
 Used by MCP, OpenAI, and CLI connectors to stay in sync with the server.

@@ -1,5 +1,5 @@
 """
-Agent-OS Database Models
+Agent-X Database Models
 All SQLAlchemy ORM models for production deployment.
 """
 import uuid

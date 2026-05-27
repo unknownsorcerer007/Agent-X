@@ -1,5 +1,5 @@
 """
-Agent-OS Extended Test Suite
+Agent-X Extended Test Suite
 Tests for core components, server, and tools.
 Run with: python -m pytest tests/ -v
 """

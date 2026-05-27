@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Agent-OS One-Command Installer
-# Usage: curl -sSL https://raw.githubusercontent.com/factspark23-hash/Agent-OS/main/install.sh | bash
+# Agent-X One-Command Installer
+# Usage: curl -sSL https://raw.githubusercontent.com/factspark23-hash/Agent-X/main/install.sh | bash
 #
 # Or with options:
 #   curl -sSL ... | bash -s -- --headed
@@ -18,12 +18,12 @@ CYAN='\033[0;36m'
 NC='\033[0m'
 
 # ─── Defaults ────────────────────────────────────────────
-INSTALL_DIR="$HOME/Agent-OS"
+INSTALL_DIR="$HOME/Agent-X"
 START_AFTER=true
 NO_SUDO=false
 AGENT_TOKEN=""
 EXTRA_ARGS=""
-REPO_URL="https://github.com/factspark23-hash/Agent-OS-Final-Pro.git"
+REPO_URL="https://github.com/unknownsorcerer007/Agent-X.git"
 
 # ─── Parse Args ──────────────────────────────────────────
 while [[ $# -gt 0 ]]; do
@@ -36,12 +36,12 @@ while [[ $# -gt 0 ]]; do
         --port)      EXTRA_ARGS="$EXTRA_ARGS --port $2"; shift 2 ;;
         --max-ram)   EXTRA_ARGS="$EXTRA_ARGS --max-ram $2"; shift 2 ;;
         --help|-h)
-            echo "Agent-OS One-Command Installer"
+            echo "Agent-X One-Command Installer"
             echo ""
             echo "Usage: curl -sSL <url> | bash -s -- [OPTIONS]"
             echo ""
             echo "Options:"
-            echo "  --dir PATH       Install directory (default: ~/Agent-OS)"
+            echo "  --dir PATH       Install directory (default: ~/Agent-X)"
             echo "  --token TOKEN    Set agent token"
             echo "  --headed         Show browser window"
             echo "  --port PORT      WebSocket port (default: 8000)"
@@ -87,7 +87,7 @@ fail() {
 # ─── Banner ──────────────────────────────────────────────
 echo ""
 echo -e "${CYAN}╔══════════════════════════════════════════╗${NC}"
-echo -e "${CYAN}║${NC}     ${GREEN}🤖 Agent-OS — One-Command Install${NC}     ${CYAN}║${NC}"
+echo -e "${CYAN}║${NC}     ${GREEN}🤖 Agent-X — One-Command Install${NC}     ${CYAN}║${NC}"
 echo -e "${CYAN}╚══════════════════════════════════════════╝${NC}"
 echo ""
 
@@ -135,7 +135,7 @@ else
 fi
 
 # ─── Step 3: Clone Repo ─────────────────────────────────
-step "Cloning Agent-OS..."
+step "Cloning Agent-X..."
 if [ -d "$INSTALL_DIR" ]; then
     warn "Directory exists. Updating..."
     cd "$INSTALL_DIR"
@@ -375,7 +375,7 @@ echo -e "${CYAN}═══ MCP Passthrough (Zero API Key) ═══${NC}"
 echo ""
 echo "  For Claude Desktop / Codex — no API key needed:"
 echo ""
-echo "  1. Start Agent-OS server:"
+echo "  1. Start Agent-X server:"
 echo "     cd $INSTALL_DIR && python main.py --agent-token '$AGENT_TOKEN'"
 echo ""
 echo "  2. In another terminal, start MCP wrapper:"
@@ -384,12 +384,12 @@ echo ""
 echo "  3. Add to Claude Desktop config:"
 echo '     {'
 echo '       "mcpServers": {'
-echo '         "agent-os": {'
+echo '         "agent-x": {'
 echo '           "command": "python3",'
 echo "           \"args\": [\"$INSTALL_DIR/connectors/mcp_passthrough.py\"],"
 echo '           "env": {'
-echo '             "AGENT_OS_URL": "http://localhost:8001",'
-echo "             \"AGENT_OS_TOKEN\": \"$AGENT_TOKEN\""
+echo '             "AGENT_X_URL": "http://localhost:8001",'
+echo "             \"AGENT_X_TOKEN\": \"$AGENT_TOKEN\""
 echo '           }'
 echo '         }'
 echo '       }'
@@ -400,7 +400,7 @@ echo ""
 
 # ─── Start Server ───────────────────────────────────────
 if $START_AFTER; then
-    echo -e "${GREEN}Starting Agent-OS...${NC}"
+    echo -e "${GREEN}Starting Agent-X...${NC}"
     echo -e "${YELLOW}Press Ctrl+C to stop${NC}"
     echo ""
     exec python main.py --agent-token "$AGENT_TOKEN" $EXTRA_ARGS

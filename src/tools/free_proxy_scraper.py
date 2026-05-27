@@ -1,5 +1,5 @@
 """
-Agent-OS Free Public Proxy Scraper & Verifier
+Agent-X Free Public Proxy Scraper & Verifier
 Fetches updated proxy lists from public APIs and filters/verifies them in parallel.
 """
 import asyncio
@@ -9,7 +9,7 @@ import random
 from typing import List, Dict, Any, Optional
 import aiohttp
 
-logger = logging.getLogger("agent-os.free-proxy-scraper")
+logger = logging.getLogger("agent-x.free-proxy-scraper")
 
 # Reliable public sources for free HTTP and SOCKS5 proxies
 SOURCES = [

@@ -1,5 +1,5 @@
 """
-Agent-OS Agent Server — Production Edition
+Agent-X Agent Server — Production Edition
 WebSocket + REST API with full auth, validation, rate limiting, and audit logging.
 """
 import asyncio
@@ -10,13 +10,17 @@ import re
 import time
 from collections import defaultdict, deque
 from typing import Dict, Optional, Any
-from aiohttp import web
+
+try:
+    from aiohttp import web
+except ImportError:
+    web = None
 
 import websockets
 
-logger = logging.getLogger("agent-os.server")
+logger = logging.getLogger("agent-x.server")
 
-AGENT_OS_VERSION = "3.2.0"
+AGENT_X_VERSION = "4.0.0"
 
 # ─── Scope-to-Command Mapping ──────────────────────────────────
 COMMAND_SCOPES = {
@@ -4306,7 +4310,7 @@ class AgentServer:
 
         return {
             "status": overall,
-            "version": AGENT_OS_VERSION,
+            "version": AGENT_X_VERSION,
             "uptime_seconds": round(uptime, 1),
             "checks": checks,
             "sessions": {

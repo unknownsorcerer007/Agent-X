@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Agent-OS Connector Tests — Updated for 199 tools
+Agent-X Connector Tests — Updated for 199 tools
 Tests MCP, OpenAI, Claude, OpenClaw, and CLI connectors.
 All connectors must expose the same tools from the registry.
 
