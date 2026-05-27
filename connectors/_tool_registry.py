@@ -820,6 +820,99 @@ TOOLS: List[ToolDef] = [
     # ═══════════════════════════════════════════════════════════
     ToolDef("health", "browser_status", "browser_status", "status",
         "Check server health, uptime, active sessions, and browser state.", [], "status"),
+
+    # ═══════════════════════════════════════════════════════════
+    # MULTI-TAB HANDLING
+    # ═══════════════════════════════════════════════════════════
+    ToolDef("mtab-create", "browser_mtab_create", "browser_mtab_create", "mtab_create",
+        "Create a new browser tab for multi-tab browsing.",
+        [ToolParam("name", "string", "Human-readable tab name (e.g., 'gmail', 'docs')", True),
+         ToolParam("url", "string", "Initial URL to navigate to"),
+         ToolParam("priority", "string", "Tab priority: critical, high, normal, low"),
+         ToolParam("group", "string", "Tab group name for organization"),
+         ToolParam("activate", "boolean", "Switch to this tab immediately (default: true)")], "multi_tab"),
+    ToolDef("mtab-switch", "browser_mtab_switch", "browser_mtab_switch", "mtab_switch",
+        "Switch to a specific tab by ID or name.",
+        [ToolParam("tab_id", "string", "Tab ID to switch to"),
+         ToolParam("name", "string", "Tab name to switch to (alternative to tab_id)")], "multi_tab"),
+    ToolDef("mtab-list", "browser_mtab_list", "browser_mtab_list", "mtab_list",
+        "List all open tabs with status and metadata.", [], "multi_tab"),
+    ToolDef("mtab-close", "browser_mtab_close", "browser_mtab_close", "mtab_close",
+        "Close a specific tab.",
+        [ToolParam("tab_id", "string", "Tab ID to close", True)], "multi_tab"),
+    ToolDef("mtab-navigate", "browser_mtab_navigate", "browser_mtab_navigate", "mtab_navigate",
+        "Navigate a specific tab without switching to it.",
+        [ToolParam("tab_id", "string", "Tab ID", True),
+         ToolParam("url", "string", "URL to navigate to", True)], "multi_tab"),
+    ToolDef("mtab-execute", "browser_mtab_execute", "browser_mtab_execute", "mtab_execute",
+        "Execute JavaScript in a specific tab without switching.",
+        [ToolParam("tab_id", "string", "Tab ID", True),
+         ToolParam("script", "string", "JavaScript to execute", True)], "multi_tab"),
+    ToolDef("mtab-overview", "browser_mtab_overview", "browser_mtab_overview", "mtab_overview",
+        "Get tab overview for AI decision making.", [], "multi_tab"),
+    ToolDef("mtab-screenshot", "browser_mtab_screenshot", "browser_mtab_screenshot", "mtab_screenshot",
+        "Take screenshot of a specific tab.",
+        [ToolParam("tab_id", "string", "Tab ID", True),
+         ToolParam("full_page", "boolean", "Capture full page")], "multi_tab"),
+    ToolDef("mtab-close-group", "browser_mtab_close_group", "browser_mtab_close_group", "mtab_close_group",
+        "Close all tabs in a group.",
+        [ToolParam("group", "string", "Group name", True)], "multi_tab"),
+
+    # ═══════════════════════════════════════════════════════════
+    # VISUAL TESTING ENGINE
+    # ═══════════════════════════════════════════════════════════
+    ToolDef("vt-capture-baseline", "browser_vt_capture_baseline", "browser_vt_capture_baseline", "vt_capture_baseline",
+        "Capture a visual baseline screenshot for regression testing.",
+        [ToolParam("test_name", "string", "Unique test name (e.g., 'homepage', 'login')", True),
+         ToolParam("full_page", "boolean", "Capture full page (default: true)"),
+         ToolParam("tags", "array", "Optional tags for organization")], "visual_testing"),
+    ToolDef("vt-compare", "browser_vt_compare", "browser_vt_compare", "vt_compare",
+        "Compare current page against stored baseline.",
+        [ToolParam("test_name", "string", "Baseline test name to compare against", True),
+         ToolParam("threshold", "number", "Color difference threshold (default: 0.1)")], "visual_testing"),
+    ToolDef("vt-list-baselines", "browser_vt_list_baselines", "browser_vt_list_baselines", "vt_list_baselines",
+        "List all stored visual baselines.",
+        [ToolParam("tag", "string", "Filter by tag")], "visual_testing"),
+    ToolDef("vt-delete-baseline", "browser_vt_delete_baseline", "browser_vt_delete_baseline", "vt_delete_baseline",
+        "Delete a stored baseline.",
+        [ToolParam("test_name", "string", "Baseline test name to delete", True)], "visual_testing"),
+    ToolDef("vt-analyze", "browser_vt_analyze", "browser_vt_analyze", "vt_analyze",
+        "Prepare visual diff analysis for user's AI (ZERO external cost).",
+        [ToolParam("test_name", "string", "Test name to analyze", True),
+         ToolParam("context", "string", "Optional context about the test")], "visual_testing"),
+    ToolDef("vt-batch-test", "browser_vt_batch_test", "browser_vt_batch_test", "vt_batch_test",
+        "Run visual tests against multiple baselines.",
+        [ToolParam("test_names", "array", "List of baseline test names", True)], "visual_testing"),
+    ToolDef("vt-cleanup", "browser_vt_cleanup", "browser_vt_cleanup", "vt_cleanup",
+        "Clean up old visual test results.",
+        [ToolParam("max_age_days", "number", "Maximum age in days (default: 30)")], "visual_testing"),
+
+    # ═══════════════════════════════════════════════════════════
+    # TOKEN OPTIMIZATION
+    # ═══════════════════════════════════════════════════════════
+    ToolDef("token-capture", "browser_token_capture", "browser_token_capture", "token_capture",
+        "Capture an optimized, token-efficient page snapshot.",
+        [ToolParam("strategy", "string", "Optimization strategy: adaptive, semantic, minimal, full")], "token_opt"),
+    ToolDef("token-diff", "browser_token_diff", "browser_token_diff", "token_diff",
+        "Capture only changed elements since last snapshot (most efficient).", [], "token_opt"),
+    ToolDef("token-stats", "browser_token_stats", "browser_token_stats", "token_stats",
+        "Get token optimization statistics.", [], "token_opt"),
+    ToolDef("token-estimate", "browser_token_estimate", "browser_token_estimate", "token_estimate",
+        "Estimate token count for given text.",
+        [ToolParam("text", "string", "Text to estimate tokens for", True)], "token_opt"),
+
+    # ═══════════════════════════════════════════════════════════
+    # TUNNEL MANAGEMENT (MCP Web Connect)
+    # ═══════════════════════════════════════════════════════════
+    ToolDef("tunnel-start", "browser_tunnel_start", "browser_tunnel_start", "tunnel_start",
+        "Start Cloudflare tunnel for Claude Web Direct Connect.",
+        [ToolParam("local_port", "number", "Local MCP SSE server port (default: 8002)")], "tunnel"),
+    ToolDef("tunnel-stop", "browser_tunnel_stop", "browser_tunnel_stop", "tunnel_stop",
+        "Stop the Cloudflare tunnel.", [], "tunnel"),
+    ToolDef("tunnel-status", "browser_tunnel_status", "browser_tunnel_status", "tunnel_status",
+        "Get tunnel connection status and public URL.", [], "tunnel"),
+    ToolDef("tunnel-info", "browser_tunnel_info", "browser_tunnel_info", "tunnel_info",
+        "Get full connection info including Claude Web setup instructions.", [], "tunnel"),
 ]
 
 
