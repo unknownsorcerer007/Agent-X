@@ -343,6 +343,26 @@ else
     fi
 fi
 
+    if [ -t 0 ] || [ -c /dev/tty ]; then
+        echo ""
+        echo -e "${YELLOW}Do you want to configure API keys now? (y/N)${NC}"
+        read -r ADD_KEYS </dev/tty || ADD_KEYS="N"
+        if [[ "$ADD_KEYS" =~ ^[Yy]$ ]]; then
+            echo -e "Enter OpenAI API Key (leave blank to skip):"
+            read -r OPENAI_KEY </dev/tty || true
+            if [ -n "$OPENAI_KEY" ]; then
+                echo "OPENAI_API_KEY=$OPENAI_KEY" >> .env
+                ok "OpenAI key added"
+            fi
+            echo -e "Enter Anthropic API Key (leave blank to skip):"
+            read -r ANTHROPIC_KEY </dev/tty || true
+            if [ -n "$ANTHROPIC_KEY" ]; then
+                echo "ANTHROPIC_API_KEY=$ANTHROPIC_KEY" >> .env
+                ok "Anthropic key added"
+            fi
+        fi
+    fi
+
 # ─── Step 9: Verify ─────────────────────────────────────
 step "Verifying installation..."
 ERRORS=0

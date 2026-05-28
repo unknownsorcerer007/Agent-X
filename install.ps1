@@ -68,6 +68,33 @@ if ($LASTEXITCODE -ne 0) {
 }
 Write-Host "Browsers installed successfully." -ForegroundColor Green
 
+# 5. Configure Environment and API Keys
+Write-Host "[5/5] Configuring Environment & API Keys..." -ForegroundColor Yellow
+if (!(Test-Path -Path ".env")) {
+    if (Test-Path -Path ".env.example") {
+        Copy-Item .env.example .env
+        Write-Host "Created .env from .env.example." -ForegroundColor Green
+    } else {
+        New-Item -ItemType File -Path .env | Out-Null
+        Write-Host "Created new .env file." -ForegroundColor Green
+    }
+}
+
+$addKeys = Read-Host "Do you want to add API keys now? (y/N)"
+if ($addKeys -match "^[yY]") {
+    $openAiKey = Read-Host "Enter OpenAI API Key (leave blank to skip)"
+    $anthropicKey = Read-Host "Enter Anthropic API Key (leave blank to skip)"
+    
+    if ($openAiKey) {
+        Add-Content -Path .env -Value "OPENAI_API_KEY=$openAiKey"
+        Write-Host "Added OpenAI API Key." -ForegroundColor Green
+    }
+    if ($anthropicKey) {
+        Add-Content -Path .env -Value "ANTHROPIC_API_KEY=$anthropicKey"
+        Write-Host "Added Anthropic API Key." -ForegroundColor Green
+    }
+}
+
 Write-Host "=========================================" -ForegroundColor Cyan
 Write-Host "Installation Complete! You are ready." -ForegroundColor Green
 Write-Host "To start the server, run: .\start.ps1" -ForegroundColor Yellow
