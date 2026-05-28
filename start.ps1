@@ -18,5 +18,11 @@ if (!(Test-Path -Path "venv\Scripts\python.exe")) {
     exit 1
 }
 
-Write-Host "Starting server..." -ForegroundColor Yellow
-.\venv\Scripts\python.exe main.py
+Write-Host "Fetching latest updates from GitHub..." -ForegroundColor Yellow
+git pull origin main
+
+Write-Host "Ensuring Chromium is installed (Patchright)..." -ForegroundColor Yellow
+.\venv\Scripts\python.exe -m patchright install chromium
+
+Write-Host "Starting server (with Visible Browser UI)..." -ForegroundColor Green
+.\venv\Scripts\python.exe main.py --headed
