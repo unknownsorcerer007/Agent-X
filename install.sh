@@ -233,7 +233,7 @@ ok "Activated venv ($(which python))"
 # ─── Step 5: System Dependencies ────────────────────────
 step "Checking system dependencies..."
 MISSING_DEPS=""
-for lib in libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxrandr2 libgbm1 libpango-1.0-0 libcairo2; do
+for lib in libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxrandr2 libgbm1 libpango-1.0-0 libcairo2 xvfb; do
     if ! dpkg -l "$lib" 2>/dev/null | grep -q "^ii" && ! dpkg -l "${lib}t64" 2>/dev/null | grep -q "^ii"; then
         MISSING_DEPS="$MISSING_DEPS $lib"
     fi
@@ -403,7 +403,11 @@ if $START_AFTER; then
     echo -e "${GREEN}Starting Agent-X...${NC}"
     echo -e "${YELLOW}Press Ctrl+C to stop${NC}"
     echo ""
-    exec python main.py --agent-token "$AGENT_TOKEN" $EXTRA_ARGS
+    if command -v xvfb-run >/dev/null 2>&1; then
+        exec xvfb-run -a python main.py --agent-token "$AGENT_TOKEN" $EXTRA_ARGS
+    else
+        exec python main.py --agent-token "$AGENT_TOKEN" $EXTRA_ARGS
+    fi
 else
     echo "To start:"
     echo "  cd $INSTALL_DIR"

@@ -21,7 +21,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 \
     libxkbcommon0 libxcomposite1 libxdamage1 libxrandr2 libgbm1 \
-    libpango-1.0-0 libcairo2 libxfixes3 fonts-liberation \
+    libpango-1.0-0 libcairo2 libxfixes3 fonts-liberation xvfb \
     && (apt-get install -y --no-install-recommends libasound2t64 2>/dev/null || apt-get install -y --no-install-recommends libasound2 2>/dev/null || true) \
     && rm -rf /var/lib/apt/lists/*
 
@@ -58,5 +58,5 @@ EXPOSE 8000 8001 8002
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
     CMD python3 -c "import urllib.request; urllib.request.urlopen('http://localhost:8001/health')" || exit 1
 
-ENTRYPOINT ["python3", "main.py"]
+ENTRYPOINT ["xvfb-run", "-a", "python3", "main.py"]
 CMD ["--port", "8000"]

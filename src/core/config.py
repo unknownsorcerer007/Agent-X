@@ -49,7 +49,7 @@ DEFAULT_CONFIG = {
         "issuer": "agent-x",
     },
     "browser": {
-        "headless": True,
+        "headless": False,
         "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
         "viewport": {"width": 1920, "height": 1080},
         "max_ram_mb": 500,
@@ -65,6 +65,7 @@ DEFAULT_CONFIG = {
         "proxy_file": None,
         "proxy_api_url": None,
         "proxy_api_key": None,
+        "use_free_proxy_fallback": False,
     },
     "session": {
         "timeout_minutes": 15,
