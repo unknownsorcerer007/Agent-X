@@ -11,7 +11,6 @@
   <a href="#"><img src="https://img.shields.io/badge/Docker-Ready-2496ED.svg?style=flat-square" alt="Docker Ready"></a>
   <img src="https://img.shields.io/badge/tools-209+-brightgreen.svg?style=flat-square" alt="209+ Tools">
   <br/>
-  <img src="https://img.shields.io/badge/stealth-99%25-success.svg?style=flat-square" alt="Stealth 99%">
   <img src="https://img.shields.io/badge/captcha-solver-orange.svg?style=flat-square" alt="CAPTCHA Solver">
   <img src="https://img.shields.io/badge/swarm-enabled-purple.svg?style=flat-square" alt="Swarm Enabled">
   <img src="https://img.shields.io/badge/multi--tab-supported-blueviolet.svg?style=flat-square" alt="Multi-Tab">
@@ -32,7 +31,7 @@ It exposes **209+ production tools** for mouse interactions, form filling, data 
 - **AI Visual Testing Engine**: Zero-cost visual regression testing that sends diffs to your connected AI for analysis
 - **Claude Web Direct Connect (MCP over SSE)**: Connect Agent X directly from Claude.ai web interface via secure tunnel
 - **Token Optimizer**: Adaptive page compression reducing LLM token usage by 90%+
-- **99% Stealth Success Rate**: Enhanced anti-detection with 5-layer defense
+- **Advanced Stealth Engine**: Enhanced anti-detection with 5-layer defense
 - **Smart Navigator**: Auto-switches between HTTP and browser per domain
 - **CAPTCHA Solver**: Built-in OCR + AI-based challenge solving
 - **Agent Swarm**: Multi-agent orchestration with shared memory
@@ -100,7 +99,7 @@ Agent X uses a **5-layer stealth defense system**:
 | Feature | Description | Status |
 |---------|-------------|--------|
 | **209+ Tools** | Complete browser automation toolkit | Active |
-| **Stealth Engine** | 5-layer anti-detection system | 99% Bypass Rate |
+| **Stealth Engine** | 5-layer anti-detection system | Active |
 | **Multi-Tab Handler** | Human-like multi-tab browsing for AI agents | Active |
 | **Visual Testing** | Zero-cost AI visual regression testing | Active |
 | **Token Optimizer** | Adaptive compression, 90%+ token reduction | Active |
