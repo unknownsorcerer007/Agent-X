@@ -164,7 +164,7 @@ class UserContext:
 
         context_options = {
             "user_agent": config.get("user_agent"),
-            "viewport": config.get("viewport", {"width": 1920, "height": 1080}),
+            "no_viewport": True,
             "locale": config.get("locale", "en-US"),
             "timezone_id": config.get("timezone_id", "America/New_York"),
             "permissions": ["geolocation", "notifications"],
