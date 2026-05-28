@@ -19,8 +19,7 @@ print("          Agent-X Interactive CLI        ")
 print("=========================================")
 print("Type 'exit' to quit.\n")
 
-if not token:
-    print("[Warning] No AGENT_TOKEN found in .env file. Auth might fail.")
+
 
 while True:
     try:
