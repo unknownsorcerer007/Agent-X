@@ -51,7 +51,7 @@ curl -sSL https://raw.githubusercontent.com/unknownsorcerer007/Agent-X/main/inst
 ### Windows (PowerShell)
 
 ```powershell
-irm https://raw.githubusercontent.com/unknownsorcerer007/Agent-X/main/install.ps1 | iex
+powershell -c "irm https://raw.githubusercontent.com/unknownsorcerer007/Agent-X/main/install.ps1 | iex"
 ```
 
 ### Docker
