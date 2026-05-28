@@ -19,8 +19,16 @@ def get_token():
     if os.path.exists(env_path):
         with open(env_path, "r") as f:
             for line in f:
-                if line.startswith("AGENT_TOKEN="):
-                    token = line.strip().split("=")[1].strip('"').strip("'")
+                line = line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                if "=" in line:
+                    key, val = line.split("=", 1)
+                    key = key.strip()
+                    val = val.strip().strip('"').strip("'")
+                    os.environ[key] = val
+                    if key == "AGENT_TOKEN":
+                        token = val
     return token
 
 async def send_command_to_server(command: str, params: dict, token: str):
