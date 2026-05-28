@@ -1,5 +1,5 @@
 /**
- * Agent-OS Debug UI — Client Application
+ * Agent-X Debug UI — Client Application
  * Real-time dashboard with WebSocket streaming, command execution,
  * session management, and live browser view.
  */
@@ -469,7 +469,7 @@
             // Extract filename from Content-Disposition or generate one
             const disposition = res.headers.get("Content-Disposition");
             const match = disposition && disposition.match(/filename="?(.+?)"?$/);
-            a.download = match ? match[1] : `agent-os-cookies-${Date.now()}.json`;
+            a.download = match ? match[1] : `Agent-X-cookies-${Date.now()}.json`;
 
             document.body.appendChild(a);
             a.click();
@@ -623,14 +623,14 @@
         const tokenInput = $("#terminal-token-input");
 
         // Load saved token
-        state.agentToken = localStorage.getItem("agent-os-token") || "";
+        state.agentToken = localStorage.getItem("Agent-X-token") || "";
         if (state.agentToken) {
             tokenInput.value = state.agentToken;
         }
 
         tokenInput.addEventListener("change", () => {
             state.agentToken = tokenInput.value.trim();
-            localStorage.setItem("agent-os-token", state.agentToken);
+            localStorage.setItem("Agent-X-token", state.agentToken);
         });
 
         input.addEventListener("keydown", async (e) => {
@@ -790,7 +790,7 @@
             if (!state.screenshotData) return;
             const a = document.createElement("a");
             a.href = `data:image/png;base64,${state.screenshotData}`;
-            a.download = `agent-os-screenshot-${Date.now()}.png`;
+            a.download = `Agent-X-screenshot-${Date.now()}.png`;
             a.click();
         });
 

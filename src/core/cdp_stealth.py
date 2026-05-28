@@ -69,7 +69,7 @@ def generate_cdp_stealth_js(
 
     return f"""
 // ═══════════════════════════════════════════════════════════════
-// AGENT-OS CDP STEALTH v4.1 — Complete Anti-Detection System
+// Agent-X CDP STEALTH v4.1 — Complete Anti-Detection System
 // Injected via CDP Page.addScriptToEvaluateOnNewDocument
 // Runs BEFORE any page JavaScript
 // ═══════════════════════════════════════════════════════════════

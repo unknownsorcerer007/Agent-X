@@ -45,7 +45,7 @@ STEALTH ARCHITECTURE (UNIFIED — NO CONFLICTS):
 # Those are ALL handled by CDPStealthInjector (cdp_stealth.py).
 
 SUPPLEMENTARY_STEALTH_JS = """
-// === AGENT-OS SUPPLEMENTARY STEALTH v2.0 ===
+// === Agent-X SUPPLEMENTARY STEALTH v2.0 ===
 // Features NOT in CDP stealth. Runs via add_init_script AFTER CDP injection.
 (function() {
 'use strict';

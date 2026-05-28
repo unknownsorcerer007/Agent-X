@@ -96,7 +96,7 @@ def generate_god_mode_js(fp: ConsistentFingerprint) -> str:
 
     return f"""
 // ═══════════════════════════════════════════════════════════════
-// AGENT-OS GOD MODE v5.0 — Ultimate Anti-Detection System
+// Agent-X GOD MODE v5.0 — Ultimate Anti-Detection System
 // Fingerprint: {fp.fp_id} | Chrome {fp.chrome_version} | {fp.hardware['name']}
 // ═══════════════════════════════════════════════════════════════
 

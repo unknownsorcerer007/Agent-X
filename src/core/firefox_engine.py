@@ -40,7 +40,7 @@ logger = logging.getLogger("agent-x.firefox")
 # ═══════════════════════════════════════════════════════════════
 
 FIREFOX_STEALTH_JS = """
-// === AGENT-OS FIREFOX STEALTH v1.0 ===
+// === Agent-X FIREFOX STEALTH v1.0 ===
 // Firefox-specific anti-detection patches
 // Different from Chromium — Firefox has different APIs and detection surfaces
 

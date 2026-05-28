@@ -240,7 +240,7 @@ EARLY_DETECTION_JS = r"""
 'use strict';
 
 // ═══════════════════════════════════════════════════════════════
-// AGENT-OS EARLY BOT-DETECTION MONITOR v1.0
+// Agent-X EARLY BOT-DETECTION MONITOR v1.0
 // Monitors for early signs of bot detection and reports them.
 // ═══════════════════════════════════════════════════════════════
 

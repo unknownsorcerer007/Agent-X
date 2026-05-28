@@ -20,19 +20,6 @@
 
 ---
 
-> [!IMPORTANT]
-> **Project Acquisition & Sponsorship Notice**
-> Agent X is currently open for **acquisition or corporate sponsorship**. If you are an AI startup, developer tool company, or enterprise looking to acquire the technology stack, codebase IP, or sponsor its ongoing development, please contact us at **[unknownsorcerer007@gmail.com](mailto:unknownsorcerer007@gmail.com)**. *Serious inquiries only.*
-
-> [!TIP]
-> **SynapseLink: Bridging Digital & Physical Worlds**
-> *What if AI could step out of the browser sandbox and touch physical reality?*
-> We are quietly engineering **SynapseLink** — an MCP-compatible bridge allowing LLMs to safely interface with physical hardware in closed-loop environments. No boundaries between digital logic and physical action.
-> 
-> Follow the journey and get early access: **[Twitter/X](https://x.com/Unknown339264)**.
-
----
-
 ## What is Agent X?
 
 **Agent X** is an autonomous browser engine that gives AI agents a **real, persistent, and self-hosted web browser** with zero-friction installation. Built on a battle-tested foundation and hardened through extensive real-world usage.
@@ -59,20 +46,20 @@ It exposes **209+ production tools** for mouse interactions, form filling, data 
 ### One-Line Install (Linux/macOS)
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/yourusername/agent-x/main/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/unknownsorcerer007/Agent-X/main/install.sh | bash
 ```
 
 ### Windows (PowerShell)
 
 ```powershell
-irm https://raw.githubusercontent.com/yourusername/agent-x/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/unknownsorcerer007/Agent-X/main/install.ps1 | iex
 ```
 
 ### Docker
 
 ```bash
-git clone https://github.com/yourusername/agent-x.git
-cd agent-x
+git clone https://github.com/unknownsorcerer007/Agent-X.git
+cd Agent-X
 export POSTGRES_PASSWORD="your-strong-password"
 docker compose up -d
 ```
@@ -81,8 +68,8 @@ docker compose up -d
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/agent-x.git
-cd agent-x
+git clone https://github.com/unknownsorcerer007/Agent-X.git
+cd Agent-X
 
 # Install dependencies
 pip install -r requirements.txt
