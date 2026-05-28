@@ -10,8 +10,28 @@ Write-Host "=========================================" -ForegroundColor Cyan
 Write-Host "       Agent-X Setup & Installer        " -ForegroundColor Cyan
 Write-Host "=========================================" -ForegroundColor Cyan
 
-# 1. Check for Python
-Write-Host "[1/4] Checking Python installation..." -ForegroundColor Yellow
+# 1. Setup Installation Directory & Clone Repo
+$installDir = "$env:USERPROFILE\Agent-X"
+Write-Host "[1/5] Setting up Agent-X in $installDir..." -ForegroundColor Yellow
+
+if (!(Get-Command git -ErrorAction SilentlyContinue)) {
+    Write-Host "Error: Git is not installed. Please install git from git-scm.com." -ForegroundColor Red
+    exit 1
+}
+
+if (!(Test-Path -Path $installDir)) {
+    git clone -q https://github.com/unknownsorcerer007/Agent-X.git $installDir
+    Write-Host "Cloned Agent-X repository." -ForegroundColor Green
+} else {
+    Write-Host "Directory already exists, updating..." -ForegroundColor Yellow
+    Set-Location -Path $installDir
+    git pull -q
+}
+
+Set-Location -Path $installDir
+
+# 2. Check for Python
+Write-Host "[2/5] Checking Python installation..." -ForegroundColor Yellow
 if (!(Get-Command python -ErrorAction SilentlyContinue)) {
     Write-Host "Error: Python is not installed or not in PATH." -ForegroundColor Red
     Write-Host "Please install Python 3.10+ from python.org and try again." -ForegroundColor Red
@@ -21,8 +41,8 @@ if (!(Get-Command python -ErrorAction SilentlyContinue)) {
 $pythonVersion = (python --version)
 Write-Host "Found $pythonVersion" -ForegroundColor Green
 
-# 2. Setup Virtual Environment
-Write-Host "[2/4] Setting up Virtual Environment (venv)..." -ForegroundColor Yellow
+# 3. Setup Virtual Environment
+Write-Host "[3/5] Setting up Virtual Environment (venv)..." -ForegroundColor Yellow
 if (!(Test-Path -Path "venv")) {
     python -m venv venv
     if ($LASTEXITCODE -ne 0) {
@@ -32,8 +52,8 @@ if (!(Test-Path -Path "venv")) {
 }
 Write-Host "Virtual environment is ready." -ForegroundColor Green
 
-# 3. Install Requirements
-Write-Host "[3/4] Installing dependencies from requirements.txt..." -ForegroundColor Yellow
+# 4. Install Requirements
+Write-Host "[4/5] Installing dependencies from requirements.txt..." -ForegroundColor Yellow
 .\venv\Scripts\python.exe -m pip install --upgrade pip
 
 # Set environment variables to install pure-Python fallbacks if binary wheels are not available
@@ -59,8 +79,8 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 
-# 4. Install Patchright Browsers
-Write-Host "[4/4] Installing Patchright / Playwright browsers..." -ForegroundColor Yellow
+# 5. Install Patchright Browsers
+Write-Host "[5/5] Installing Patchright / Playwright browsers..." -ForegroundColor Yellow
 .\venv\Scripts\python.exe -m patchright install --with-deps chromium
 if ($LASTEXITCODE -ne 0) {
     # Fallback to playwright if patchright CLI not directly available
@@ -68,8 +88,8 @@ if ($LASTEXITCODE -ne 0) {
 }
 Write-Host "Browsers installed successfully." -ForegroundColor Green
 
-# 5. Configure Environment and API Keys
-Write-Host "[5/5] Configuring Environment & API Keys..." -ForegroundColor Yellow
+# 6. Configure Environment and API Keys
+Write-Host "[6/6] Configuring Environment & API Keys..." -ForegroundColor Yellow
 if (!(Test-Path -Path ".env")) {
     if (Test-Path -Path ".env.example") {
         Copy-Item .env.example .env
