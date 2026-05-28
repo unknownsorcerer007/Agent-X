@@ -1,4 +1,4 @@
-# Agent-OS — Production Multi-stage Docker Build
+# Agent-X — Production Multi-stage Docker Build
 # Final image: ~400MB
 FROM python:3.12-slim AS builder
 
@@ -25,9 +25,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && (apt-get install -y --no-install-recommends libasound2t64 2>/dev/null || apt-get install -y --no-install-recommends libasound2 2>/dev/null || true) \
     && rm -rf /var/lib/apt/lists/*
 
-RUN groupadd -r agentos && useradd -r -g agentos -d /home/agentos -m agentos
+RUN groupadd -r agentx && useradd -r -g agentx -d /home/agentx -m agentx
 
-COPY --from=builder /root/.cache/ms-playwright /home/agentos/.cache/ms-playwright
+COPY --from=builder /root/.cache/ms-playwright /home/agentx/.cache/ms-playwright
 COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
 
@@ -39,12 +39,12 @@ COPY alembic/ alembic/
 COPY alembic.ini .
 COPY qwen_bridge.py .
 
-RUN mkdir -p /home/agentos/.agent-os && \
-    chown -R agentos:agentos /app /home/agentos
+RUN mkdir -p /home/agentx/.Agent-X && \
+    chown -R agentx:agentx /app /home/agentx
 
-USER agentos
+USER agentx
 
-ENV PLAYWRIGHT_BROWSERS_PATH=/home/agentos/.cache/ms-playwright
+ENV PLAYWRIGHT_BROWSERS_PATH=/home/agentx/.cache/ms-playwright
 # Bind to 0.0.0.0 for Docker (not 127.0.0.1)
 ENV AGENT_OS_HOST=0.0.0.0
 # Signal that we're running inside Docker (browser uses --no-sandbox)

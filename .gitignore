@@ -1,5 +1,5 @@
-.agent-os/
-# Agent-OS
+.agent-x/
+# Agent-X
 .coverage
 dist/
 *.egg-info/

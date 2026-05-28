@@ -15,8 +15,8 @@ venv/
 .vscode
 .idea
 
-# Agent-OS runtime
-.agent-os
+# Agent-X runtime
+.agent-x
 *.enc
 
 # Docker
