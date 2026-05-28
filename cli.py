@@ -54,18 +54,30 @@ while True:
             headers={"Content-Type": "application/json"}
         )
 
-        try:
-            with urllib.request.urlopen(req, timeout=30) as response:
-                result = json.loads(response.read().decode())
-                print(f"[Success] {result.get('status', 'OK')}")
-                if 'data' in result:
-                    print(json.dumps(result['data'], indent=2))
-        except urllib.error.URLError as e:
-            if hasattr(e, 'read'):
-                err_response = e.read().decode()
-                print(f"[Error] {e.reason}: {err_response}")
-            else:
-                print(f"[Error] {e.reason} - Is the Agent-X server running on port 8001?")
+        import time
+        max_retries = 5
+        for attempt in range(max_retries):
+            try:
+                with urllib.request.urlopen(req, timeout=30) as response:
+                    result = json.loads(response.read().decode())
+                    print(f"[Success] {result.get('status', 'OK')}")
+                    if 'data' in result:
+                        print(json.dumps(result['data'], indent=2))
+                break
+            except urllib.error.URLError as e:
+                if hasattr(e, 'reason') and isinstance(e.reason, ConnectionRefusedError):
+                    if attempt < max_retries - 1:
+                        print(f"[*] Server not ready yet. Waiting 3 seconds to retry... ({attempt+1}/{max_retries})")
+                        time.sleep(3)
+                    else:
+                        print(f"[Error] Server is still not running. Please make sure you started .\\start.ps1 in another window.")
+                elif hasattr(e, 'read'):
+                    err_response = e.read().decode()
+                    print(f"[Error] {e.reason}: {err_response}")
+                    break
+                else:
+                    print(f"[Error] {e.reason} - Is the Agent-X server running on port 8001?")
+                    break
 
     except KeyboardInterrupt:
         break
