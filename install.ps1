@@ -100,22 +100,60 @@ if (!(Test-Path -Path ".env")) {
     }
 }
 
-$addKeys = Read-Host "Do you want to add API keys now? (y/N)"
+$addKeys = Read-Host "Do you want to configure an AI Provider API key now? (y/N)"
 if ($addKeys -match "^[yY]") {
-    $openAiKey = Read-Host "Enter OpenAI API Key (leave blank to skip)"
-    $anthropicKey = Read-Host "Enter Anthropic API Key (leave blank to skip)"
+    Write-Host "Available Providers:" -ForegroundColor Cyan
+    Write-Host "  [1] OpenAI"
+    Write-Host "  [2] Anthropic"
+    Write-Host "  [3] Google"
+    Write-Host "  [4] Groq"
+    Write-Host "  [5] Skip"
+    $choice = Read-Host "Select provider (1-5)"
     
-    if ($openAiKey) {
-        Add-Content -Path .env -Value "OPENAI_API_KEY=$openAiKey"
-        Write-Host "Added OpenAI API Key." -ForegroundColor Green
+    $keyVar = ""
+    $prefix = ""
+    
+    switch ($choice) {
+        "1" { $keyVar = "OPENAI_API_KEY"; $prefix = "sk-" }
+        "2" { $keyVar = "ANTHROPIC_API_KEY"; $prefix = "sk-ant-" }
+        "3" { $keyVar = "GOOGLE_API_KEY"; $prefix = "" }
+        "4" { $keyVar = "GROQ_API_KEY"; $prefix = "gsk_" }
     }
-    if ($anthropicKey) {
-        Add-Content -Path .env -Value "ANTHROPIC_API_KEY=$anthropicKey"
-        Write-Host "Added Anthropic API Key." -ForegroundColor Green
+    
+    if ($keyVar -ne "") {
+        while ($true) {
+            $key = Read-Host "Enter your API key for $keyVar (leave blank to skip)"
+            if ([string]::IsNullOrWhiteSpace($key)) {
+                Write-Host "Skipped." -ForegroundColor Yellow
+                break
+            }
+            if ($prefix -ne "" -and -not $key.StartsWith($prefix)) {
+                Write-Host "Invalid format! It should start with '$prefix'. Please try again." -ForegroundColor Red
+            } else {
+                Add-Content -Path .env -Value "$keyVar=$key"
+                Write-Host "Added $keyVar successfully!" -ForegroundColor Green
+                break
+            }
+        }
     }
 }
 
 Write-Host "=========================================" -ForegroundColor Cyan
-Write-Host "Installation Complete! You are ready." -ForegroundColor Green
-Write-Host "To start the server, run: .\start.ps1" -ForegroundColor Yellow
+Write-Host "Installation Complete!" -ForegroundColor Green
+
+$startServer = Read-Host "Do you want to start the Agent-X server now? (y/N)"
+if ($startServer -match "^[yY]") {
+    Write-Host "Starting server in the background..." -ForegroundColor Yellow
+    Start-Process powershell -ArgumentList "-ExecutionPolicy Bypass -File .\start.ps1" -WindowStyle Hidden
+    Write-Host "Waiting 5 seconds for server to boot..." -ForegroundColor Yellow
+    Start-Sleep -Seconds 5
+    Write-Host "Launching Interactive CLI..." -ForegroundColor Green
+    if (Test-Path -Path "cli.py") {
+        .\venv\Scripts\python.exe cli.py
+    } else {
+        Write-Host "cli.py not found. You can run it manually later." -ForegroundColor Red
+    }
+} else {
+    Write-Host "To start the server manually later, run: .\start.ps1" -ForegroundColor Yellow
+}
 Write-Host "=========================================" -ForegroundColor Cyan

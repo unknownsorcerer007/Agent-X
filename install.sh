@@ -345,20 +345,44 @@ fi
 
     if [ -t 0 ] || [ -c /dev/tty ]; then
         echo ""
-        echo -e "${YELLOW}Do you want to configure API keys now? (y/N)${NC}"
+        echo -e "${YELLOW}Do you want to configure an AI Provider API key now? (y/N)${NC}"
         read -r ADD_KEYS </dev/tty || ADD_KEYS="N"
         if [[ "$ADD_KEYS" =~ ^[Yy]$ ]]; then
-            echo -e "Enter OpenAI API Key (leave blank to skip):"
-            read -r OPENAI_KEY </dev/tty || true
-            if [ -n "$OPENAI_KEY" ]; then
-                echo "OPENAI_API_KEY=$OPENAI_KEY" >> .env
-                ok "OpenAI key added"
-            fi
-            echo -e "Enter Anthropic API Key (leave blank to skip):"
-            read -r ANTHROPIC_KEY </dev/tty || true
-            if [ -n "$ANTHROPIC_KEY" ]; then
-                echo "ANTHROPIC_API_KEY=$ANTHROPIC_KEY" >> .env
-                ok "Anthropic key added"
+            echo -e "${CYAN}Available Providers:${NC}"
+            echo "  [1] OpenAI"
+            echo "  [2] Anthropic"
+            echo "  [3] Google"
+            echo "  [4] Groq"
+            echo "  [5] Skip"
+            echo -n "Select provider (1-5): "
+            read -r CHOICE </dev/tty || CHOICE="5"
+
+            KEY_VAR=""
+            PREFIX=""
+            case "$CHOICE" in
+                1) KEY_VAR="OPENAI_API_KEY"; PREFIX="sk-" ;;
+                2) KEY_VAR="ANTHROPIC_API_KEY"; PREFIX="sk-ant-" ;;
+                3) KEY_VAR="GOOGLE_API_KEY"; PREFIX="" ;;
+                4) KEY_VAR="GROQ_API_KEY"; PREFIX="gsk_" ;;
+                *) KEY_VAR="" ;;
+            esac
+
+            if [ -n "$KEY_VAR" ]; then
+                while true; do
+                    echo -n "Enter your API key for $KEY_VAR (leave blank to skip): "
+                    read -r API_KEY </dev/tty || API_KEY=""
+                    if [ -z "$API_KEY" ]; then
+                        warn "Skipped."
+                        break
+                    fi
+                    if [ -n "$PREFIX" ] && [[ "$API_KEY" != "$PREFIX"* ]]; then
+                        echo -e "${RED}Invalid format! It should start with '$PREFIX'. Please try again.${NC}"
+                    else
+                        echo "$KEY_VAR=$API_KEY" >> .env
+                        ok "Added $KEY_VAR successfully!"
+                        break
+                    fi
+                done
             fi
         fi
     fi
@@ -420,13 +444,40 @@ echo ""
 
 # ─── Start Server ───────────────────────────────────────
 if $START_AFTER; then
-    echo -e "${GREEN}Starting Agent-X...${NC}"
-    echo -e "${YELLOW}Press Ctrl+C to stop${NC}"
-    echo ""
-    if command -v xvfb-run >/dev/null 2>&1; then
-        exec xvfb-run -a python main.py --agent-token "$AGENT_TOKEN" $EXTRA_ARGS
+    if [ -t 0 ] || [ -c /dev/tty ]; then
+        echo ""
+        echo -e "${YELLOW}Do you want to start the Agent-X server now? (y/N)${NC}"
+        read -r START_NOW </dev/tty || START_NOW="N"
+        if [[ "$START_NOW" =~ ^[Yy]$ ]]; then
+            echo -e "${YELLOW}Starting server in the background...${NC}"
+            if command -v xvfb-run >/dev/null 2>&1; then
+                nohup xvfb-run -a python main.py --agent-token "$AGENT_TOKEN" $EXTRA_ARGS > server.log 2>&1 &
+            else
+                nohup python main.py --agent-token "$AGENT_TOKEN" $EXTRA_ARGS > server.log 2>&1 &
+            fi
+            echo -e "${YELLOW}Waiting 5 seconds for server to boot...${NC}"
+            sleep 5
+            echo -e "${GREEN}Launching Interactive CLI...${NC}"
+            if [ -f "cli.py" ]; then
+                python cli.py
+            else
+                warn "cli.py not found. You can run it manually later."
+            fi
+        else
+            echo "To start manually:"
+            echo "  cd $INSTALL_DIR"
+            echo "  source venv/bin/activate"
+            echo "  python main.py --agent-token '$AGENT_TOKEN'"
+        fi
     else
-        exec python main.py --agent-token "$AGENT_TOKEN" $EXTRA_ARGS
+        echo -e "${GREEN}Starting Agent-X...${NC}"
+        echo -e "${YELLOW}Press Ctrl+C to stop${NC}"
+        echo ""
+        if command -v xvfb-run >/dev/null 2>&1; then
+            exec xvfb-run -a python main.py --agent-token "$AGENT_TOKEN" $EXTRA_ARGS
+        else
+            exec python main.py --agent-token "$AGENT_TOKEN" $EXTRA_ARGS
+        fi
     fi
 else
     echo "To start:"
