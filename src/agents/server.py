@@ -2096,6 +2096,9 @@ class AgentServer:
             "login-handoff-list": self._cmd_login_handoff_list,
             "login-handoff-history": self._cmd_login_handoff_history,
             "login-handoff-stats": self._cmd_login_handoff_stats,
+            # Visual Testing
+            "visual-capture": self._cmd_visual_capture,
+            "visual-compare": self._cmd_visual_compare,
             # Status
             "health": self._cmd_health,
         }
@@ -4266,6 +4269,43 @@ class AgentServer:
         return {"status": "success", **handoff.get_stats()}
 
     # ─── Health Check (command-level) ─────────────────────────
+
+    # ─── Visual Testing (AI Vision) ──────────────────────────
+
+    async def _cmd_visual_capture(self, data: Dict, session) -> Dict:
+        """Capture visual testing baseline."""
+        from src.tools.visual_testing import capture_baseline
+        test_name = data.get("test_name")
+        if not test_name:
+            return {"status": "error", "error": "Missing 'test_name'"}
+        try:
+            entry = await capture_baseline(
+                self.browser.page,
+                test_name=test_name,
+                url=data.get("url"),
+                full_page=data.get("full_page", True)
+            )
+            return {"status": "success", "baseline": entry.test_name, "checksum": entry.checksum}
+        except Exception as e:
+            return {"status": "error", "error": str(e)}
+
+    async def _cmd_visual_compare(self, data: Dict, session) -> Dict:
+        """Compare current page against visual baseline and return payload for AI."""
+        from src.tools.visual_testing import compare_visual, analyze_visual_diff
+        test_name = data.get("test_name")
+        if not test_name:
+            return {"status": "error", "error": "Missing 'test_name'"}
+        try:
+            result = await compare_visual(
+                self.browser.page,
+                test_name=test_name,
+                threshold=data.get("threshold", 0.1),
+                full_page=data.get("full_page", True)
+            )
+            analysis_payload = await analyze_visual_diff(result, context=data.get("context"))
+            return {"status": "success", "visual_analysis": analysis_payload}
+        except Exception as e:
+            return {"status": "error", "error": str(e)}
 
     async def _cmd_health(self, data: Dict, session) -> Dict:
         """Deep health check — server, browser, database, redis, sessions."""

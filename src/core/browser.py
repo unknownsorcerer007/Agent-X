@@ -3523,6 +3523,10 @@ class AgentBrowser:
         """Switch to a different tab."""
         if tab_id in self._pages:
             self.page = self._pages[tab_id]
+            try:
+                await self.page.bring_to_front()
+            except Exception as e:
+                pass
             return {"status": "success", "tab_id": tab_id, "url": self.page.url}
         return {"status": "error", "error": f"Tab not found: {tab_id}"}
 
