@@ -55,6 +55,8 @@ from src.core.browser import AgentBrowser
 from src.core.session import SessionManager
 from src.infra.logging import setup_logging, get_logger
 
+logger = get_logger("agent-x")
+
 
 __version__ = "4.0.0"
 
