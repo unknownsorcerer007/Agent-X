@@ -51,9 +51,7 @@ jobs:
 
       - name: Verify no secrets in code
         run: |
-          # Check for common secret patterns (allow .env.example placeholders)
-          ! grep -rE '(api[_-]?key|password|secret|token)\s*=\s*["\'][^"\']{20,}["\']' --include='*.py' --exclude-dir=venv --exclude-dir=__pycache__ --exclude-dir=.git . || true
-          echo "Secret scan complete"
+          python -m pytest tests/test_secrets.py -v
 
       - name: Validate README claims
         run: |
