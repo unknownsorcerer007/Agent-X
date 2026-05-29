@@ -1,7 +1,7 @@
 # Agent-X Requirements — Production Edition
 # Core browser automation
 patchright>=1.50.0
-playwright>=1.49.0
+playwright>=1.60.0
 
 # WebSocket server for agent connections
 websockets>=13.1
