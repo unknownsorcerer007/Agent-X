@@ -913,6 +913,16 @@ TOOLS: List[ToolDef] = [
         "Get tunnel connection status and public URL.", [], "tunnel"),
     ToolDef("tunnel-info", "browser_tunnel_info", "browser_tunnel_info", "tunnel_info",
         "Get full connection info including Claude Web setup instructions.", [], "tunnel"),
+
+    # ═══════════════════════════════════════════════════════════
+    # VISUAL TESTING
+    # ═══════════════════════════════════════════════════════════
+    ToolDef("visual-capture", "browser_visual_capture", "browser_visual_capture", "visual_capture",
+        "Capture a visual baseline of the current page for comparison.",
+        [ToolParam("name", "string", "Name for the baseline capture", True)], "visual"),
+    ToolDef("visual-compare", "browser_visual_compare", "browser_visual_compare", "visual_compare",
+        "Compare current page against a previously captured baseline.",
+        [ToolParam("name", "string", "Name of the baseline to compare against", True)], "visual"),
 ]
 
 
