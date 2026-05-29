@@ -393,6 +393,9 @@ class AgentBrowser:
         lang_primary = locale.split("-")[0]  # e.g., "en" from "en-US"
         accept_language = f"{locale},{lang_primary};q=0.9"
 
+        # Derive sec-ch-ua-mobile from user agent (mobile UAs should have ?1)
+        is_mobile = "Mobile" in profile.user_agent or "Android" in profile.user_agent
+
         headers: Dict[str, str] = {
             "Accept": (
                 "text/html,application/xhtml+xml,application/xml;q=0.9,"
@@ -402,7 +405,7 @@ class AgentBrowser:
             "Accept-Language": accept_language,
             "Accept-Encoding": "gzip, deflate, br, zstd",
             "sec-ch-ua": profile.sec_ch_ua,
-            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-mobile": "?1" if is_mobile else "?0",
             "sec-ch-ua-platform": profile.sec_ch_ua_platform,
             "Upgrade-Insecure-Requests": "1",
             "sec-fetch-dest": "document",
@@ -419,6 +422,9 @@ class AgentBrowser:
         """Launch the browser with stealth settings."""
         self._cookie_dir.mkdir(parents=True, exist_ok=True)
         self._download_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Ensure home config .env directory exists (for consistent env file writes)
+        Path.home().joinpath(".agent-x").mkdir(parents=True, exist_ok=True)
 
         # NOTE: TLS proxy is disabled for browser traffic by default.
         # Patchright (our browser engine) already patches Chromium's TLS
@@ -1029,7 +1035,8 @@ class AgentBrowser:
     # Block indicators — only specific challenge/block page phrases.
     # NOTE: Do NOT use generic words like "cloudflare", "challenge", "blocked"
     # because legitimate sites contain those words in normal content.
-    _BLOCK_INDICATORS = [
+    # Uses frozenset for O(1) membership testing.
+    _BLOCK_INDICATORS = frozenset([
         "access denied",
         "captcha required",
         "bot detected",
@@ -1060,7 +1067,7 @@ class AgentBrowser:
         "unauthorized access",
         "your request was blocked",
         "automated access",
-    ]
+    ])
 
     # Sites that are KNOWN to show false positive block indicators
     # even when serving real content. Skip block detection for these.

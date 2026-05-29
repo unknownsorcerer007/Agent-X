@@ -8,7 +8,10 @@ import time
 import base64
 import re
 
-TOKEN = "agent-x-main-2026"
+import os
+TOKEN = os.environ.get("AGENT_TOKEN", "")
+if not TOKEN:
+    TOKEN = input("Enter agent token (or set AGENT_TOKEN env var): ").strip()
 BASE = "http://127.0.0.1:8001"
 
 def cmd(command, **kwargs):

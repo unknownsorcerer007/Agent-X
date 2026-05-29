@@ -34,16 +34,21 @@ from src.compat import check_all as _check_compat
 _check_compat()
 
 # ─── Auto-load .env file ────────────────────────────────
-_env_file = Path(__file__).parent / ".env"
-if _env_file.exists():
-    for line in _env_file.read_text().splitlines():
-        line = line.strip()
-        if line and not line.startswith("#") and "=" in line:
-            key, _, value = line.partition("=")
-            key = key.strip()
-            value = value.strip().strip('"').strip("'")
-            if key and value and key not in os.environ:
-                os.environ[key] = value
+# Try multiple locations: app dir first, then home config dir
+_env_paths = [
+    Path(__file__).parent / ".env",           # App directory (highest priority)
+    Path.home() / ".agent-x" / ".env",        # Home config directory (fallback)
+]
+for _env_file in _env_paths:
+    if _env_file.exists():
+        for line in _env_file.read_text().splitlines():
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                key, _, value = line.partition("=")
+                key = key.strip()
+                value = value.strip().strip('"').strip("'")
+                if key and value and key not in os.environ:
+                    os.environ[key] = value
 
 from src.core.config import Config
 from src.core.browser import AgentBrowser
@@ -301,7 +306,8 @@ class AgentOS:
 
         legacy_token = self.config.get("server.agent_token")
         if legacy_token:
-            masked = f"{legacy_token[:4]}****{legacy_token[-4:]}" if len(legacy_token) > 12 else "****"
+            # Always show fixed-length mask regardless of actual token length
+            masked = f"{legacy_token[:4]}****{legacy_token[-4:]}" if len(legacy_token) > 8 else "****"
             self.logger.info(f"    Legacy Token: {masked}")
         self.logger.info("")
         self.logger.info("  Press Ctrl+C to stop")
@@ -446,14 +452,19 @@ async def main():
 
     app = AgentOS(args)
 
-    # Handle shutdown signals
+    # Handle shutdown signals (cross-platform)
     shutdown_event = asyncio.Event()
 
     def signal_handler(sig, frame):
         shutdown_event.set()
 
-    signal.signal(signal.SIGINT, signal_handler)
-    signal.signal(signal.SIGTERM, signal_handler)
+    try:
+        signal.signal(signal.SIGINT, signal_handler)
+        if hasattr(signal, 'SIGTERM'):
+            signal.signal(signal.SIGTERM, signal_handler)
+    except ValueError:
+        # Signals only work in main thread — skip if in subprocess/thread
+        logger.warning("Signal handlers not available (not in main thread)")
 
     try:
         await app.start()

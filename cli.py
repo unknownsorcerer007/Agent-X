@@ -59,7 +59,7 @@ async def send_command_to_server(command: str, params: dict, token: str):
             elif hasattr(e, 'read'):
                 try:
                     return json.loads(e.read().decode())
-                except:
+                except Exception:
                     return {"status": "error", "error": e.read().decode()}
             else:
                 return {"status": "error", "error": str(e.reason)}

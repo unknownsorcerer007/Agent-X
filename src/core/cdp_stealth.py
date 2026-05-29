@@ -39,8 +39,8 @@ def generate_cdp_stealth_js(
     chrome_version: str = "124",
     platform: str = "Win32",
     user_agent: str = None,
-    webgl_vendor: str = "Intel Inc.",
-    webgl_renderer: str = "Intel Iris OpenGL Engine",
+    webgl_vendor: str = None,
+    webgl_renderer: str = None,
     hardware_concurrency: int = 8,
     device_memory: int = 8,
     screen_width: int = 1920,
@@ -60,6 +60,29 @@ def generate_cdp_stealth_js(
               If None, a seed is derived from a hash of the webgl_renderer.
               Using the same seed guarantees identical fingerprints on re-injection.
     """
+
+    # Auto-select WebGL vendor/renderer based on platform if not explicitly set
+    if webgl_vendor is None or webgl_renderer is None:
+        if "Mac" in platform:
+            webgl_vendor = "Apple Inc."
+            webgl_renderer = "Apple GPU"
+        elif platform == "Linux x86_64":
+            import random as _vrandom
+            _gpu_opts = [
+                ("Intel Inc.", "Intel Iris Xe Graphics"),
+                ("NVIDIA Corporation", "NVIDIA GeForce RTX 3060/PCIe/SSE2"),
+                ("AMD", "AMD Radeon RX 6700 XT"),
+            ]
+            webgl_vendor, webgl_renderer = _vrandom.choice(_gpu_opts)
+        else:
+            import random as _vrandom
+            _gpu_opts = [
+                ("Intel Inc.", "Intel Iris Xe Graphics"),
+                ("NVIDIA Corporation", "NVIDIA GeForce RTX 3060/PCIe/SSE2"),
+                ("AMD", "AMD Radeon RX 6700 XT"),
+                ("Google Inc.", "ANGLE (Intel, Intel(R) Iris(TM) Plus Graphics Direct3D11 vs_5_0 ps_5_0, D3D11)"),
+            ]
+            webgl_vendor, webgl_renderer = _vrandom.choice(_gpu_opts)
 
     # Use a seeded PRNG so re-injection after recovery produces the same values
     import random as _random

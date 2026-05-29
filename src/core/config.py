@@ -29,7 +29,7 @@ DEFAULT_CONFIG = {
         "max_request_body_kb": 1024,
     },
     "database": {
-        "enabled": False,
+        "enabled": True,  # Align with main.py behavior (SQLite fallback when no DSN set)
         "dsn": "postgresql+asyncpg://agent_os:agent_os@localhost:5432/agent_os",
         "pool_size": 20,
         "max_overflow": 10,
