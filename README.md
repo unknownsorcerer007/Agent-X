@@ -15,7 +15,7 @@
   <img src="https://img.shields.io/badge/swarm-enabled-purple.svg?style=flat-square" alt="Swarm Enabled">
   <img src="https://img.shields.io/badge/multi--tab-blueviolet.svg?style=flat-square" alt="Multi-Tab">
   <img src="https://img.shields.io/badge/captcha-solver-red.svg?style=flat-square" alt="CAPTCHA Solver">
-  <img src="https://img.shields.io/badge/license-MIT-green.svg?style=flat-square" alt="MIT License">
+  <img src="https://img.shields.io/badge/license-Custom-blue.svg?style=flat-square" alt="Custom License">
 </p>
 
 ---
@@ -406,3 +406,14 @@ Agent X is licensed under the MIT License. See [LICENSE](LICENSE) for details.
   Built with precision. Hardened for real-world usage.<br>
   <a href="https://x.com/Unknown339264">Follow on X</a>
 </p>
+
+---
+
+> [!IMPORTANT]
+> **Project Acquisition & Sponsorship Notice**
+> Agent X is currently open for **acquisition or corporate sponsorship**. If you are an AI startup, developer tool company, or enterprise looking to acquire the technology stack, codebase IP, or sponsor its ongoing development, please contact us at **[unknownsorcerer007@gmail.com](mailto:unknownsorcerer007@gmail.com)**. *Serious inquiries only.*
+
+> [!TIP]
+> **SynapseLink: Bridging Digital & Physical Worlds**
+> *What if AI could step out of the browser sandbox and touch physical reality?*
+> Our next project, **SynapseLink**, is a neural-orchestration layer designed to bridge LLMs with physical IoT devices and robotics. Stay tuned for the alpha release.
