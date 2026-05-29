@@ -613,7 +613,7 @@ class AgentBrowser:
 
         context_options = {
             "user_agent": self._active_profile.user_agent,
-            "no_viewport": True,
+            "viewport": {"width": self._active_profile.viewport["width"], "height": self._active_profile.viewport["height"]},
             "locale": self._active_profile.locale,
             "timezone_id": self._active_profile.timezone_id,
             "device_scale_factor": self._active_profile.pixel_ratio,
