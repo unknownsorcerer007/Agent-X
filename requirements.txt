@@ -30,7 +30,7 @@ pyyaml>=6.0.0
 
 # Utilities
 requests>=2.31.0
-urllib3<2.0.0              # Keep compatibility with older requests/cloudscraper
+urllib3>=2.0.0,<3.0.0      # Modern urllib3 (v2 is stable, fixes many issues)
 psutil>=5.9.0
 
 # Human mimicry

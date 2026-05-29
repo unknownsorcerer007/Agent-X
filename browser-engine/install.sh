@@ -44,10 +44,19 @@ else
     fi
 fi
 
-# ─── Step 2: Install npm dependencies ──────────────────────────────────────
+# ─── Step 2: Verify bunx is available ──────────────────────────────────────
+if ! command -v bunx &>/dev/null; then
+    echo -e "${RED}  ✗ bunx not found. Bun installation may be incomplete.${NC}"
+    exit 1
+fi
+
+# ─── Step 3: Install npm dependencies ──────────────────────────────────────
 echo -e "${YELLOW}[2/6] Installing dependencies (including z-ai-web-dev-sdk)...${NC}"
 cd "$BROWSER_ENGINE_DIR"
-bun install
+bun install || {
+    echo -e "${RED}  ✗ bun install failed. Check network connection and try again.${NC}"
+    exit 1
+}
 echo -e "${GREEN}  ✓ Dependencies installed${NC}"
 
 # ─── Step 3: Install Playwright browsers ────────────────────────────────────

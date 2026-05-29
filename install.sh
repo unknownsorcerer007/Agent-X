@@ -343,7 +343,11 @@ else
     fi
 fi
 
-    if [ -t 0 ] || [ -c /dev/tty ]; then
+    # Only prompt for API keys when creating a new .env (avoid duplicates/modifying existing)
+    if [ -f ".env" ] && [ "$FRESH_ENV" != "true" ]; then
+        true  # .env already existed — skip API key prompt
+    elif [ -t 0 ] || [ -c /dev/tty ]; then
+        FRESH_ENV=true
         echo ""
         echo -e "${YELLOW}Do you want to configure an AI Provider API key now? (y/N)${NC}"
         read -r ADD_KEYS </dev/tty || ADD_KEYS="N"
@@ -386,6 +390,7 @@ fi
             fi
         fi
     fi
+fi
 
 # ─── Step 9: Verify ─────────────────────────────────────
 step "Verifying installation..."

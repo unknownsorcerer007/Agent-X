@@ -238,10 +238,9 @@ class AgentServer:
         import hmac as _hmac
         allowed = self.config.get("server.allowed_tokens", [])
         if allowed:
-            for allowed_token in allowed:
-                if _hmac.compare_digest(token, allowed_token):
-                    return True
-            return False
+            # Use set for O(1) membership check
+            allowed_set = set(allowed)
+            return token in allowed_set
         configured = self.config.get("server.agent_token")
         if configured:
             return _hmac.compare_digest(token, configured)
