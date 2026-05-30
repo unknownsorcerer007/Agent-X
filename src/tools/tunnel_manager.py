@@ -338,8 +338,8 @@ class TunnelManager:
                 ],
             }
         
-        # Build MCP server URL
-        mcp_url = f"{status.public_url}/sse"
+        # Build MCP server URL (using /mcp for native Claude Web connector support, /sse remains supported)
+        mcp_url = f"{status.public_url}/mcp"
         
         return {
             "ready": True,

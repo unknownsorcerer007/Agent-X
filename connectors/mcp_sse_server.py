@@ -198,7 +198,12 @@ class DynamicSseServerTransport(SseServerTransport):
         try:
             async with anyio.create_task_group() as tg:
                 response = EventSourceResponse(
-                    content=sse_stream_reader, data_sender_callable=sse_writer
+                    content=sse_stream_reader,
+                    data_sender_callable=sse_writer,
+                    headers={
+                        "X-Accel-Buffering": "no",
+                        "Cache-Control": "no-cache",
+                    }
                 )
                 logger.debug("Starting SSE response task")
                 tg.start_soon(response, scope, receive, send)
@@ -229,14 +234,18 @@ sse = DynamicSseServerTransport("/sse")
 
 @app.get("/.well-known/oauth-protected-resource")
 @app.get("/.well-known/oauth-protected-resource/sse")
+@app.get("/.well-known/oauth-protected-resource/mcp")
 async def oauth_protected_resource(request: Request):
     headers = request.headers
     host = headers.get("x-forwarded-host") or headers.get("host") or "localhost:8002"
     proto = headers.get("x-forwarded-proto") or request.url.scheme or "http"
     base_url = f"{proto}://{host}"
     
+    path = request.url.path
+    resource_path = "/sse" if "sse" in path else "/mcp"
+    
     return JSONResponse({
-        "resource": f"{base_url}/sse",
+        "resource": f"{base_url}{resource_path}",
         "authorization_servers": [base_url],
         "scopes_supported": ["mcp"],
         "bearer_methods_supported": ["header"]
@@ -599,6 +608,9 @@ async def oauth_token(request: Request):
     })
 
 @app.get("/sse")
+@app.get("/sse/")
+@app.get("/mcp")
+@app.get("/mcp/")
 async def handle_sse(request: Request):
     auth_header = request.headers.get("Authorization")
     if not auth_header or not auth_header.startswith("Bearer "):
@@ -607,8 +619,10 @@ async def handle_sse(request: Request):
         proto = headers.get("x-forwarded-proto") or request.url.scheme or "http"
         base_url = f"{proto}://{host}"
         
-        metadata_url = f"{base_url}/.well-known/oauth-protected-resource/sse"
-        logger.info(f"Unauthenticated request to /sse. Challenging with WWW-Authenticate pointing to {metadata_url}")
+        path = request.url.path
+        metadata_suffix = "sse" if "sse" in path else "mcp"
+        metadata_url = f"{base_url}/.well-known/oauth-protected-resource/{metadata_suffix}"
+        logger.info(f"Unauthenticated request to {path}. Challenging with WWW-Authenticate pointing to {metadata_url}")
         
         return JSONResponse(
             status_code=401,
@@ -648,8 +662,8 @@ class _MessagePostMiddleware:
             path = scope.get("path", "")
             method = scope.get("method", "GET")
             
-            # Intercept POST to /messages, /sse, or / (excluding oauth endpoints or register/token)
-            if method == "POST" and (path.startswith("/messages") or path in ("/", "/sse", "/sse/")):
+            # Intercept POST to /messages, /sse, /mcp, or / (excluding oauth endpoints or register/token)
+            if method == "POST" and (path.startswith("/messages") or path in ("/", "/sse", "/sse/", "/mcp", "/mcp/")):
                 # Check auth
                 headers_list = scope.get("headers", [])
                 auth_val = b""
