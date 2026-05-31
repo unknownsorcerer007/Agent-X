@@ -65,7 +65,7 @@ readability-lxml>=0.8.1
 
 # ─── Server & API ────────────────────────────────────────────
 fastapi>=0.110.0
-uvicorn>=0.27.0
+uvicorn>=0.48.0
 sse-starlette>=2.0.0
 
 # ─── Cloud & AWS (Optional) ─────────────────────────────────
