@@ -642,5 +642,6 @@ _wrapped = WrappedApp(app, session_manager)
 
 if __name__ == "__main__":
     import uvicorn
-    # Start on port 8002 — use the wrapped app for middleware support
-    uvicorn.run(_wrapped, host="0.0.0.0", port=8002)
+    # Start on custom port if configured — use the wrapped app for middleware support
+    port = int(os.environ.get("MCP_SERVER_PORT", "8002"))
+    uvicorn.run(_wrapped, host="0.0.0.0", port=port)

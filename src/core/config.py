@@ -54,7 +54,7 @@ DEFAULT_CONFIG = {
         "viewport": {"width": 1920, "height": 1080},
         "max_ram_mb": 500,
         "page_timeout_ms": 30000,
-        "proxy": None,
+        "proxy": os.environ.get("PAID_PROXY_URL", os.environ.get("BROWSER_PROXY", None)),
         "device": "desktop_1080",
         "locale": "en-US",
         "timezone_id": "America/New_York",

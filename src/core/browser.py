@@ -609,6 +609,9 @@ class AgentBrowser:
                 self._launch_args.append("--dns-over-https-templates=https://cloudflare-dns.com/dns-query")
                 logger.info(f"Browser shielded at launch using proxy: {proxy_data.get('url', 'N/A')}")
 
+        if "proxy" not in launch_options:
+            logger.warning("Running browser on Local IP (No proxy configured). For high-volume scraping, please configure a paid residential proxy pool.")
+
         self.browser = await self.playwright.chromium.launch(**launch_options)
 
         # Log browser engine version (patchright manages its own binary)

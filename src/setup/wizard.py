@@ -53,15 +53,21 @@ class SetupWizard:
             "free_alternative": "Built-in CAPTCHA prevention (blocking CAPTCHA scripts) works without a key",
         },
         "proxy": {
-            "name": "Proxy Rotation Provider",
-            "description": "Residential proxy rotation for large-scale scraping",
+            "name": "Paid Proxy Setup",
+            "description": "Configure a paid residential or datacenter proxy to route browser traffic safely",
             "env_vars": {
-                "PROXY_PROVIDER": "Provider name (brightdata, oxylabs, smartproxy, iproyal)",
-                "PROXY_PROVIDER_CUSTOMER_ID": "Your customer/account ID",
-                "PROXY_PROVIDER_PASSWORD": "Your provider password",
-                "PROXY_PROVIDER_ZONE": "Zone name (default: residential)",
+                "PAID_PROXY_URL": "Your paid proxy URL (e.g. http://user:pass@host:port)",
             },
-            "free_alternative": "Built-in TLS fingerprint spoofing + smart retries work without proxies",
+            "free_alternative": "Runs directly on your Local IP address safely with TLS fingerprint spoofing",
+        },
+        "mcp": {
+            "name": "Model Context Protocol (MCP) Server Setup",
+            "description": "Configure the Agent-X MCP SSE connector to expose browser tools to Claude Desktop",
+            "env_vars": {
+                "AGENT_X_URL": "Backend Agent-X URL (default: http://localhost:8001)",
+                "MCP_SERVER_PORT": "MCP SSE Server Port (default: 8002)",
+            },
+            "free_alternative": "Default settings (http://localhost:8001 on port 8002) will be used",
         },
         "whisper": {
             "name": "Whisper Transcription (Local)",
