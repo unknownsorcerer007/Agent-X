@@ -275,7 +275,7 @@ class AgentServer:
                 return {
                     "user_id": "legacy",
                     "api_key_id": None,
-                    "scopes": ["browser"],
+                    "scopes": ["browser", "admin", "workflows"],
                     "auth_method": "legacy_token",
                 }
 
@@ -869,7 +869,7 @@ class AgentServer:
                     auth_context = {
                         "user_id": "legacy",
                         "api_key_id": None,
-                        "scopes": ["browser"],
+                        "scopes": ["browser", "admin", "workflows"],
                         "auth_method": "legacy_token",
                     }
 

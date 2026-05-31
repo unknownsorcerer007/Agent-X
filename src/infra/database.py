@@ -58,9 +58,13 @@ class DatabaseManager:
             engine_args.update({
                 "poolclass": NullPool,
                 "connect_args": {
-                    "check_same_thread": False
+                    "check_same_thread": False,
+                    "timeout": 30.0
                 }
             })
+            engine_args.pop("pool_timeout", None)
+            engine_args.pop("pool_recycle", None)
+            engine_args.pop("pool_pre_ping", None)
         else:
             engine_args.update({
                 "pool_size": pool_size,
@@ -119,9 +123,9 @@ class DatabaseManager:
             return {
                 "status": "healthy",
                 "latency_ms": round(latency_ms, 2),
-                "pool_size": pool.size(),
-                "checked_out": pool.checkedout(),
-                "overflow": pool.overflow(),
+                "pool_size": pool.size() if hasattr(pool, "size") else 0,
+                "checked_out": pool.checkedout() if hasattr(pool, "checkedout") else 0,
+                "overflow": pool.overflow() if hasattr(pool, "overflow") else 0,
             }
         except Exception as e:
             return {
@@ -132,6 +136,7 @@ class DatabaseManager:
 
     async def create_tables(self):
         """Create all tables (for development/testing)."""
+        from src.infra import models  # noqa: F401
         async with self.engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
         logger.info("Database tables created")

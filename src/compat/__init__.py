@@ -5,6 +5,24 @@ This ensures the system works even when some packages are not installed.
 """
 import logging
 import sys
+
+# Pre-emptively redirect any 'playwright' imports to 'patchright' to avoid library conflicts
+try:
+    import patchright
+    sys.modules['playwright'] = patchright
+    try:
+        import patchright.async_api
+        sys.modules['playwright.async_api'] = patchright.async_api
+    except ImportError:
+        pass
+    try:
+        import patchright.sync_api
+        sys.modules['playwright.sync_api'] = patchright.sync_api
+    except ImportError:
+        pass
+except ImportError:
+    pass
+
 from typing import Any, Optional
 
 logger = logging.getLogger("agent-x.compat")
@@ -193,16 +211,11 @@ except ImportError:
 try:
     from patchright.async_api import async_playwright
     PATCHRIGHT_AVAILABLE = True
+    PLAYWRIGHT_AVAILABLE = True  # Mapped via namespace alias
 except ImportError:
     PATCHRIGHT_AVAILABLE = False
-    _warn_missing("patchright", "Primary browser engine (will try playwright)")
-    try:
-        from playwright.async_api import async_playwright
-        PLAYWRIGHT_AVAILABLE = True
-        logger.info("Using playwright as fallback for patchright")
-    except ImportError:
-        PLAYWRIGHT_AVAILABLE = False
-        _warn_missing("playwright", "Browser automation (CRITICAL - install required)")
+    PLAYWRIGHT_AVAILABLE = False
+    _warn_missing("patchright", "Primary browser engine (CRITICAL - install required)")
 
 
 # ─── whisper ──────────────────────────────────────────────────

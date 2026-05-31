@@ -304,7 +304,7 @@ class AgentBrowser:
         self._proxy_manager_enabled = self.config.get("browser.proxy_rotation_enabled", True)
         self._proxy_rotation_strategy = self.config.get("browser.proxy_rotation_strategy", "weighted")
         self._shield_local_ip = self.config.get("browser.shield_local_ip", True)
-        self._use_free_proxy_fallback = self.config.get("browser.use_free_proxy_fallback", True)
+        self._use_free_proxy_fallback = self.config.get("browser.use_free_proxy_fallback", False)
         self._handoff_manager: Optional[Any] = None
         self._current_proxy: Optional[ProxyInfo] = None
         self._current_proxy_config: Optional[Dict] = None

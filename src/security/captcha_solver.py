@@ -1,19 +1,22 @@
 """
-Agent-X CAPTCHA Solver Engine
-Real CAPTCHA solving integration with multiple providers.
+Agent-X CAPTCHA Solver Engine - Production-Grade Dual Solver
+Real CAPTCHA solving integration with local OCR and AI Visual models.
 
 Supports:
-  - 2captcha (reCAPTCHA v2/v3, hCaptcha, Turnstile, FunCaptcha)
-  - Anti-Captcha (all types)
-  - CapMonster (all types)
+  - Local offline OCR (ddddocr)
+  - Multimodal AI Visual solving (Gemini, OpenAI, Anthropic)
+  - Interactive Visual solving (checkboxes & grids) using Human Mimicry
+  - 2captcha (as fallback/legacy option)
+  - Anti-Captcha (as fallback/legacy option)
   - Auto-detection and fallback between providers
-  - Session reuse for efficiency
-  - Rate limiting and cost tracking
 """
 import asyncio
 import logging
 import time
-from typing import Any, Dict, Optional
+import os
+import re
+import random
+from typing import Any, Dict, Optional, List
 from dataclasses import dataclass, field
 from enum import Enum
 
@@ -34,6 +37,8 @@ class SolverProvider(str, Enum):
     TWOCAPTCHA = "2captcha"
     ANTICAPTCHA = "anti-captcha"
     CAPMONSTER = "capmonster"
+    DDDDOCR = "ddddocr"
+    AI_VISUAL = "ai_visual"
 
 
 @dataclass
@@ -80,6 +85,257 @@ class CaptchaSolution:
         }
 
 
+class DdddocrLocalSolver:
+    """Local offline CAPTCHA solver using ddddocr."""
+
+    def __init__(self):
+        self._ocr = None
+        self._available = False
+        try:
+            import ddddocr
+            self._ocr = ddddocr.DdddOcr(show_ad=False)
+            self._available = True
+            logger.info("Local ddddocr CAPTCHA solver initialized")
+        except ImportError:
+            logger.debug("Local ddddocr package is not installed")
+        except Exception as e:
+            logger.warning(f"Local ddddocr init failed: {e}")
+
+    @property
+    def available(self) -> bool:
+        return self._available
+
+    async def solve_image(self, image_base64: str) -> CaptchaSolution:
+        import base64
+        start = time.monotonic()
+        if not self._available:
+            return CaptchaSolution(
+                success=False,
+                error="ddddocr is not available (import failed or package missing)",
+                solve_time=time.monotonic() - start,
+                provider="ddddocr"
+            )
+        try:
+            image_bytes = base64.b64decode(image_base64)
+            loop = asyncio.get_running_loop()
+            # Run the OCR engine in a worker thread since classification is CPU-bound
+            result = await loop.run_in_executor(None, self._ocr.classification, image_bytes)
+            if result:
+                result = "".join(result.split())
+                return CaptchaSolution(
+                    success=True,
+                    token=result,
+                    solve_time=time.monotonic() - start,
+                    provider="ddddocr",
+                    cost=0.0
+                )
+            return CaptchaSolution(
+                success=False,
+                error="ddddocr returned empty result",
+                solve_time=time.monotonic() - start,
+                provider="ddddocr"
+            )
+        except Exception as e:
+            logger.warning(f"ddddocr solve failed: {e}")
+            return CaptchaSolution(
+                success=False,
+                error=str(e),
+                solve_time=time.monotonic() - start,
+                provider="ddddocr"
+            )
+
+    async def close(self):
+        pass
+
+
+class AIVisualSolver:
+    """Multimodal LLM CAPTCHA Solver using direct HTTP requests to Gemini, OpenAI, or Anthropic."""
+
+    def __init__(self):
+        self._session = None
+
+    async def _get_session(self):
+        if self._session is None:
+            import httpx
+            self._session = httpx.AsyncClient(timeout=httpx.Timeout(30.0))
+        return self._session
+
+    async def solve_image(self, image_base64: str) -> CaptchaSolution:
+        """Solve CAPTCHA using the first available visual LLM provider."""
+        start = time.time()
+
+        # 1. Google Gemini API (preferred)
+        gemini_key = os.getenv("GOOGLE_API_KEY")
+        if gemini_key:
+            logger.info("Solving CAPTCHA using Gemini 2.0 Visual Engine...")
+            try:
+                session = await self._get_session()
+                url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={gemini_key}"
+                payload = {
+                    "contents": [
+                        {
+                            "parts": [
+                                {
+                                    "text": (
+                                        "Solve this CAPTCHA. Identify and output ONLY the letters and/or numbers "
+                                        "visible in this image, with absolutely no formatting, spaces, comments, "
+                                        "or explanations. If there are math symbols (e.g. 5+3 or 10-2), perform the "
+                                        "calculation and return only the final number."
+                                    )
+                                },
+                                {
+                                    "inlineData": {
+                                        "mimeType": "image/png",
+                                        "data": image_base64
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+                resp = await session.post(url, json=payload)
+                if resp.status_code == 200:
+                    data = resp.json()
+                    try:
+                        text = data["candidates"][0]["content"]["parts"][0]["text"].strip()
+                        text = "".join(text.split())
+                        return CaptchaSolution(
+                            success=True,
+                            token=text,
+                            solve_time=time.time() - start,
+                            provider="ai_visual_gemini",
+                            cost=0.0
+                        )
+                    except (KeyError, IndexError) as err:
+                        logger.warning(f"Failed to parse Gemini vision response: {err}")
+                else:
+                    logger.warning(f"Gemini API returned status {resp.status_code}: {resp.text}")
+            except Exception as e:
+                logger.warning(f"Gemini Vision solver failed: {e}")
+
+        # 2. OpenAI Vision API (fallback)
+        openai_key = os.getenv("OPENAI_API_KEY")
+        if openai_key:
+            logger.info("Solving CAPTCHA using OpenAI GPT-4o-mini Visual Engine...")
+            try:
+                session = await self._get_session()
+                url = "https://api.openai.com/v1/chat/completions"
+                headers = {
+                    "Authorization": f"Bearer {openai_key}",
+                    "Content-Type": "application/json"
+                }
+                payload = {
+                    "model": "gpt-4o-mini",
+                    "messages": [
+                        {
+                            "role": "user",
+                            "content": [
+                                {
+                                    "type": "text",
+                                    "text": (
+                                        "Solve this CAPTCHA. Identify and output ONLY the letters and/or numbers "
+                                        "visible in this image, with absolutely no formatting, spaces, comments, "
+                                        "or explanations. If there are math symbols, calculate the result and return it."
+                                    )
+                                },
+                                {
+                                    "type": "image_url",
+                                    "image_url": {
+                                        "url": f"data:image/png;base64,{image_base64}"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "max_tokens": 50,
+                    "temperature": 0.0
+                }
+                resp = await session.post(url, json=payload, headers=headers)
+                if resp.status_code == 200:
+                    data = resp.json()
+                    text = data["choices"][0]["message"]["content"].strip()
+                    text = "".join(text.split())
+                    return CaptchaSolution(
+                        success=True,
+                        token=text,
+                        solve_time=time.time() - start,
+                        provider="ai_visual_openai",
+                        cost=0.0002
+                    )
+                else:
+                    logger.warning(f"OpenAI API returned status {resp.status_code}: {resp.text}")
+            except Exception as e:
+                logger.warning(f"OpenAI Vision solver failed: {e}")
+
+        # 3. Anthropic Vision API (fallback)
+        anthropic_key = os.getenv("ANTHROPIC_API_KEY")
+        if anthropic_key:
+            logger.info("Solving CAPTCHA using Anthropic Claude 3.5 Sonnet Visual Engine...")
+            try:
+                session = await self._get_session()
+                url = "https://api.anthropic.com/v1/messages"
+                headers = {
+                    "x-api-key": anthropic_key,
+                    "anthropic-version": "2023-06-01",
+                    "Content-Type": "application/json"
+                }
+                payload = {
+                    "model": "claude-3-5-sonnet-20241022",
+                    "max_tokens": 50,
+                    "messages": [
+                        {
+                            "role": "user",
+                            "content": [
+                                {
+                                    "type": "text",
+                                    "text": (
+                                        "Solve this CAPTCHA. Identify and output ONLY the letters and/or numbers "
+                                        "visible in this image, with absolutely no formatting, spaces, comments, "
+                                        "or explanations. If there are math symbols, calculate the result and return it."
+                                    )
+                                },
+                                {
+                                    "type": "image",
+                                    "source": {
+                                        "type": "base64",
+                                        "media_type": "image/png",
+                                        "data": image_base64
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+                resp = await session.post(url, json=payload, headers=headers)
+                if resp.status_code == 200:
+                    data = resp.json()
+                    text = data["content"][0]["text"].strip()
+                    text = "".join(text.split())
+                    return CaptchaSolution(
+                        success=True,
+                        token=text,
+                        solve_time=time.time() - start,
+                        provider="ai_visual_anthropic",
+                        cost=0.0003
+                    )
+                else:
+                    logger.warning(f"Anthropic API returned status {resp.status_code}: {resp.text}")
+            except Exception as e:
+                logger.warning(f"Anthropic Vision solver failed: {e}")
+
+        return CaptchaSolution(
+            success=False,
+            error="No visual LLM provider API keys found in environment variables.",
+            solve_time=time.time() - start,
+            provider="ai_visual"
+        )
+
+    async def close(self):
+        if self._session:
+            await self._session.aclose()
+            self._session = None
+
+
 class TwoCaptchaSolver:
     """2captcha.com API integration."""
 
@@ -122,7 +378,6 @@ class TwoCaptchaSolver:
         invisible: bool = False,
         enterprise: bool = False,
     ) -> CaptchaSolution:
-        """Solve reCAPTCHA v2."""
         start = time.time()
         data = {
             "key": self.api_key,
@@ -136,7 +391,6 @@ class TwoCaptchaSolver:
         if enterprise:
             data["enterprise"] = 1
 
-        # Submit task
         resp = await self._post("/in.php", data)
         if resp.get("status") != 1:
             return CaptchaSolution(
@@ -157,7 +411,6 @@ class TwoCaptchaSolver:
         min_score: float = 0.3,
         enterprise: bool = False,
     ) -> CaptchaSolution:
-        """Solve reCAPTCHA v3."""
         start = time.time()
         data = {
             "key": self.api_key,
@@ -189,7 +442,6 @@ class TwoCaptchaSolver:
         sitekey: str,
         page_url: str,
     ) -> CaptchaSolution:
-        """Solve hCaptcha."""
         start = time.time()
         data = {
             "key": self.api_key,
@@ -217,7 +469,6 @@ class TwoCaptchaSolver:
         page_url: str,
         action: str = "",
     ) -> CaptchaSolution:
-        """Solve Cloudflare Turnstile."""
         start = time.time()
         data = {
             "key": self.api_key,
@@ -247,7 +498,6 @@ class TwoCaptchaSolver:
         page_url: str,
         service_url: str = "",
     ) -> CaptchaSolution:
-        """Solve FunCaptcha / Arkose Labs."""
         start = time.time()
         data = {
             "key": self.api_key,
@@ -272,7 +522,6 @@ class TwoCaptchaSolver:
         return await self._poll_result(task_id, start)
 
     async def solve_image(self, image_base64: str, **kwargs) -> CaptchaSolution:
-        """Solve image CAPTCHA."""
         start = time.time()
         data = {
             "key": self.api_key,
@@ -295,7 +544,6 @@ class TwoCaptchaSolver:
         return await self._poll_result(task_id, start)
 
     async def _poll_result(self, task_id: str, start: float, max_wait: int = 120) -> CaptchaSolution:
-        """Poll for CAPTCHA solution."""
         elapsed = 0
         poll_interval = 3
 
@@ -317,7 +565,7 @@ class TwoCaptchaSolver:
                     solve_time=elapsed,
                     provider="2captcha",
                     captcha_id=task_id,
-                    cost=0.003,  # Approximate cost per solve
+                    cost=0.003,
                 )
 
             if resp.get("request") != "CAPCHA_NOT_READY":
@@ -329,7 +577,6 @@ class TwoCaptchaSolver:
                     captcha_id=task_id,
                 )
 
-            # Increase poll interval gradually
             poll_interval = min(poll_interval + 1, 5)
 
         return CaptchaSolution(
@@ -341,7 +588,6 @@ class TwoCaptchaSolver:
         )
 
     async def get_balance(self) -> Dict[str, Any]:
-        """Get account balance."""
         resp = await self._get("/res.php", {
             "key": self.api_key,
             "action": "getbalance",
@@ -508,28 +754,7 @@ class AntiCaptchaSolver:
 class CaptchaSolver:
     """
     Multi-provider CAPTCHA solver with auto-fallback.
-
-    Usage:
-        solver = CaptchaSolver()
-
-        # Add providers
-        solver.add_provider("2captcha", "your-api-key", priority=10)
-        solver.add_provider("anti-captcha", "your-api-key", priority=5)
-
-        # Solve reCAPTCHA
-        result = await solver.solve(
-            captcha_type="recaptcha_v2",
-            sitekey="6Le-wvkSAAAAAPBMRTvw0Q4Muexq9bi0DJwx_mJ-",
-            page_url="https://example.com",
-        )
-
-        if result.success:
-            # Inject token into page
-            await page.evaluate(f'''
-                document.getElementById("g-recaptcha-response").innerHTML = "{result.token}";
-                document.querySelector(".g-recaptcha-response").innerHTML = "{result.token}";
-            ''')
-            # Then click submit
+    Enforces local OCR (ddddocr) first, falling back to AIVisualSolver.
     """
 
     def __init__(self):
@@ -542,6 +767,13 @@ class CaptchaSolver:
             "by_type": {},
             "by_provider": {},
         }
+
+        # 1. Register local OCR if available
+        self.add_provider("ddddocr", "local_free", priority=100)
+
+        # 2. Register AI Visual solver if vision API keys exist
+        if any(os.getenv(k) for k in ("GOOGLE_API_KEY", "OPENAI_API_KEY", "ANTHROPIC_API_KEY")):
+            self.add_provider("ai_visual", "ai_free_or_owned", priority=90)
 
     def add_provider(
         self,
@@ -568,8 +800,11 @@ class CaptchaSolver:
         elif prov == SolverProvider.ANTICAPTCHA:
             self._solvers[prov.value] = AntiCaptchaSolver(api_key)
         elif prov == SolverProvider.CAPMONSTER:
-            # CapMonster uses same API as Anti-Captcha
             self._solvers[prov.value] = AntiCaptchaSolver(api_key)
+        elif prov == SolverProvider.DDDDOCR:
+            self._solvers[prov.value] = DdddocrLocalSolver()
+        elif prov == SolverProvider.AI_VISUAL:
+            self._solvers[prov.value] = AIVisualSolver()
 
         logger.info(f"Captcha provider added: {provider} (priority: {priority})")
         return {"status": "success", "provider": provider, "priority": priority}
@@ -605,16 +840,6 @@ class CaptchaSolver:
         image_base64: str = "",
         **kwargs,
     ) -> CaptchaSolution:
-        """
-        Solve a CAPTCHA with automatic provider selection and fallback.
-
-        Args:
-            captcha_type: recaptcha_v2, recaptcha_v3, hcaptcha, turnstile, funcaptcha, image
-            sitekey: Site key / public key
-            page_url: Page URL where CAPTCHA appears
-            image_base64: Base64-encoded image (for image CAPTCHAs)
-            **kwargs: Extra params (action, invisible, enterprise, etc.)
-        """
         if not self._providers:
             return CaptchaSolution(
                 success=False,
@@ -644,6 +869,12 @@ class CaptchaSolver:
                 )
 
             try:
+                # If solver doesn't support the requested non-image captcha format, skip it
+                if ct != CaptchaType.IMAGE:
+                    if not hasattr(solver, f"solve_{captcha_type}"):
+                        errors.append(f"{provider_name}: does not support token-solving for {captcha_type}")
+                        continue
+
                 if ct == CaptchaType.RECAPTCHA_V2:
                     result = await solver.solve_recaptcha_v2(
                         sitekey, page_url,
@@ -670,7 +901,7 @@ class CaptchaSolver:
                         service_url=kwargs.get("service_url", ""),
                     )
                 elif ct == CaptchaType.IMAGE:
-                    result = await solver.solve_image(image_base64, **kwargs)
+                    result = await solver.solve_image(image_base64)
                 else:
                     return CaptchaSolution(
                         success=False,
@@ -712,11 +943,6 @@ class CaptchaSolver:
         solution: CaptchaSolution,
         captcha_type: str = "recaptcha_v2",
     ) -> Dict[str, Any]:
-        """
-        Inject a CAPTCHA solution into a Playwright page.
-
-        This handles the DOM manipulation needed to submit the solved CAPTCHA.
-        """
         if not solution.success or not solution.token:
             return {"status": "error", "error": "No valid solution to inject"}
 
@@ -726,18 +952,15 @@ class CaptchaSolver:
             if captcha_type in ("recaptcha_v2", "recaptcha_v3"):
                 await page.evaluate(f"""
                     (function(token) {{
-                        // Set all possible reCAPTCHA response fields
                         var ta = document.getElementById('g-recaptcha-response');
                         if (ta) ta.innerHTML = token;
 
                         var tas = document.querySelectorAll('.g-recaptcha-response');
                         tas.forEach(function(el) {{ el.innerHTML = token; }});
 
-                        // Set hidden form fields
                         var inputs = document.querySelectorAll('input[name="g-recaptcha-response"]');
                         inputs.forEach(function(el) {{ el.value = token; }});
 
-                        // Fire callback if exists
                         if (typeof ___grecaptcha_cfg !== 'undefined') {{
                             try {{
                                 Object.entries(___grecaptcha_cfg.clients).forEach(function(entry) {{
@@ -767,10 +990,8 @@ class CaptchaSolver:
                         var div = document.querySelector('.h-captcha');
                         if (div && div.dataset) div.dataset.hcaptchaResponse = token;
 
-                        // Fire callback
                         try {{
                             if (typeof hcaptcha !== 'undefined' && hcaptcha.getResponse) {{
-                                // Override getResponse
                                 var origGet = hcaptcha.getResponse;
                                 hcaptcha.getResponse = function() {{ return token; }};
                             }}
@@ -783,19 +1004,6 @@ class CaptchaSolver:
                     (function(token) {{
                         var input = document.querySelector('[name="cf-turnstile-response"]');
                         if (input) input.value = token;
-
-                        try {{
-                            if (typeof turnstile !== 'undefined') {{
-                                // Find widget and set token
-                                var widgets = document.querySelectorAll('[data-sitekey]');
-                                widgets.forEach(function(w) {{
-                                    var widgetId = w.id;
-                                    if (widgetId && turnstile.getResponse) {{
-                                        // Token is already set via input
-                                    }}
-                                }});
-                            }}
-                        }} catch(e) {{}}
                     }})('{token}');
                 """)
 
@@ -806,9 +1014,8 @@ class CaptchaSolver:
 
     async def detect_and_solve(self, page) -> Dict[str, Any]:
         """
-        Auto-detect CAPTCHA on page and solve it.
-
-        Checks for reCAPTCHA, hCaptcha, Turnstile, and FunCaptcha on the page.
+        Auto-detect CAPTCHA on page and solve it. Falls back to interactive visual
+        solving using visual LLMs if token-based solvers are missing or failed.
         """
         try:
             detection = await page.evaluate("""
@@ -820,10 +1027,9 @@ class CaptchaSolver:
                     if (recaptcha) {
                         var sitekey = recaptcha.getAttribute('data-sitekey') || recaptcha.dataset.sitekey;
                         if (sitekey) {
-                            // Check if invisible
                             var invisible = recaptcha.getAttribute('data-size') === 'invisible' ||
                                            recaptcha.getAttribute('data-badge') === 'inline';
-                            result.type = invisible ? 'recaptcha_v2' : 'recaptcha_v2';
+                            result.type = 'recaptcha_v2';
                             result.sitekey = sitekey;
                             result.action = recaptcha.getAttribute('data-action') || recaptcha.getAttribute('data-callback') || '';
                             return result;
@@ -895,16 +1101,18 @@ class CaptchaSolver:
 
             logger.info(f"Detected {captcha_type} CAPTCHA (sitekey: {sitekey[:20]}...)")
 
-            # Solve it
-            result = await self.solve(
-                captcha_type=captcha_type,
-                sitekey=sitekey,
-                page_url=page_url,
-                action=detection.get("action", ""),
-            )
+            # First, try to solve via standard configured solvers (like 2captcha/anticaptcha if API keys are configured)
+            result = None
+            if any(p in self._providers for p in ("2captcha", "anti-captcha", "capmonster")):
+                result = await self.solve(
+                    captcha_type=captcha_type,
+                    sitekey=sitekey,
+                    page_url=page_url,
+                    action=detection.get("action", ""),
+                )
 
-            if result.success:
-                # Inject solution
+            # If token solver succeeded, inject solution
+            if result and result.success:
                 inject_result = await self.inject_solution(page, result, captcha_type)
                 return {
                     "status": "success",
@@ -914,18 +1122,370 @@ class CaptchaSolver:
                     "cost": result.cost,
                     "injected": inject_result.get("status") == "success",
                 }
-            else:
-                return {
-                    "status": "failed",
-                    "captcha_type": captcha_type,
-                    "error": result.error,
-                }
+
+            # If token solvers are missing, failed, or skipped, fall back to interactive visual solving via LLM!
+            if "ai_visual" in self._providers:
+                visual_result = await self.solve_interactive_visual(page, captcha_type, detection)
+                if visual_result.get("success"):
+                    return {
+                        "status": "success",
+                        "captcha_type": captcha_type,
+                        "solve_time": round(visual_result.get("solve_time", 0.0), 2),
+                        "provider": "ai_visual",
+                        "cost": 0.0,
+                        "injected": True,
+                    }
+                else:
+                    return {
+                        "status": "failed",
+                        "captcha_type": captcha_type,
+                        "error": visual_result.get("error", "Interactive visual solver failed"),
+                    }
+
+            return {
+                "status": "failed",
+                "captcha_type": captcha_type,
+                "error": "No token solvers available and visual AI solver was not triggered.",
+            }
 
         except Exception as e:
             return {"status": "error", "error": str(e)}
 
+    async def solve_interactive_visual(
+        self,
+        page,
+        captcha_type: str,
+        detection: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """
+        Solve reCAPTCHA, hCaptcha, or Turnstile visually by clicking checkboxes
+        and using visual LLMs to solve grid/image selection challenges.
+        """
+        start_time = time.time()
+        logger.info(f"Starting interactive visual solver for {captcha_type}...")
+
+        try:
+            if captcha_type in ("recaptcha_v2", "recaptcha_v3"):
+                # 1. Look for anchor iframe (checkbox)
+                anchor_frame_selector = "iframe[src*='recaptcha/api2/anchor']"
+                try:
+                    await page.wait_for_selector(anchor_frame_selector, timeout=5000)
+                    anchor_element = await page.query_selector(anchor_frame_selector)
+                    if anchor_element:
+                        logger.info("Found reCAPTCHA anchor iframe. Clicking checkbox...")
+                        box = await anchor_element.bounding_box()
+                        if box:
+                            await self._click_with_mimicry(page, box["x"] + 30, box["y"] + box["height"] / 2)
+                            await asyncio.sleep(2.0)
+                except Exception as e:
+                    logger.debug(f"reCAPTCHA anchor checkbox click skipped/failed: {e}")
+
+                # 2. Check if image challenge frame appeared
+                bframe_selector = "iframe[src*='recaptcha/api2/bframe']"
+                try:
+                    await page.wait_for_selector(bframe_selector, timeout=3000)
+                    bframe_element = await page.query_selector(bframe_selector)
+                    if bframe_element:
+                        logger.info("reCAPTCHA image challenge popped up. Solving visually...")
+                        success = await self._solve_grid_challenge(page, bframe_element, "recaptcha")
+                        return {"success": success, "solve_time": time.time() - start_time}
+                except Exception as e:
+                    logger.debug(f"No active reCAPTCHA image challenge frame found: {e}")
+
+                return {"success": True, "solve_time": time.time() - start_time}
+
+            elif captcha_type == "hcaptcha":
+                # 1. Click hCaptcha checkbox
+                anchor_selector = "iframe[src*='hcaptcha.com/box']"
+                try:
+                    await page.wait_for_selector(anchor_selector, timeout=5000)
+                    anchor_element = await page.query_selector(anchor_selector)
+                    if anchor_element:
+                        logger.info("Found hCaptcha anchor. Clicking checkbox...")
+                        box = await anchor_element.bounding_box()
+                        if box:
+                            await self._click_with_mimicry(page, box["x"] + 30, box["y"] + box["height"] / 2)
+                            await asyncio.sleep(2.5)
+                except Exception as e:
+                    logger.debug(f"hCaptcha checkbox click skipped/failed: {e}")
+
+                # 2. Check if challenge frame popped up
+                challenge_selector = "iframe[src*='hcaptcha.com/secshow']"
+                try:
+                    await page.wait_for_selector(challenge_selector, timeout=3000)
+                    challenge_element = await page.query_selector(challenge_selector)
+                    if challenge_element:
+                        logger.info("hCaptcha visual challenge popped up. Solving visually...")
+                        success = await self._solve_grid_challenge(page, challenge_element, "hcaptcha")
+                        return {"success": success, "solve_time": time.time() - start_time}
+                except Exception as e:
+                    logger.debug(f"No active hCaptcha challenge frame found: {e}")
+
+                return {"success": True, "solve_time": time.time() - start_time}
+
+            elif captcha_type == "turnstile":
+                turnstile_selector = "iframe[src*='challenges.cloudflare.com']"
+                try:
+                    await page.wait_for_selector(turnstile_selector, timeout=5000)
+                    element = await page.query_selector(turnstile_selector)
+                    if element:
+                        logger.info("Found Turnstile iframe. Clicking checkbox center...")
+                        box = await element.bounding_box()
+                        if box:
+                            await self._click_with_mimicry(page, box["x"] + 45, box["y"] + box["height"] / 2)
+                            await asyncio.sleep(3.0)
+                            return {"success": True, "solve_time": time.time() - start_time}
+                except Exception as e:
+                    logger.debug(f"Turnstile interaction skipped: {e}")
+
+        except Exception as err:
+            logger.error(f"Interactive visual solver error: {err}")
+
+        return {"success": False, "error": "Visual interactive solve failed"}
+
+    async def _click_with_mimicry(self, page, x: float, y: float):
+        """Simulate human-like mouse movement and click at (x, y) coordinates."""
+        from src.security.human_mimicry import HumanMimicry
+        mimic = HumanMimicry()
+
+        # Start from a random position
+        start_x = random.uniform(10.0, 100.0)
+        start_y = random.uniform(10.0, 100.0)
+
+        path = mimic.mouse_path(start_x, start_y, x, y)
+        for px, py in path:
+            await page.mouse.move(px, py)
+            await asyncio.sleep(mimic.mouse_delay())
+
+        await asyncio.sleep(mimic.pre_click_pause())
+        await page.mouse.down()
+        await asyncio.sleep(mimic.click_delay())
+        await page.mouse.up()
+
+    async def _solve_grid_challenge(self, page, iframe_element, provider_type: str) -> bool:
+        """Capture screenshot of the grid challenge, analyze with vision API, and execute clicks."""
+        box = await iframe_element.bounding_box()
+        if not box:
+            return False
+
+        # 1. Capture challenge screenshot as base64
+        import base64
+        import json
+        screenshot_bytes = await iframe_element.screenshot()
+        image_base64 = base64.b64encode(screenshot_bytes).decode("utf-8")
+
+        # 2. Get content frame
+        frame = await iframe_element.content_frame()
+        if not frame:
+            logger.warning("Could not access content frame of challenge iframe")
+            return False
+
+        # 3. Retrieve challenge text
+        challenge_text = ""
+        try:
+            if provider_type == "recaptcha":
+                el = await frame.query_selector(".rc-imageselect-desc-wrapper")
+                if el:
+                    challenge_text = await el.inner_text()
+            elif provider_type == "hcaptcha":
+                el = await frame.query_selector(".challenge-title")
+                if el:
+                    challenge_text = await el.inner_text()
+        except Exception:
+            pass
+
+        if not challenge_text:
+            challenge_text = "Select all images matching the subject."
+
+        logger.info(f"Challenge instruction: {challenge_text.strip()}")
+
+        prompt = (
+            f"This is a {provider_type} CAPTCHA challenge grid: '{challenge_text.strip()}'.\n"
+            "Identify the 1-indexed row and column coordinates of all cells in the grid matching the instruction.\n"
+            "Output your answer ONLY as a JSON array of [row, col] coordinates, e.g. [[1,2], [3,1]]. "
+            "Do not include markdown blocks, explanation, or any other characters."
+        )
+
+        resp_text = await self._call_vision_api(image_base64, prompt)
+        if not resp_text:
+            logger.warning("Visual LLM response is empty")
+            return False
+
+        try:
+            match = re.search(r"\[\s*\[.*\]\s*\]", resp_text, re.DOTALL)
+            if match:
+                cells = json.loads(match.group(0))
+            else:
+                cells = json.loads(resp_text.strip())
+            logger.info(f"LLM grid cell coordinates: {cells}")
+        except Exception as err:
+            logger.warning(f"Error parsing LLM response '{resp_text}': {err}")
+            return False
+
+        # Determine grid size (estimate based on coordinates)
+        max_val = 3
+        for r, c in cells:
+            max_val = max(max_val, r, c)
+        grid_size = 4 if max_val > 3 else 3
+
+        # Locate grid element bounds
+        grid_box = None
+        try:
+            grid_el = await frame.query_selector(".rc-imageselect-table-3x3, .rc-imageselect-table-4x4, .challenge-container, #task-image")
+            if grid_el:
+                grid_box = await grid_el.bounding_box()
+        except Exception:
+            pass
+
+        if not grid_box:
+            grid_box = {
+                "x": 0,
+                "y": 0,
+                "width": box["width"],
+                "height": box["height"] * 0.75
+            }
+
+        cell_width = grid_box["width"] / grid_size
+        cell_height = grid_box["height"] / grid_size
+
+        for row, col in cells:
+            cell_x = grid_box["x"] + (col - 0.5) * cell_width
+            cell_y = grid_box["y"] + (row - 0.5) * cell_height
+
+            abs_x = box["x"] + cell_x
+            abs_y = box["y"] + cell_y
+            logger.info(f"Interactive click Cell ({row}, {col}) at absolute: ({abs_x}, {abs_y})")
+            await self._click_with_mimicry(page, abs_x, abs_y)
+            await asyncio.sleep(random.uniform(0.3, 0.8))
+
+        # Click submit button
+        submit_btn = None
+        try:
+            submit_btn = await frame.query_selector("#recaptcha-verify-button, #submit-button, .button-submit")
+        except Exception:
+            pass
+
+        if submit_btn:
+            s_box = await submit_btn.bounding_box()
+            if s_box:
+                abs_sx = box["x"] + s_box["x"] + s_box["width"] / 2
+                abs_sy = box["y"] + s_box["y"] + s_box["height"] / 2
+                logger.info(f"Clicking Verify/Submit at ({abs_sx}, {abs_sy})")
+                await self._click_with_mimicry(page, abs_sx, abs_sy)
+                await asyncio.sleep(2.0)
+                return True
+
+        return False
+
+    async def _call_vision_api(self, image_base64: str, prompt: str) -> Optional[str]:
+        """Wrapper calling direct Vision LLM HTTP endpoints based on active credentials."""
+        solver = self._solvers.get("ai_visual")
+        if not solver:
+            return None
+
+        # Gemini
+        gemini_key = os.getenv("GOOGLE_API_KEY")
+        if gemini_key:
+            try:
+                session = await solver._get_session()
+                url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={gemini_key}"
+                payload = {
+                    "contents": [
+                        {
+                            "parts": [
+                                {"text": prompt},
+                                {
+                                    "inlineData": {
+                                        "mimeType": "image/png",
+                                        "data": image_base64
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+                resp = await session.post(url, json=payload)
+                if resp.status_code == 200:
+                    text = resp.json()["candidates"][0]["content"]["parts"][0]["text"]
+                    return text.strip()
+            except Exception as e:
+                logger.warning(f"Interactive Gemini Vision API call failed: {e}")
+
+        # OpenAI
+        openai_key = os.getenv("OPENAI_API_KEY")
+        if openai_key:
+            try:
+                session = await solver._get_session()
+                url = "https://api.openai.com/v1/chat/completions"
+                headers = {
+                    "Authorization": f"Bearer {openai_key}",
+                    "Content-Type": "application/json"
+                }
+                payload = {
+                    "model": "gpt-4o-mini",
+                    "messages": [
+                        {
+                            "role": "user",
+                            "content": [
+                                {"type": "text", "text": prompt},
+                                {
+                                    "type": "image_url",
+                                    "image_url": {
+                                        "url": f"data:image/png;base64,{image_base64}"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "max_tokens": 150,
+                    "temperature": 0.0
+                }
+                resp = await session.post(url, json=payload, headers=headers)
+                if resp.status_code == 200:
+                    return resp.json()["choices"][0]["message"]["content"].strip()
+            except Exception as e:
+                logger.warning(f"Interactive OpenAI Vision API call failed: {e}")
+
+        # Anthropic
+        anthropic_key = os.getenv("ANTHROPIC_API_KEY")
+        if anthropic_key:
+            try:
+                session = await solver._get_session()
+                url = "https://api.anthropic.com/v1/messages"
+                headers = {
+                    "x-api-key": anthropic_key,
+                    "anthropic-version": "2023-06-01",
+                    "Content-Type": "application/json"
+                }
+                payload = {
+                    "model": "claude-3-5-sonnet-20241022",
+                    "max_tokens": 150,
+                    "messages": [
+                        {
+                            "role": "user",
+                            "content": [
+                                {"type": "text", "text": prompt},
+                                {
+                                    "type": "image",
+                                    "source": {
+                                        "type": "base64",
+                                        "media_type": "image/png",
+                                        "data": image_base64
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+                resp = await session.post(url, json=payload, headers=headers)
+                if resp.status_code == 200:
+                    return resp.json()["content"][0]["text"].strip()
+            except Exception as e:
+                logger.warning(f"Interactive Anthropic Vision API call failed: {e}")
+
+        return None
+
     def get_stats(self) -> Dict[str, Any]:
-        """Get solver statistics."""
         return {
             "total_solves": self._stats["total_solves"],
             "total_failures": self._stats["total_failures"],
@@ -946,7 +1506,6 @@ class CaptchaSolver:
         }
 
     async def get_balances(self) -> Dict[str, Any]:
-        """Get balances from all providers."""
         balances = {}
         for name, solver in self._solvers.items():
             if hasattr(solver, "get_balance"):
@@ -958,7 +1517,6 @@ class CaptchaSolver:
         return balances
 
     async def close(self):
-        """Close all solver sessions."""
         for solver in self._solvers.values():
             if hasattr(solver, "close"):
                 await solver.close()

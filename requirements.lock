@@ -4,7 +4,7 @@
 # Install with: pip install -r requirements.lock
 
 # Core browser automation
-playwright==1.49.1
+
 
 # WebSocket server for agent connections
 websockets==13.1

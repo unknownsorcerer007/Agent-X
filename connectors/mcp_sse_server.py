@@ -18,7 +18,7 @@ import httpx
 from fastapi import FastAPI, Request, Header
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from mcp.server import Server
-from mcp.server.sse import SseServerTransport
+from mcp.server.streamable_http import StreamableHTTPServerTransport
 from mcp.types import Tool, TextContent
 import mcp.types as types
 from uuid import uuid4
@@ -29,9 +29,21 @@ from connectors._tool_registry import get_command_map, get_mcp_tools
 
 # Resolve token and url
 def resolve_agent_token() -> str:
-    token = os.environ.get("AGENT_X_TOKEN")
+    token = os.environ.get("AGENT_X_TOKEN") or os.environ.get("AGENT_TOKEN")
     if token:
         return token
+    # Check ~/.agent-x/config.yaml
+    yaml_path = os.path.expanduser("~/.agent-x/config.yaml")
+    if os.path.exists(yaml_path):
+        try:
+            import yaml
+            with open(yaml_path, "r", encoding="utf-8") as f:
+                cfg = yaml.safe_load(f) or {}
+                t = cfg.get("server", {}).get("agent_token")
+                if t:
+                    return t
+        except Exception:
+            pass
     repo_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     path = os.path.join(repo_dir, ".env")
     if os.path.exists(path):
@@ -131,92 +143,24 @@ async def call_tool(name: str, arguments: Dict[str, Any]) -> List[TextContent]:
 
     return [TextContent(type="text", text=output)]
 
-# ─── FastAPI app & SSE Transport ─────────────────────────────
+# ─── FastAPI app & Streamable HTTP Session Manager ───────────
 from contextlib import asynccontextmanager
 from starlette.types import Receive, Scope, Send
-from anyio.streams.memory import MemoryObjectReceiveStream, MemoryObjectSendStream
 import anyio
-from sse_starlette import EventSourceResponse
+from mcp.server.streamable_http_manager import StreamableHTTPSessionManager
 
-class DynamicSseServerTransport(SseServerTransport):
-    @asynccontextmanager
-    async def connect_sse(self, scope: Scope, receive: Receive, send: Send):
-        if scope["type"] != "http":
-            logger.error("connect_sse received non-HTTP request")
-            raise ValueError("connect_sse can only handle HTTP requests")
+session_manager = StreamableHTTPSessionManager(
+    app=server,
+    json_response=False,
+    stateless=False
+)
 
-        logger.debug("Setting up SSE connection")
-        read_stream: MemoryObjectReceiveStream[types.JSONRPCMessage | Exception]
-        read_stream_writer: MemoryObjectSendStream[types.JSONRPCMessage | Exception]
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    async with session_manager.run():
+        yield
 
-        write_stream: MemoryObjectSendStream[types.JSONRPCMessage]
-        write_stream_reader: MemoryObjectReceiveStream[types.JSONRPCMessage]
-
-        read_stream_writer, read_stream = anyio.create_memory_object_stream(0)
-        write_stream, write_stream_reader = anyio.create_memory_object_stream(0)
-
-        session_id = uuid4()
-        self._current_session_id = session_id
-        
-        # Build dynamic absolute URL using request details from scope
-        headers = dict(scope.get("headers", []))
-        host = headers.get(b"host", b"localhost").decode("utf-8")
-        proto = headers.get(b"x-forwarded-proto", b"http").decode("utf-8")
-        
-        # If it has x-forwarded-host, use it (Cloudflare forwards this)
-        forwarded_host = headers.get(b"x-forwarded-host", b"").decode("utf-8")
-        if forwarded_host:
-            host = forwarded_host
-            
-        base_url = f"{proto}://{host}"
-        session_uri = f"{base_url}/messages?session_id={session_id.hex}"
-        
-        self._read_stream_writers[session_id] = read_stream_writer
-        logger.info(f"Created new session with ID: {session_id}, absolute messages URL: {session_uri}")
-
-        sse_stream_writer, sse_stream_reader = anyio.create_memory_object_stream[
-            dict[str, Any]
-        ](0)
-
-        async def sse_writer():
-            logger.debug("Starting SSE writer")
-            async with sse_stream_writer, write_stream_reader:
-                await sse_stream_writer.send({"event": "endpoint", "data": session_uri})
-                logger.debug(f"Sent endpoint event: {session_uri}")
-
-                async for message in write_stream_reader:
-                    logger.debug(f"Sending message via SSE: {message}")
-                    await sse_stream_writer.send(
-                        {
-                            "event": "message",
-                            "data": message.model_dump_json(
-                                by_alias=True, exclude_none=True
-                            ),
-                        }
-                    )
-
-        try:
-            async with anyio.create_task_group() as tg:
-                response = EventSourceResponse(
-                    content=sse_stream_reader,
-                    data_sender_callable=sse_writer,
-                    headers={
-                        "X-Accel-Buffering": "no",
-                        "Cache-Control": "no-cache",
-                    }
-                )
-                logger.debug("Starting SSE response task")
-                tg.start_soon(response, scope, receive, send)
-
-                logger.debug("Yielding read and write streams")
-                yield (read_stream, write_stream)
-        finally:
-            self._read_stream_writers.pop(session_id, None)
-            if hasattr(self, "_current_session_id") and self._current_session_id == session_id:
-                self._current_session_id = None
-            logger.info(f"Cleaned up session with ID: {session_id}")
-
-app = FastAPI(title="Agent-X MCP SSE Server")
+app = FastAPI(title="Agent-X MCP SSE Server", lifespan=lifespan)
 
 # Add CORS middleware to allow the browser to connect
 from fastapi.middleware.cors import CORSMiddleware
@@ -227,8 +171,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-sse = DynamicSseServerTransport("/sse")
 
 # ─── Mock OAuth 2.1 Provider Endpoints ────────────────────────
 
@@ -607,136 +549,96 @@ async def oauth_token(request: Request):
         "scope": "mcp"
     })
 
-@app.get("/sse")
-@app.get("/sse/")
-@app.get("/mcp")
-@app.get("/mcp/")
-async def handle_sse(request: Request):
-    auth_header = request.headers.get("Authorization")
-    if not auth_header or not auth_header.startswith("Bearer "):
-        headers = request.headers
-        host = headers.get("x-forwarded-host") or headers.get("host") or "localhost:8002"
-        proto = headers.get("x-forwarded-proto") or request.url.scheme or "http"
-        base_url = f"{proto}://{host}"
-        
-        path = request.url.path
-        metadata_suffix = "sse" if "sse" in path else "mcp"
-        metadata_url = f"{base_url}/.well-known/oauth-protected-resource/{metadata_suffix}"
-        logger.info(f"Unauthenticated request to {path}. Challenging with WWW-Authenticate pointing to {metadata_url}")
-        
-        return JSONResponse(
-            status_code=401,
-            content={"error": "unauthorized", "message": "Authentication required"},
-            headers={"WWW-Authenticate": f'Bearer resource_metadata="{metadata_url}"'}
-        )
-        
-    logger.info("Authentication successful via Bearer token. Proceeding to SSE stream connection.")
-    async with sse.connect_sse(
-        request.scope,
-        request.receive,
-        request._send
-    ) as streams:
-        await server.run(
-            streams[0],
-            streams[1],
-            server.create_initialization_options()
-        )
+# ─── ASGI middleware to intercept transport requests ─────────
 
-# ─── ASGI middleware to intercept POST /messages ──────────────
-# Using middleware instead of app.mount() to avoid Starlette's
-# automatic 307 trailing-slash redirect on mounted sub-apps.
-
-_inner_app = app.middleware_stack  # Will be set after build
-
-class _MessagePostMiddleware:
-    """ASGI middleware that intercepts POST /messages* requests and
-    delegates them to handle_post_message as a raw ASGI app, bypassing
-    FastAPI's route handler entirely (avoids double-response errors)."""
-
-    def __init__(self, app_inner, transport: SseServerTransport):
+class _McpTransportMiddleware:
+    """ASGI middleware that intercepts GET/POST to /sse and /mcp and delegates to session_manager."""
+    def __init__(self, app_inner, manager: StreamableHTTPSessionManager):
         self._app = app_inner
-        self._transport = transport
+        self._manager = manager
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send):
         if scope["type"] == "http":
             path = scope.get("path", "")
             method = scope.get("method", "GET")
             
-            # Intercept POST to /messages, /sse, /mcp, or / (excluding oauth endpoints or register/token)
-            if method == "POST" and (path.startswith("/messages") or path in ("/", "/sse", "/sse/", "/mcp", "/mcp/")):
-                # Check auth
+            if path in ("/sse", "/sse/", "/mcp", "/mcp/"):
+                # 1. Perform Authentication check
                 headers_list = scope.get("headers", [])
                 auth_val = b""
+                host_val = b"localhost:8002"
+                proto_val = b"http"
+                
                 for hdr_name, hdr_value in headers_list:
                     if hdr_name == b"authorization":
                         auth_val = hdr_value
-                        break
+                    elif hdr_name == b"x-forwarded-host":
+                        host_val = hdr_value
+                    elif hdr_name == b"host" and not host_val:
+                        host_val = hdr_value
+                    elif hdr_name == b"x-forwarded-proto":
+                        proto_val = hdr_value
+
+                # If Authorization is missing or doesn't start with Bearer, return 401 challenge
                 if not auth_val.startswith(b"Bearer "):
-                    from starlette.responses import JSONResponse as _JR
-                    resp = _JR(status_code=401, content={"error": "unauthorized"})
-                    await resp(scope, receive, send)
+                    host = host_val.decode("utf-8")
+                    proto = proto_val.decode("utf-8")
+                    base_url = f"{proto}://{host}"
+                    
+                    metadata_suffix = "sse" if "sse" in path else "mcp"
+                    metadata_url = f"{base_url}/.well-known/oauth-protected-resource/{metadata_suffix}"
+                    logger.info(f"Unauthenticated request to {path}. Challenging via middleware.")
+                    
+                    # Return 401
+                    headers = [
+                        (b"content-type", b"application/json"),
+                        (b"www-authenticate", f'Bearer resource_metadata="{metadata_url}"'.encode("utf-8"))
+                    ]
+                    
+                    # Add session ID to headers if present in request (to clean up properly if client sends it)
+                    session_id_val = b""
+                    for hdr_name, hdr_value in headers_list:
+                        if hdr_name == b"mcp-session-id":
+                            session_id_val = hdr_value
+                            break
+                    if session_id_val:
+                        headers.append((b"mcp-session-id", session_id_val))
+
+                    error_body = json.dumps({"error": "unauthorized", "message": "Authentication required"}).encode("utf-8")
+                    
+                    await send({
+                        "type": "http.response.start",
+                        "status": 401,
+                        "headers": headers
+                    })
+                    await send({
+                        "type": "http.response.body",
+                        "body": error_body,
+                        "more_body": False
+                    })
                     return
-                
-                # Check query string for session_id
-                import urllib.parse
-                query_string = scope.get("query_string", b"").decode("utf-8")
-                query_params = dict(urllib.parse.parse_qsl(query_string))
-                
-                if "session_id" not in query_params:
-                    # Resolve active session_id from transport
-                    active_sessions = list(self._transport._read_stream_writers.keys())
-                    if len(active_sessions) == 1:
-                        session_id = active_sessions[0]
-                        query_params["session_id"] = session_id.hex
-                        scope["query_string"] = urllib.parse.urlencode(query_params).encode("utf-8")
-                        logger.info(f"Injected single active session_id {session_id.hex} into POST {path} request")
-                    elif len(active_sessions) > 1:
-                        logger.error("Multiple active SSE sessions exist and no session_id was provided in query params!")
-                        from starlette.responses import JSONResponse as _JR
-                        resp = _JR(
-                            status_code=400,
-                            content={"error": "bad_request", "message": "Missing session_id query parameter (multiple active sessions exist)"}
-                        )
-                        await resp(scope, receive, send)
-                        return
-                    elif hasattr(self._transport, "_current_session_id") and self._transport._current_session_id:
-                        session_id = self._transport._current_session_id
-                        query_params["session_id"] = session_id.hex
-                        scope["query_string"] = urllib.parse.urlencode(query_params).encode("utf-8")
-                        logger.info(f"Injected fallback current_session_id {session_id.hex} into POST {path} request")
-                    else:
-                        logger.error(f"No active SSE session found to route POST {path} request!")
-                        from starlette.responses import JSONResponse as _JR
-                        resp = _JR(
-                            status_code=400,
-                            content={"error": "bad_request", "message": "No active SSE session found"}
-                        )
-                        await resp(scope, receive, send)
-                        return
-                
-                logger.info(f"POST {path} authenticated, delegating to handle_post_message")
-                await self._transport.handle_post_message(scope, receive, send)
+
+                # 2. Delegate to StreamableHTTPSessionManager
+                logger.info(f"Delegating {method} {path} to StreamableHTTPSessionManager")
+                await self._manager.handle_request(scope, receive, send)
                 return
 
+        # Fall through to FastAPI
         await self._app(scope, receive, send)
 
-
-# Wrap the FastAPI app with our middleware
-_original_app_call = app.__class__.__call__
-
 class WrappedApp:
-    """Wraps the FastAPI ASGI app with the message POST middleware."""
-    def __init__(self, fastapi_app, transport):
+    """Wraps the FastAPI ASGI app with the MCP transport middleware."""
+    def __init__(self, fastapi_app, manager: StreamableHTTPSessionManager):
         self._fastapi_app = fastapi_app
         self._middleware = None
-        self._transport = transport
+        self._manager = manager
     
     async def __call__(self, scope, receive, send):
         if self._middleware is None:
-            self._middleware = _MessagePostMiddleware(self._fastapi_app, self._transport)
+            self._middleware = _McpTransportMiddleware(self._fastapi_app, self._manager)
         await self._middleware(scope, receive, send)
 
-_wrapped = WrappedApp(app, sse)
+_wrapped = WrappedApp(app, session_manager)
 
 if __name__ == "__main__":
     import uvicorn
