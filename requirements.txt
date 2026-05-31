@@ -21,7 +21,7 @@ curl_cffi>=0.15.0         # curl-impersonate: browser-grade TLS fingerprint
 cloudscraper>=1.2.71       # Cloudflare solver
 
 # Bug bounty / scanning tools
-beautifulsoup4>=4.12.0
+beautifulsoup4>=4.14.3
 lxml>=5.2.0
 
 # Configuration
