@@ -30,7 +30,7 @@ pyyaml>=6.0.0
 # Utilities
 requests>=2.31.0
 urllib3>=2.0.0,<3.0.0      # Modern urllib3 (v2 is stable, fixes many issues)
-psutil>=5.9.0
+psutil>=7.2.2
 
 # Human mimicry
 numpy>=1.24.0
